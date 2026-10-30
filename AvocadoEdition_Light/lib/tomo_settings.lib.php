@@ -40,3 +40,16 @@ function tomo_protection_mask(): int
     global $config;
     return ((int)($config['cf_tomo_protection'] ?? 0)) & 7;
 }
+
+/** Return confirmed server values so asynchronous forms do not retain stale IDs/asset URLs. */
+function tomo_settings_saved(string $url, array $fields, array $clearFiles = []): void
+{
+    if (($GLOBALS['is_admin'] ?? '') === 'super' && ($_SERVER['HTTP_X_ARCHIVE_SAVE'] ?? '') === '1') {
+        while (ob_get_level()) ob_end_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        echo json_encode(['saved'=>true,'url'=>$url,'fields'=>$fields,'clear_files'=>$clearFiles], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        exit;
+    }
+    goto_url($url);
+}

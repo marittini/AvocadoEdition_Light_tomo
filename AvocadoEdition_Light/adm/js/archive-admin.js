@@ -13,12 +13,14 @@ const action = name => {const data=new FormData();data.set('action',name);return
 document.querySelectorAll('.btn_confirm a[title]').forEach(a=>{a.querySelectorAll('.material-icons').forEach(x=>x.remove());a.textContent=a.title;});
 const toggle=document.getElementById('archive-nav-toggle');
 if(toggle)toggle.addEventListener('click',()=>{const opened=document.body.classList.toggle('archive-menu-open');toggle.setAttribute('aria-expanded',String(opened));});
-let dirty=false, submitting=false;
+const dirtyForms=new Set();
+let submitting=false;
 const forms=[...document.querySelectorAll('#container form')];
 forms.forEach(form=>{
  const status=document.createElement('span');status.className='archive-form-status';status.setAttribute('role','status');status.textContent='현재 저장된 설정';
  const buttons=form.querySelector('.btn_confirm');if(buttons)buttons.prepend(status);
- const mark=()=>{dirty=true;status.textContent='저장하지 않은 변경사항';};
+ let revision=0;
+ const mark=()=>{revision++;dirtyForms.add(form);status.textContent='저장하지 않은 변경사항';};
  form.addEventListener('input',mark);form.addEventListener('change',mark);
  // Use one-time legacy token for Enter submissions as well as mouse clicks.
  form.addEventListener('submit',async event=>{
@@ -33,17 +35,29 @@ forms.forEach(form=>{
    const token=typeof window.get_ajax_token==='function'?window.get_ajax_token():'';
    if(!token)throw new Error('저장 인증을 확인하지 못했습니다. 다시 시도해 주세요.');
    let input=form.querySelector('[name=token]');if(!input){input=document.createElement('input');input.type='hidden';input.name='token';form.append(input);}input.value=token;
+   const submittedRevision=revision;
+   const uploaded=[...form.querySelectorAll('input[type=file]')].map(input=>({input,files:[...input.files]}));
    const data=new FormData(form);controls.forEach(x=>x.disabled=true);status.textContent='설정을 저장하고 있습니다.';
    const response=await fetch(form.action,{method:'POST',body:data,credentials:'same-origin',headers:{'X-Archive-Save':'1'}});
    const result=await response.json();
    if(!response.ok||!result.saved)throw new Error(result.error||'저장하지 못했습니다. 입력을 유지했습니다.');
-   dirty=false;status.textContent='저장 완료 · 현재 화면을 다시 불러오면 저장된 값을 확인할 수 있습니다.';
+   // Apply only fields that have not changed since this request's snapshot.
+   Object.entries(result.fields||{}).forEach(([name,value])=>{
+    const input=form.elements.namedItem(name);
+    if(input&&'value' in input&&input.value===String(data.get(name)??''))input.value=String(value);
+   });
+   uploaded.forEach(({input,files})=>{
+    const current=[...input.files];
+    if((result.clear_files||[]).includes(input.name)&&current.length===files.length&&current.every((file,i)=>file===files[i]))input.value='';
+   });
+   if(revision===submittedRevision){dirtyForms.delete(form);status.textContent='저장 완료 · 현재 화면을 다시 불러오면 저장된 값을 확인할 수 있습니다.';}
+   else{dirtyForms.add(form);status.textContent='저장 완료 · 저장하지 않은 변경사항이 남아 있습니다.';}
   }catch(error){status.textContent=error.message;}
   finally{controls.forEach(x=>x.disabled=false);form.dataset.archiveSaving='0';}
  });
- if(buttons){const reset=document.createElement('button');reset.type='button';reset.textContent='변경 취소';reset.addEventListener('click',()=>{if(!dirty || confirm('저장하지 않은 변경을 취소하고 마지막 저장값을 불러올까요?')){dirty=false;location.reload();}});buttons.append(reset);}
+ if(buttons){const reset=document.createElement('button');reset.type='button';reset.textContent='변경 취소';reset.addEventListener('click',()=>{if(!dirtyForms.size || confirm('저장하지 않은 변경을 취소하고 마지막 저장값을 불러올까요?')){dirtyForms.clear();location.reload();}});buttons.append(reset);}
 });
-window.addEventListener('beforeunload',event=>{if(dirty&&!submitting){event.preventDefault();event.returnValue='';}});
+window.addEventListener('beforeunload',event=>{if(dirtyForms.size&&!submitting){event.preventDefault();event.returnValue='';}});
 const path=location.pathname;
 if(path.endsWith('site_config_form.php')){
  const info=document.createElement('p');info.className='archive-group-help';info.textContent='사이트 전체의 기본 설정입니다. 사이트 공개와 게시글·첨부파일의 열람 권한은 다릅니다. 기존 설정값과 모든 항목을 유지합니다.';forms[0]?.prepend(info);

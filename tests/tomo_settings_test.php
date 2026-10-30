@@ -32,7 +32,9 @@ check(hash_file('sha256',$dir.'/actual35.webp')===hash_file('sha256',$dir.'/expe
 check(hash_file('sha256',$dir.'/actual35.webp')!==hash_file('sha256',$dir.'/actual.webp'),'quality changes encoded output');
 archive_webp($dir.'/source.png',$dir.'/lossless.webp',IMG_WEBP_LOSSLESS);$decoded=imagecreatefromwebp($dir.'/lossless.webp');check((imagecolorat($decoded,20,20)&0xffffff)===(imagecolorat($image,20,20)&0xffffff),'explicit lossless helper remains supported');
 define('G5_DIR_PERMISSION',0755);define('G5_FILE_PERMISSION',0644);
+$configured_memory_limit=ini_get('memory_limit');
 require __DIR__.'/../AvocadoEdition_Light/lib/thumbnail.lib.php';
+check(ini_get('memory_limit')===$configured_memory_limit,'thumbnail library does not change upload memory limit');
 $config['cf_tomo_webp_quality']=95;
 $thumb=thumbnail('actual.webp',$dir,$dir,30,30,true);
 $first=hash_file('sha256',$dir.'/'.$thumb);
@@ -42,4 +44,8 @@ thumbnail('actual.webp',$dir,$dir,30,30,false);
 check(hash_file('sha256',$dir.'/'.$thumb)===$first,'existing thumbnail not reencoded on quality change');
 thumbnail('actual.webp',$dir,$dir,30,30,true);
 check(hash_file('sha256',$dir.'/'.$thumb)!==$first,'new thumbnail uses configured quality');
+$saved_limit=ini_get('memory_limit');touch($dir.'/'.$thumb,time()+10);ini_set('memory_limit','16M');
+check(thumbnail('actual.webp',$dir,$dir,30,30,false)===$thumb,'existing thumbnail remains usable with low memory');
+check(thumbnail('actual.webp',$dir,$dir,31,31,true)==='','thumbnail declines when configured memory is insufficient');
+ini_set('memory_limit',$saved_limit);
 foreach(glob($dir.'/*')as$f)unlink($f);rmdir($dir);

@@ -22,6 +22,14 @@ try {
 } catch (Throwable $e) { alert($e->getMessage()); }
 
 
+$tomo_saved_fields = [];
+$tomo_uploaded_files = [];
+$tomo_ids_by_family = array_column($tomo_fonts, 'id', 'family');
+foreach (($_POST['tomo_fonts'] ?? []) as $index=>$font) {
+    $family = trim(stripslashes((string)($font['family'] ?? '')));
+    if (isset($tomo_ids_by_family[$family])) $tomo_saved_fields["tomo_fonts[{$index}][id]"] = $tomo_ids_by_family[$family];
+}
+
 $site_style_path = G5_DATA_PATH."/site";
 $site_style_url = G5_DATA_URL."/site";
 
@@ -64,6 +72,8 @@ for($i=0; $i < count($cs_name); $i++) {
 		$image_name = "design_".$cs_name[$i].".".$exp;
 		upload_file($_FILES['cs_value_file']['tmp_name'][$i], $image_name, $site_style_path);
 		$cs_value[$i] = $site_style_url."/".$image_name;
+        $tomo_saved_fields["cs_value[{$i}]"] = $cs_value[$i];
+        $tomo_uploaded_files[] = "cs_value_file[{$i}]";
 	}
 
 
@@ -172,5 +182,5 @@ try {
     alert('디자인 파일을 저장하지 못했습니다. 입력을 유지하고 서버 쓰기 권한을 확인해 주세요.');
 }
 
-goto_url('./design_form.php', false);
+tomo_settings_saved('./design_form.php', $tomo_saved_fields, $tomo_uploaded_files);
 ?>

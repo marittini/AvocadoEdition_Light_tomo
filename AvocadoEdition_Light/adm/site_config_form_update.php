@@ -53,7 +53,7 @@ if ($_FILES['cf_cursor_file']['name']) {
 	$exp = explode(".", $_FILES['cf_cursor_file']['name']);
 	$exp = $exp[count($exp)-1];
 
-	$image_name = "site_favicon.".$exp;
+	$image_name = "site_cursor.".$exp;
 	upload_file($_FILES['cf_cursor_file']['tmp_name'], $image_name, $site_style_path);
 	$_POST['cf_cursor'] = $site_style_url."/".$image_name;
 }
@@ -84,5 +84,11 @@ $sql = " update {$g5['config_table']}
 				cf_1				= '{$_POST['cf_1']}'";
 sql_query($sql);
 
-goto_url('./site_config_form.php', false);
+$tomo_fields = [];
+$tomo_files = [];
+foreach (['cf_site_img','cf_favicon','cf_cursor'] as $field) {
+    $tomo_fields[$field] = stripslashes((string)($_POST[$field] ?? ''));
+    if (!empty($_FILES[$field.'_file']['name']) && ($_FILES[$field.'_file']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) $tomo_files[] = $field.'_file';
+}
+tomo_settings_saved('./site_config_form.php', $tomo_fields, $tomo_files);
 ?>

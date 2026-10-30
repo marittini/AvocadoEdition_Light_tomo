@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
+require_once __DIR__.'/tomo_settings.lib.php';
 
 /** Parse GIF blocks; malformed or multi-frame files must not be flattened by GD. */
 function archive_gif_is_animated(string $source): bool
@@ -33,8 +34,10 @@ function archive_gif_is_animated(string $source): bool
 }
 
 /** Preserve the uploaded original until WebP encoding has succeeded. Never resize implicitly. */
-function archive_webp(string $source, string $destination, int $quality = IMG_WEBP_LOSSLESS): array
+function archive_webp(string $source, string $destination, ?int $quality = null): array
 {
+    $quality = $quality ?? tomo_webp_quality();
+    if ($quality !== IMG_WEBP_LOSSLESS) $quality = tomo_validate_quality($quality);
     $info = @getimagesize($source);
     if (!$info) throw new RuntimeException('이미지 파일을 읽을 수 없습니다.');
     $type = $info[2];

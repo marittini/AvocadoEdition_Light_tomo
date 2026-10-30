@@ -13,6 +13,15 @@ $mb = get_member($cf_admin);
 if (!$mb['mb_id'])
     alert('최고관리자 회원아이디가 존재하지 않습니다.');
 check_admin_token();
+include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+try {
+    tomo_settings_upgrade();
+    $tomo_quality = isset($_POST['tomo_settings_present']) ? tomo_validate_quality($_POST['cf_tomo_webp_quality'] ?? null) : tomo_webp_quality();
+    $tomo_protection = isset($_POST['tomo_settings_present'])
+        ? ((!empty($_POST['tomo_protect_context']) ? 1 : 0) | (!empty($_POST['tomo_protect_drag']) ? 2 : 0) | (!empty($_POST['tomo_protect_copy']) ? 4 : 0))
+        : tomo_protection_mask();
+} catch (Throwable $e) { alert($e->getMessage()); }
+
 
 $site_style_path = G5_DATA_PATH."/site";
 $site_style_url = G5_DATA_URL."/site";
@@ -52,7 +61,9 @@ if ($_FILES['cf_cursor_file']['name']) {
 
 
 $sql = " update {$g5['config_table']}
-			set cf_admin			= '{$_POST['cf_admin']}',
+			set cf_tomo_webp_quality = '{$tomo_quality}',
+                cf_tomo_protection = '{$tomo_protection}',
+                cf_admin			= '{$_POST['cf_admin']}',
 				cf_use_http			= '{$_POST['cf_use_http']}',
 				cf_open				= '{$_POST['cf_open']}',
 				cf_title			= '{$_POST['cf_title']}',

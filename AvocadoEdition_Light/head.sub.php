@@ -140,5 +140,12 @@ if(!parent || parent==this) $('html').addClass('single');
 * {cursor: url(<?=$config['cf_cursor']?>) 0 0, auto;}
 </style>
 <?php  } ?>
+<?php if (!defined('G5_IS_ADMIN') || !G5_IS_ADMIN) {
+    include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+    $tomo_mask = tomo_protection_mask();
+    if ($tomo_mask) { ?>
+<link rel="stylesheet" href="<?=G5_CSS_URL?>/tomo-protection.css?v=1">
+<script defer src="<?=G5_JS_URL?>/tomo-protection.js?v=1" data-tomo-protection="<?=$tomo_mask?>"></script>
+<?php } } ?>
 </head>
 <body>

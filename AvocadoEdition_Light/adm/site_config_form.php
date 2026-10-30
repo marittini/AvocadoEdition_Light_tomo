@@ -3,6 +3,10 @@ $sub_menu = "100100";
 include_once('./_common.php');
 
 auth_check($auth[$sub_menu], 'r');
+include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+if ($is_admin === 'super') {
+    try { tomo_settings_upgrade(); } catch (Throwable $e) { alert($e->getMessage()); }
+}
 
 if ($is_admin != 'super')
 	alert('최고관리자만 접근 가능합니다.');
@@ -233,6 +237,8 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 		<input type="submit" value="저장" class="btn_submit" accesskey="s">
 	</div>
 </div>
+
+<?php include __DIR__.'/tomo_settings.inc.php'; ?>
 
 <section id="anc_001">
 	<h2 class="h2_frm">홈페이지 기본환경 설정</h2>

@@ -21,3 +21,9 @@ Avocado Edition Light : Original Character Personal Site by GUNUBOARD Custom
 
 기타 문제 발생 시, https://avocado-edition-rout.postype.com 로 연락 주시길 바랍니다.
 감사합니다!
+
+## 개발 및 추가 설정 안내
+
+- [웹폰트 목록·WebP 품질·콘텐츠 보호 사용법](docs/FONTS-MEDIA-PROTECTION.md)
+- [그누보드5 기반 구조 점검](docs/ARCHITECTURE.md)
+- [기능·스킨별 개발 진입점](docs/DEVELOPMENT-GUIDE.md)

@@ -12,6 +12,9 @@ if ($is_admin != 'super')
 	alert('최고관리자만 접근 가능합니다.');
 
 $g5['title'] = '디자인 설정';
+include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+include_once G5_LIB_PATH.'/tomo_fonts.lib.php';
+try { tomo_settings_upgrade(); } catch (Throwable $e) { alert($e->getMessage()); }
 include_once ('./admin.head.php');
 
 $design_result = sql_query("select * from {$g5['css_table']}");
@@ -75,6 +78,8 @@ th a + a {margin-top:3px;}
 	</div>
 </div>
 
+
+<?php include __DIR__.'/tomo_fonts.inc.php'; ?>
 
 <section id="anc_007">
 	<h2 class="h2_frm">커스텀 코드</h2>
@@ -370,7 +375,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_4[<?=$css_index?>]" value="<?=$de['menu_tooltip']['cs_etc_4']?>" size="5"/> px
 						&nbsp;&nbsp;
-						글자모양&nbsp;&nbsp; <input type="text" name="cs_etc_9[<?=$css_index?>]" value="<?=$de['menu_tooltip']['cs_etc_9']?>" size="30">
+						글자모양&nbsp;&nbsp; <?=tomo_font_input('cs_etc_9['.$css_index.']', (string)($de['menu_tooltip']['cs_etc_9'] ?? ''))?>
 					</td></tr><tr>
 					<td class="bo-right txt-center">
 						모서리 라운드
@@ -571,7 +576,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_4[<?=$css_index?>]" value="<?=$de['intro']['cs_etc_4']?>" size="5"/> px
 						&nbsp;&nbsp;
-						글자모양&nbsp;&nbsp; <input type="text" name="cs_etc_5[<?=$css_index?>]" value="<?=$de['intro']['cs_etc_5']?>" size="30">
+						글자모양&nbsp;&nbsp; <?=tomo_font_input('cs_etc_5['.$css_index.']', (string)($de['intro']['cs_etc_5'] ?? ''))?>
 					</td>
 				</tr <?php  $css_index++; ?>>
 			</tbody>
@@ -1537,7 +1542,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['default_font']['cs_etc_2']?>" size="5"/>px
 						&nbsp;&nbsp;
-						글자모양&nbsp;&nbsp; <input type="text" name="cs_etc_3[<?=$css_index?>]" value="<?=$de['default_font']['cs_etc_3']?>" size="40"/>
+						글자모양&nbsp;&nbsp; <?=tomo_font_input('cs_etc_3['.$css_index.']', (string)($de['default_font']['cs_etc_3'] ?? ''))?>
 					</td>
 				</tr <?php  $css_index++; ?>>
 

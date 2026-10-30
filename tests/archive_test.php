@@ -6,7 +6,7 @@ $root=sys_get_temp_dir().'/archive-tests-'.bin2hex(random_bytes(5));mkdir($root)
 $image=imagecreatetruecolor(17,13);imagealphablending($image,false);imagesavealpha($image,true);$clear=imagecolorallocatealpha($image,120,60,30,127);imagefill($image,0,0,$clear);imagesetpixel($image,3,3,imagecolorallocatealpha($image,40,50,60,0));
 $source=$root.'/data/file/log/a.png';imagepng($image,$source);$original=hash_file('sha256',$source);$result=archive_convert_saved_upload($source);
 expect($result['converted']&&getimagesize($result['path'])[2]===IMAGETYPE_WEBP,'PNG becomes valid WebP');expect(!file_exists($source),'source removed only after verified WebP conversion');expect(!file_exists($result['path'].'.archive.json'),'new uploads do not leave original metadata');
-$decoded=imagecreatefromwebp($result['path']);expect((imagecolorat($decoded,0,0)>>24)===127,'transparent alpha preserved');expect((imagecolorat($decoded,3,3)&0xffffff)===(imagecolorat($image,3,3)&0xffffff),'lossless pixels preserved');
+$decoded=imagecreatefromwebp($result['path']);expect((imagecolorat($decoded,0,0)>>24)===127,'transparent alpha preserved');ob_start();imagewebp($image,null,95);$expected_webp=ob_get_clean();expect(hash_file('sha256',$result['path'])===hash('sha256',$expected_webp),'quality 95 used for uploads');
 expect(!archive_convert_saved_upload($result['path'])['converted'],'existing WebP not recompressed');
 $gif=$root.'/still.gif';imagegif($image,$gif);$gifData=file_get_contents($gif);$gifResult=archive_convert_saved_upload($gif);expect($gifResult['converted']&&!is_file($gif),'static GIF replaced by WebP');
 $packed=ord($gifData[10]);$start=13+(($packed&128)?3*(1<<(($packed&7)+1)):0);

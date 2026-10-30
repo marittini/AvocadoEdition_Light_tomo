@@ -436,7 +436,8 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         imagegif($dst, $thumb_file);
     } else if($size[2] == IMAGETYPE_WEBP) {
         imagesavealpha($dst, true);
-        imagewebp($dst, $thumb_file, IMG_WEBP_LOSSLESS);
+        require_once __DIR__.'/tomo_settings.lib.php';
+        imagewebp($dst, $thumb_file, tomo_webp_quality());
     } else if($size[2] == 3) {
         if(!defined('G5_THUMB_PNG_COMPRESS'))
             $png_compress = 5;

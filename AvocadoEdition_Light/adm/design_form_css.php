@@ -48,7 +48,10 @@ $is_comment_area = false;
 	- 모바일 사이즈 기준 (공통) : <?=$tab_width?>px
 ***************************************************************/
 
-<?=stripslashes($cf_add_fonts)?>
+<?php
+include_once dirname(__DIR__).'/lib/tomo_fonts.lib.php';
+echo tomo_font_css($tomo_legacy_font_css ?? stripslashes($cf_add_fonts ?? ''), $tomo_render_fonts ?? tomo_fonts());
+?>
 
 
 /**************************************************************

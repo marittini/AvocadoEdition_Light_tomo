@@ -1,0 +1,15 @@
+.tomo-settings {margin:20px 0;color:#5b5b5a}
+.tomo-settings .frm_info {color:#895a5a;line-height:1.7}
+.tomo-font-row {display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;padding:14px;border:1px solid #efeff1;background:#fafafa;min-width:0}
+.tomo-font-row legend {display:block;font-size:12px;color:#895a5a;padding:0 5px}
+.tomo-font-row label {display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
+.tomo-font-row label:has(textarea) {flex-basis:100%}
+.tomo-font-row input,.tomo-font-row textarea {width:100%;min-width:0;text-align:left}
+.tomo-font-row textarea {height:100px;font-family:monospace}
+.tomo-settings button {padding:8px 12px;border:1px solid #d8c5c5;border-radius:0;background:#fff0f0;color:#60464a;font:inherit;cursor:pointer}
+.tomo-font-choice {display:inline-flex;flex-wrap:wrap;gap:6px;max-width:100%}
+.tomo-font-choice input,.tomo-font-choice select {max-width:100%}
+.tomo-font-choice [hidden] {display:none!important}
+.tomo-protection-options>label {display:block;margin:8px 0}
+.tomo-settings input:focus-visible,.tomo-settings textarea:focus-visible,.tomo-settings button:focus-visible,.tomo-font-choice select:focus-visible {outline:2px solid #895a5a;outline-offset:2px}
+@media(max-width:800px){.tomo-font-row{padding:10px}.tomo-font-row label{min-width:0;flex-basis:100%}.tomo-font-choice{width:100%}.tomo-font-choice select,.tomo-font-row input,.tomo-font-row textarea{width:100%;font-size:16px;min-height:36px}.tomo-settings button{min-height:40px}}

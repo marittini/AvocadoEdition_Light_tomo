@@ -1,12 +1,19 @@
 @charset "utf-8";
-/* Layout-only mobile corrections. The owner's generated colors, fonts, borders and background stay intact. */
+/* Keep the generated theme authoritative; adapt only content and form layout. */
+@media (max-width:1024px) {
+  /* Match the original navigation breakpoint, including tablet widths. */
+  #body {height:auto;min-height:90vh}
+  #body>.fix-layout {height:auto}
+  #body>.fix-layout>.mid-layout {padding-top:64px;padding-bottom:32px}
+}
 @media (max-width:800px) {
   html,body {min-width:0!important;max-width:100%}
   #body {height:auto;min-height:calc(100svh - 50px)}
   #body>.fix-layout {display:block;max-width:100%;width:100%;min-width:0}
   #body>.fix-layout>.mid-layout {display:block;min-width:0;width:auto;padding:64px 12px 24px!important}
   #main_body,#bo_list,#bo_w,#bo_v,.character-board-wrap,.ui-mmb-list {min-width:0;max-width:100%;box-sizing:border-box}
-  #main_body img,#bo_v_img img,#bo_v_con img,.ui-mmb-list img,.character-board-wrap img {max-width:100%!important;height:auto!important}
+  /* Do not resize cropped character thumbnails, stamps, or decorative images. */
+  #bo_v_img img,#bo_v_con img {max-width:100%;height:auto}
   #main_body iframe,#bo_v_con iframe,#main_body video,#bo_v_con video {max-width:100%;box-sizing:border-box}
   #bo_w input:not([type=checkbox]):not([type=radio]):not([type=hidden]),#bo_w textarea,#bo_w select,
   #bo_v input[type=text],#bo_v textarea {max-width:100%;box-sizing:border-box;font-size:16px}
@@ -15,9 +22,10 @@
   .theme-form th,.theme-form td {display:block;width:100%!important;box-sizing:border-box;text-align:left}
   .theme-form th {padding-top:12px;padding-bottom:4px}
   .theme-form td {height:auto;min-height:36px}
-  .ui-btn,button,input[type=submit],input[type=button],#mo_header a {min-height:40px;line-height:1.4}
-  .ui-btn {display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;max-width:100%;white-space:normal}
-  .btn_confirm,.bo_fx,.bo_v_com,.bo_v_nb,.board-info {display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+  /* Keep the theme's button geometry, especially pair badges and icon controls. */
+  .btn_confirm .ui-btn,.board-category .ui-btn {max-width:100%;white-space:normal}
+  .btn_confirm {display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-width:0}
+  .bo_fx,.bo_v_com,.bo_v_nb,.board-info {display:flex;flex-wrap:wrap;gap:8px;min-width:0}
   .bo_fx ul,.bo_v_com ul {display:flex;flex-wrap:wrap;gap:6px}
   #bo_list .tbl_head01 {max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
   #bo_list table {min-width:500px} /* Keep all columns; scroll the table instead of clipping the page. */
@@ -27,7 +35,11 @@
   #mo_header .gnbWrap {max-width:100%;overflow-wrap:anywhere}
   .control-mobile-menu {min-width:44px;min-height:44px}
   .character-card-list {max-width:100%;box-sizing:border-box}
-  .character-card-list>li {max-width:100%;box-sizing:border-box}
+  /* The skin's 47% limit intentionally keeps a two-column character list. */
+  .character-card-list>li {box-sizing:border-box}
+}
+@media (pointer:coarse) {
+  .btn_confirm>.ui-btn,.board-category .ui-btn {min-height:40px;display:inline-flex;align-items:center;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce) {
   *,*:before,*:after {transition:none!important;animation:none!important;scroll-behavior:auto!important}

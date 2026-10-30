@@ -586,9 +586,12 @@ function html_purifier($html)
 	$config->set('Attr.AllowedFrameTargets', array('_blank'));
     // Keep the editor's safe HTML5 blocks while retaining the existing XSS filter.
     $config->set('HTML.DefinitionID', 'tomo-editor-html5');
-    $config->set('HTML.DefinitionRev', 2);
+    $config->set('HTML.DefinitionRev', 3);
     $definition = $config->maybeGetRawHTMLDefinition();
     if ($definition) {
+        $definition->addElement('ruby', 'Inline', 'Inline', 'Common');
+        $definition->addElement('rt', 'Inline', 'Inline', 'Common');
+        $definition->addElement('rp', 'Inline', 'Inline', 'Common');
         $definition->addElement('details', 'Block', 'Flow', 'Common', ['open'=>'Bool']);
         $definition->addElement('summary', 'Block', 'Flow', 'Common');
         $definition->addElement('input', 'Inline', 'Empty', 'Common', ['type*'=>'Enum#checkbox', 'checked'=>'Bool', 'disabled'=>'Bool']);

@@ -13,8 +13,8 @@ function editor_html($id, $content, $is_dhtml_editor=true)
         $font_css = tomo_font_css((string)($config['cf_add_fonts'] ?? ''), tomo_fonts());
         $html .= '<script type="application/json" id="tomo-editor-font-css">'.json_encode($font_css, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE).'</script>';
 
-        foreach (['editor.css'] as $file) $html .= '<link rel="stylesheet" href="'.$url.'/'.$file.'?v=2">';
-        foreach (['editor.bundle.js'] as $file) $html .= '<script src="'.$url.'/'.$file.'?v=2"></script>';
+        foreach (['editor.css'] as $file) $html .= '<link rel="stylesheet" href="'.$url.'/'.$file.'?v=3">';
+        foreach (['editor.bundle.js'] as $file) $html .= '<script src="'.$url.'/'.$file.'?v=3"></script>';
         $loaded = true;
     }
     if ($is_dhtml_editor) {

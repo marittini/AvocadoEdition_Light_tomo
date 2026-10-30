@@ -16,7 +16,7 @@ if($header_pos['cs_value'] != 'N') {
 ?>
 	<!-- Mobile Menu Control -->
 	<div class="not-pc">
-		<button type="button" onclick="control_mobile_menu();" class="control-mobile-menu txt-default">
+		<button type="button" onclick="control_mobile_menu();" class="control-mobile-menu txt-default" aria-label="사이트 메뉴" aria-controls="mo_header" aria-expanded="false">
 			<span class="material-icons open">menu</span>
 			<span class="material-icons close">close</span>
 		</button>
@@ -142,6 +142,7 @@ if($header_pos['cs_value'] != 'N') {
 	}
 	function control_mobile_menu() {
 		$('body').toggleClass('open-gnb');
+        $('.control-mobile-menu').attr('aria-expanded', $('body').hasClass('open-gnb') ? 'true' : 'false');
 	}
 	</script>
 

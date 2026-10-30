@@ -39,10 +39,11 @@ if (defined('_INDEX_')) {
 if (defined('G5_IS_ADMIN') && G5_IS_ADMIN) {
     echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
 } elseif (G5_IS_MOBILE) {
-    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">'.PHP_EOL;
+    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0">'.PHP_EOL;
     echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
     echo '<meta name="format-detection" content="telephone=no">'.PHP_EOL;
 } else {
+    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0">'.PHP_EOL;
     echo '<meta http-equiv="imagetoolbar" content="no">'.PHP_EOL;
     echo '<meta http-equiv="X-UA-Compatible" content="IE=Edge">'.PHP_EOL;
 }
@@ -79,6 +80,7 @@ if (defined('G5_IS_ADMIN')) {
 }
 ?>
 
+<?php if (!defined("G5_IS_ADMIN") || !G5_IS_ADMIN) { ?><link rel="stylesheet" href="<?=G5_CSS_URL?>/archive-responsive.css?v=2"><?php } ?>
 <?php  if($config['cf_favicon']) { ?>
 <link rel="shortcut icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">
 <link rel="icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">

@@ -15,3 +15,20 @@ button,.btn,.btn_confirm .btn,.btn_submit{min-height:42px}button{padding:8px 14p
 #wrapper{padding:0!important}#page_top{height:auto;min-height:68px}#page_top h2{position:static;line-height:1.5;padding:0;color:#252a2e;font-weight:650}
 .btn_confirm>*{float:none!important;width:auto!important;height:auto!important;min-height:42px;padding:8px 14px;border:1px solid #adb8bf;border-radius:5px}.btn_confirm .btn{padding:0;display:inline-flex;align-items:center}.btn_confirm .btn>span.material-icons{display:none}.btn_confirm input[type=submit]{position:static!important;opacity:1!important;inset:auto!important;height:auto!important;width:auto!important;padding:9px 16px;border:0;border-radius:5px;font-size:15px}.btn_confirm .archive-form-status{background:transparent!important;color:#70404e!important;border:0;flex:1;min-width:150px}.btn_confirm>button{background:white!important;color:#252a2e!important}.btn_confirm>a{color:#253948;background:#edf2f7!important}.archive-disk button[hidden]{display:none}
 .btn_confirm>a{color:#253948!important}.archive-tools a{display:inline-block;padding:7px 10px;color:#753349;text-decoration:underline}.archive-tools input{font:inherit;min-height:40px}.archive-group-help+nav{margin-top:10px}
+/* Keep the original charcoal + dusty rose identity; improve contrast rather than introducing a new palette. */
+:root{--archive-accent:#963f54;--archive-muted:#5b5b5a}
+.archive-group-help{background:#fff0f0;color:#5b5b5a;border:1px solid #ecc6c6}.archive-preview [role=status]{background:#fff0f0}.archive-search-hit{outline-color:#963f54!important}
+@media(max-width:800px){
+  #header,#gnb,#gnb ul{max-width:100%;box-sizing:border-box}
+  #admin_prof{width:auto!important;min-height:0}
+  #container .tbl_frm01 tr>*{min-width:0!important;overflow-wrap:anywhere}
+  #container .tbl_frm01 input[type=file]{width:100%}
+  #container .tbl_head01{max-width:100%;overscroll-behavior-x:contain}
+  #container .tbl_head01 table{table-layout:auto}
+  .btn_confirm{gap:8px}.btn_confirm .archive-form-status{flex-basis:100%;padding:0;min-height:0}
+  .archive-tools>label{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;width:100%}
+  .archive-tools input{width:100%;min-width:0}
+  .archive-preview{padding:12px}.archive-preview button{max-width:100%;min-height:44px}
+  .archive-disk{padding:14px}.archive-disk table{table-layout:fixed}.archive-disk td,.archive-disk th{overflow-wrap:anywhere}
+  #container iframe{max-width:100%}.archive-disk dd{overflow-wrap:anywhere}
+}

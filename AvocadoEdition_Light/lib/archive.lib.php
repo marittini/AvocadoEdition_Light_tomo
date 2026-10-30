@@ -1,14 +1,46 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 
+/** Parse GIF blocks; malformed or multi-frame files must not be flattened by GD. */
+function archive_gif_is_animated(string $source): bool
+{
+    if (!is_file($source) || filesize($source) > 16777216) return true;
+    $data = file_get_contents($source);
+    $length = strlen($data);
+    if ($length < 14 || $length > 16777216) return true;
+    $packed = ord($data[10]);
+    $position = 13 + (($packed & 128) ? 3 * (1 << (($packed & 7) + 1)) : 0);
+    $frames = 0;
+    while ($position < $length) {
+        $tag = ord($data[$position++]);
+        if ($tag === 0x3b) return $frames > 1;
+        if ($tag === 0x21) {
+            $position++; // extension label followed by sub-blocks
+        } elseif ($tag === 0x2c) {
+            if ($position + 9 > $length) return true;
+            if (++$frames > 1) return true;
+            $packed = ord($data[$position + 8]);
+            $position += 9 + (($packed & 128) ? 3 * (1 << (($packed & 7) + 1)) : 0);
+            $position++; // LZW minimum code size
+        } else return true;
+        do {
+            if ($position >= $length) return true;
+            $size = ord($data[$position++]);
+            $position += $size;
+        } while ($size !== 0);
+    }
+    return true;
+}
+
 /** Preserve the uploaded original until WebP encoding has succeeded. Never resize implicitly. */
 function archive_webp(string $source, string $destination, int $quality = IMG_WEBP_LOSSLESS): array
 {
     $info = @getimagesize($source);
     if (!$info) throw new RuntimeException('이미지 파일을 읽을 수 없습니다.');
     $type = $info[2];
-    // Animated GIF/WebP and existing WebP are deliberately preserved without re-encoding.
-    if (!in_array($type, [IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) return ['converted'=>false, 'path'=>$source];
+    // Existing WebP and animated GIF are kept without flattening their frames.
+    if ($type === IMAGETYPE_GIF && archive_gif_is_animated($source)) return ['converted'=>false, 'path'=>$source];
+    if (!in_array($type, [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_BMP], true)) return ['converted'=>false, 'path'=>$source];
     if (!function_exists('imagewebp') || !(gd_info()['WebP Support'] ?? false)) {
         throw new RuntimeException('서버가 WebP 변환을 지원하지 않습니다. 원본은 변경하지 않았습니다.');
     }
@@ -19,7 +51,8 @@ function archive_webp(string $source, string $destination, int $quality = IMG_WE
         throw new RuntimeException('이미지 해상도가 서버의 안전한 처리 범위를 넘습니다. 원본은 변경하지 않았습니다.');
     }
     if ($type === IMAGETYPE_JPEG && !function_exists('exif_read_data') && str_contains((string)file_get_contents($source, false, null, 0, 262144), "Exif\0\0")) throw new RuntimeException('사진 회전 정보 지원이 없어 원본을 보관합니다.');
-    $image = $type === IMAGETYPE_JPEG ? @imagecreatefromjpeg($source) : @imagecreatefrompng($source);
+    $decoder = [IMAGETYPE_JPEG=>'imagecreatefromjpeg', IMAGETYPE_PNG=>'imagecreatefrompng', IMAGETYPE_GIF=>'imagecreatefromgif', IMAGETYPE_BMP=>'imagecreatefrombmp'][$type];
+    $image = @$decoder($source);
     if (!$image) throw new RuntimeException('이미지 디코딩에 실패했습니다.');
     if ($type === IMAGETYPE_JPEG && function_exists('exif_read_data')) {
         $orientation = (int)(@exif_read_data($source)['Orientation'] ?? 1);
@@ -35,6 +68,9 @@ function archive_webp(string $source, string $destination, int $quality = IMG_WE
         if (!imagewebp($image, $temporary, $quality) || !is_file($temporary) || filesize($temporary) === 0 || (@getimagesize($temporary)[2] ?? 0) !== IMAGETYPE_WEBP) {
             throw new RuntimeException('WebP 파일 생성에 실패했습니다.');
         }
+        $verified = @imagecreatefromwebp($temporary);
+        if (!$verified || imagesx($verified) !== imagesx($image) || imagesy($verified) !== imagesy($image)) throw new RuntimeException('WebP 결과 검증에 실패했습니다.');
+        unset($verified);
         if (!rename($temporary, $destination)) throw new RuntimeException('변환 파일 저장에 실패했습니다.');
         chmod($destination, defined('G5_FILE_PERMISSION') ? G5_FILE_PERMISSION : 0644);
     } finally {
@@ -110,15 +146,17 @@ function archive_disk_step(array $state, int $budget = 600): array
 function archive_convert_saved_upload(string $source): array
 {
     $info = @getimagesize($source);
-    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) return ['path'=>$source,'converted'=>false];
+    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_BMP], true) || ($info[2] === IMAGETYPE_GIF && archive_gif_is_animated($source))) return ['path'=>$source,'converted'=>false];
     $destination = $source.'.webp';
+    if (file_exists($destination)) throw new RuntimeException('변환 대상 파일이 이미 있어 원본을 유지했습니다.');
     $result = archive_webp($source, $destination);
-    // Original remains beside its derivative. Record the relationship for backup/deletion.
-    $metadata = ['original'=>basename($source),'webp'=>basename($destination),'created'=>time(),'policy'=>'lossless-preserve-original'];
-    if (file_put_contents($destination.'.archive.json', json_encode($metadata), LOCK_EX) === false) {
+    // Only remove the source after a fully decoded, verified derivative is on disk.
+    if (!@unlink($source)) {
         @unlink($destination);
-        throw new RuntimeException('원본 연결 정보를 기록하지 못했습니다.');
+        throw new RuntimeException('원본 파일을 정리하지 못해 원본으로 첨부합니다.');
     }
+    clearstatcache(true, $source);
+
     return $result;
 }
 

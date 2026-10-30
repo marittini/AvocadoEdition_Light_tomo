@@ -184,9 +184,8 @@ else
 
 // IP보이기 사용 여부
 $ip = "";
-$is_ip_view = $board['bo_use_ip_view'];
+$is_ip_view = false; // IP addresses are retained for moderation, never shown beside posts.
 if ($is_admin) {
-	$is_ip_view = true;
 	if (array_key_exists('wr_ip', $write)) {
 		$ip = $write['wr_ip'];
 	}

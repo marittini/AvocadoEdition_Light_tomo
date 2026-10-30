@@ -150,3 +150,15 @@ table { width:100%; }
 	.not-ta {}
 	.not-mo {display:none !important;}
 }
+
+/* Administrative post IP is confined to the author menu. */
+.sv .sv-post-ip { display:block; padding:8px 10px; border-top:1px solid #ddd; font-size:12px; white-space:nowrap; color:#666; background:#f7f7f7; user-select:text; }
+.sv_wrap { display:inline-block; position:relative; }
+.sv_wrap > .sv { display:none; position:absolute; top:100%; left:0; z-index:100; min-width:180px; max-width:calc(100vw - 32px); padding:5px 0; border:1px solid #e3d8dc; background:#fff; color:#5b5b5a; box-shadow:0 4px 12px rgba(73,57,60,.12); text-align:left; }
+.sv_wrap > .sv.sv_on { display:block; }
+.sv_wrap > .sv a { display:block; padding:7px 10px; font-size:12px; text-decoration:none; color:#69535b; white-space:nowrap; }
+.sv_wrap > .sv a:hover { background:#fcf0f3; }
+/* Read-only rendering of modern editor blocks. */
+ul[data-type=taskList]{list-style:none;padding-left:0}li[data-type=taskItem]{display:flex;align-items:flex-start;gap:8px}li[data-type=taskItem]>label{flex-shrink:0}li[data-type=taskItem]>label input{pointer-events:none}li[data-type=taskItem]>div{flex:1;min-width:0}li[data-checked=true]>div{text-decoration:line-through;opacity:.7}
+[data-youtube-video]{max-width:100%;margin:14px 0}[data-youtube-video] iframe{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;border:0}
+details{margin:12px 0}details>summary{cursor:pointer;font-weight:bold}details>[data-type=detailsContent]{padding:10px 0}

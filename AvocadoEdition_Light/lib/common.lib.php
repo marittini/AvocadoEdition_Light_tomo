@@ -348,7 +348,7 @@ function get_dirsize($dir)
 // 게시물 정보($write_row)를 출력하기 위하여 $list로 가공된 정보를 복사 및 가공
 function get_list($write_row, $board, $skin_url, $subject_len=40)
 {
-	global $g5, $config;
+	global $g5, $config, $is_admin;
 	global $qstr, $page;
 
 	//$t = get_microtime();
@@ -400,8 +400,8 @@ function get_list($write_row, $board, $skin_url, $subject_len=40)
 
 	$tmp_name = get_text(cut_str($list['wr_name'], $config['cf_cut_name'])); // 설정된 자리수 만큼만 이름 출력
 	$tmp_name2 = cut_str($list['wr_name'], $config['cf_cut_name']); // 설정된 자리수 만큼만 이름 출력
-	if ($board['bo_use_sideview'])
-		$list['name'] = get_sideview($list['mb_id'], $tmp_name2, $list['wr_email'], $list['wr_homepage']);
+	if ($board['bo_use_sideview'] || $is_admin)
+		$list['name'] = get_sideview($list['mb_id'], $tmp_name2, $list['wr_email'], $list['wr_homepage'], $list['wr_ip'] ?? '');
 	else
 		$list['name'] = '<span class="'.($list['mb_id']?'sv_member':'sv_guest').'">'.$tmp_name.'</span>';
 
@@ -584,6 +584,20 @@ function html_purifier($html)
 	$config->set('HTML.SafeIframe', true);
 	$config->set('URI.SafeIframeRegexp','%^(https?:)?//('.$safeiframe.')%');
 	$config->set('Attr.AllowedFrameTargets', array('_blank'));
+    // Keep the editor's safe HTML5 blocks while retaining the existing XSS filter.
+    $config->set('HTML.DefinitionID', 'tomo-editor-html5');
+    $config->set('HTML.DefinitionRev', 2);
+    $definition = $config->maybeGetRawHTMLDefinition();
+    if ($definition) {
+        $definition->addElement('details', 'Block', 'Flow', 'Common', ['open'=>'Bool']);
+        $definition->addElement('summary', 'Block', 'Flow', 'Common');
+        $definition->addElement('input', 'Inline', 'Empty', 'Common', ['type*'=>'Enum#checkbox', 'checked'=>'Bool', 'disabled'=>'Bool']);
+        $definition->addAttribute('div', 'data-type', 'Enum#s:detailsContent');
+        $definition->addAttribute('div', 'data-youtube-video', 'Text');
+        $definition->addAttribute('ul', 'data-type', 'Enum#s:taskList');
+        $definition->addAttribute('li', 'data-type', 'Enum#s:taskItem');
+        $definition->addAttribute('li', 'data-checked', 'Enum#true,false');
+    }
 	$purifier = new HTMLPurifier($config);
 	return $purifier->purify($html);
 }
@@ -1213,7 +1227,7 @@ function delete_point($mb_id, $rel_table, $rel_id, $rel_action)
 }
 
 // 회원 레이어
-function get_sideview($mb_id, $name='', $email='', $homepage='')
+function get_sideview($mb_id, $name='', $email='', $homepage='', $post_ip='')
 {
 	global $config;
 	global $g5;
@@ -1285,6 +1299,9 @@ function get_sideview($mb_id, $name='', $email='', $homepage='')
 		$str2 .= "<a href=\"".G5_ADMIN_URL."/member_form.php?w=u&amp;mb_id=".$mb_id."\" target=\"_blank\">회원정보변경</a>\n";
 		$str2 .= "<a href=\"".G5_ADMIN_URL."/point_list.php?sfl=mb_id&amp;stx=".$mb_id."\" target=\"_blank\">포인트내역</a>\n";
 	}
+	if ($is_admin && filter_var($post_ip, FILTER_VALIDATE_IP)) {
+        $str2 .= '<span class="sv-post-ip">작성 IP: '.htmlspecialchars($post_ip, ENT_QUOTES, 'UTF-8').'</span>';
+    }
 	$str2 .= "</span>\n";
 	$str .= $str2;
 	$str .= "\n<noscript class=\"sv_nojs\">".$str2."</noscript>";

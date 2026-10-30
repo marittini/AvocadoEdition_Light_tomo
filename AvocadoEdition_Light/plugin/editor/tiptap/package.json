@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "dependencies": {
+    "@tiptap/core": "3.32.1",
+    "@tiptap/extension-details": "3.32.1",
+    "@tiptap/extension-image": "3.32.1",
+    "@tiptap/extension-list": "3.32.1",
+    "@tiptap/extension-placeholder": "3.32.1",
+    "@tiptap/extension-subscript": "3.32.1",
+    "@tiptap/extension-superscript": "3.32.1",
+    "@tiptap/extension-table": "3.32.1",
+    "@tiptap/extension-text-align": "3.32.1",
+    "@tiptap/extension-text-style": "3.32.1",
+    "@tiptap/extension-youtube": "3.32.1",
+    "@tiptap/starter-kit": "3.32.1",
+    "esbuild": "0.25.12"
+  },
+  "scripts": {
+    "build": "esbuild src/editor.js --bundle --minify --format=iife --target=es2020 --legal-comments=linked --outfile=editor.bundle.js"
+  }
+}

@@ -6,7 +6,7 @@ const {chromium}=require('playwright');const fs=require('fs');const crypto=requi
  const b=await chromium.launch({executablePath:process.env.CHROMIUM||'/usr/bin/chromium',args:['--no-sandbox']});const c=await b.newContext();
  await c.route('**/*',r=>r.request().url().startsWith(base)?r.continue():r.abort());const p=await c.newPage();p.on('dialog',d=>d.accept());
  await p.goto(base+'/bbs/login.php');await p.locator('[name=mb_id]').fill(process.env.TEST_USER);await p.locator('[name=mb_password]').fill(process.env.TEST_PASSWORD);await p.locator('button[type=submit]').click();
- await p.goto(base+'/adm/site_config_form.php');await p.locator('#cf_tomo_webp_quality').fill('73');
+ await p.goto(base+'/adm/site_config_form.php#tomo-media-settings');await p.locator('#cf_tomo_webp_quality').fill('73');
  const save=p.waitForResponse(r=>r.url().endsWith('/site_config_form_update.php')&&r.request().method()==='POST');await p.locator('input[type=submit]').first().click();assert.equal((await(await save).json()).saved,true);
  const viewer=await(await c.request.get(base+'/adm/viewer_form.php')).text();const nonce=viewer.match(/ed_nonce = "([^"]+)"/)[1];
  const image={name:'quality.png',mimeType:'image/png',buffer:fs.readFileSync(process.env.TEST_IMAGE)};

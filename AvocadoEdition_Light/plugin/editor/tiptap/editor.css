@@ -1,0 +1,657 @@
+/* Matches the original admin palette; 8px spacing, square controls, one active tool. */
+.tomo-editor {
+  --editor-text: #49393c;
+  --editor-muted: #73656b;
+  --editor-border: #e7dfe1;
+  --editor-surface: #faf7f8;
+  --editor-accent: #d18686;
+  --editor-selected: #f3dfe2;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--editor-border);
+  background: #fff;
+  color: var(--editor-text);
+  text-align: left;
+}
+.tomo-editor button,
+.tomo-editor select,
+.tomo-editor input {
+  font: inherit;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+.tomo-editor button {
+  cursor: pointer;
+}
+.tomo-editor button:focus-visible,
+.tomo-editor select:focus-visible,
+.tomo-editor input:focus-visible,
+.tomo-editor textarea:focus-visible {
+  outline: 2px solid #96565e;
+  outline-offset: 2px;
+}
+.tomo-editor button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.tomo-editor-toolbar {
+  padding: 0;
+  background: var(--editor-surface);
+  border-bottom: 1px solid var(--editor-border);
+}
+.tomo-editor-presets {
+  display: grid;
+  grid-template-columns: minmax(0, 120px) minmax(0, 180px) minmax(0, 100px);
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--editor-border);
+}
+.tomo-editor-presets select {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--editor-border);
+  background: #fff;
+  color: var(--editor-text);
+  font-size: 12px;
+}
+.tomo-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.tomo-editor-action-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+  padding: 0 8px;
+  border-right: 1px solid #dfd5d8;
+}
+.tomo-editor-action-group:first-child {
+  padding-left: 0;
+}
+.tomo-editor-action-group:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+.tomo-editor-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid transparent;
+  color: #69535b;
+  background: transparent;
+}
+.tomo-editor-actions button:hover,
+.tomo-editor-actions button[aria-pressed="true"] {
+  background: var(--editor-selected);
+  border-color: #d8a3ac;
+  color: var(--editor-text);
+}
+.tomo-editor-actions select {
+  width: 112px;
+  height: 32px;
+  padding: 4px 6px;
+  border: 1px solid var(--editor-border);
+  background: #fff;
+  color: #69535b;
+  font-size: 12px;
+}
+.tomo-editor-actions input[type="color"] {
+  width: 28px;
+  height: 28px;
+  margin: 0 4px;
+  padding: 3px;
+  border: 1px solid var(--editor-border);
+  background: #fff;
+}
+.tomo-editor-tools {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 0;
+  padding: 0 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  border-bottom: 1px solid var(--editor-border);
+  background: #fff;
+}
+.tomo-editor-tools button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--editor-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.tomo-editor-tools button:hover {
+  color: var(--editor-text);
+  background: var(--editor-surface);
+}
+.tomo-editor-tools button[aria-expanded="true"] {
+  border-bottom-color: var(--editor-accent);
+  background: #fcf0f1;
+  color: #89545c;
+}
+.tomo-editor-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--editor-border);
+  background: var(--editor-surface);
+}
+.tomo-editor-panel > p,
+.tomo-editor-panel > [role="status"] {
+  grid-column: 1/-1;
+  margin: 0;
+  color: var(--editor-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.tomo-editor-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  color: var(--editor-muted);
+  font-size: 12px;
+}
+.tomo-editor-panel input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 32px;
+  padding: 6px 8px;
+  border: 1px solid #dcd1d5;
+  background: #fff;
+  color: var(--editor-text);
+}
+.tomo-editor-panel input[type="color"] {
+  width: 100%;
+  padding: 4px;
+}
+.tomo-editor-panel button,
+.tomo-editor-link button {
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid #dcd1d5;
+  background: #fff;
+  color: #69535b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.tomo-editor-panel button:not(:disabled):hover,
+.tomo-editor-link button:hover {
+  border-color: var(--editor-accent);
+  background: #fcf0f1;
+}
+.tomo-editor-tool-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.tomo-editor-tool-group legend {
+  float: none;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--editor-border);
+  color: #5e4b53;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tomo-editor-panel[data-kind="table"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tomo-editor-panel[data-kind="table"] > .tomo-editor-danger {
+  grid-column: 1/-1;
+  justify-self: end;
+  min-width: 100px;
+  color: #94525e;
+}
+.tomo-editor-panel[data-kind="image"] label:has(input[type="text"]),
+.tomo-editor-panel[data-kind="image"]
+  .tomo-editor-tool-group:first-of-type
+  > button {
+  grid-column: 1/-1;
+}
+.tomo-editor-panel[data-kind="source"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.tomo-editor-source {
+  grid-column: 1/-1;
+  width: 100%;
+  min-height: 260px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #dcd1d5;
+  background: #fff;
+  color: var(--editor-text);
+  font: 13px/1.8 monospace;
+  tab-size: 2;
+}
+.tomo-editor-panel[data-kind="media"] > label {
+  grid-column: 1/-1;
+}
+.tomo-editor-symbols {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+  grid-column: 1/-1;
+}
+.tomo-editor-symbols button {
+  padding: 4px;
+  font-size: 18px;
+}
+.tomo-editor-link {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--editor-border);
+  background: var(--editor-surface);
+}
+.tomo-editor-link input {
+  flex: 1 1 180px;
+  min-width: 0;
+  height: 32px;
+  padding: 6px 8px;
+  border: 1px solid #dcd1d5;
+  background: #fff;
+  color: var(--editor-text);
+}
+.tomo-editor-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--editor-border);
+  background: var(--editor-surface);
+  color: var(--editor-muted);
+  font-size: 11px;
+}
+.tomo-editor-status {
+  margin: 0;
+  padding: 0 12px;
+  color: #89545c;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.tomo-editor-status:not(:empty) {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.tomo-editor [hidden] {
+  display: none !important;
+}
+.tomo-editor.is-expanded {
+  position: fixed;
+  inset: 16px;
+  z-index: 10010;
+  width: auto;
+  overflow: auto;
+  box-shadow: 0 0 0 100vmax rgba(40, 30, 35, 0.4);
+}
+.tomo-editor.is-expanded .tiptap {
+  min-height: calc(100vh - 220px);
+}
+
+/* Document blocks keep their own layout inside the administrator form. */
+.tomo-editor .tiptap {
+  min-height: 320px;
+  padding: 24px;
+  outline: none;
+  font: 16px/1.8 sans-serif;
+  color: #393336;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+.tomo-editor .tiptap:focus {
+  box-shadow: inset 0 0 0 1px #d8a3ac;
+}
+.tomo-editor .tiptap p {
+  margin: 0 0 0.7em;
+}
+.tomo-editor .tiptap h2,
+.tomo-editor .tiptap h3,
+.tomo-editor .tiptap h4 {
+  margin: 1em 0 0.5em;
+  line-height: 1.4;
+  color: inherit;
+}
+.tomo-editor .tiptap ul,
+.tomo-editor .tiptap ol {
+  padding-left: 1.6em;
+  margin: 0.6em 0;
+  list-style-position: outside;
+}
+.tomo-editor .tiptap ul {
+  list-style: disc;
+}
+.tomo-editor .tiptap ol {
+  list-style: decimal;
+}
+.tomo-editor .tiptap blockquote {
+  border-left: 3px solid #d8a3ac;
+  background: #fcf6f7;
+  padding: 10px 16px;
+  margin: 12px 0;
+}
+.tomo-editor .tiptap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 14px 0;
+}
+.tomo-editor .tiptap a {
+  color: #a75d65;
+  text-decoration: underline;
+}
+.tomo-editor .tiptap .ProseMirror-selectednode {
+  outline: 2px solid #d18686;
+}
+.tomo-editor .tiptap pre {
+  padding: 12px;
+  background: #f5f3f4;
+  white-space: pre-wrap;
+}
+.tomo-editor .tiptap table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 14px 0;
+}
+.tomo-editor .tiptap td,
+.tomo-editor .tiptap th {
+  border: 1px solid #ddd;
+  min-width: 30px;
+  padding: 8px;
+  vertical-align: top;
+  position: relative;
+}
+.tomo-editor .tiptap th {
+  background: #faf5f6;
+  font-weight: bold;
+}
+.tomo-editor .tiptap .is-editor-empty:first-child:before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #b29ea8;
+  pointer-events: none;
+  height: 0;
+}
+.tomo-editor .tableWrapper {
+  overflow-x: auto;
+}
+.tomo-editor .tiptap .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #d18686;
+  pointer-events: none;
+}
+.tomo-editor .resize-cursor {
+  cursor: col-resize;
+}
+.tomo-editor [data-resize-container] {
+  max-width: 100%;
+}
+.tomo-editor [data-resize-wrapper] {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.tomo-editor [data-resize-handle] {
+  position: absolute;
+  display: none;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #b87989;
+  background: #fff;
+  border-radius: 2px;
+}
+.tomo-editor .ProseMirror-selectednode [data-resize-handle],
+.tomo-editor [data-resize-container]:hover [data-resize-handle] {
+  display: block;
+}
+.tomo-editor [data-resize-handle="bottom-right"] {
+  right: -5px;
+  bottom: -5px;
+  cursor: nwse-resize;
+}
+.tomo-editor [data-resize-handle="bottom-left"] {
+  left: -5px;
+  bottom: -5px;
+  cursor: nesw-resize;
+}
+.tomo-editor .tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+.tomo-editor .tiptap li[data-type="taskItem"] {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.tomo-editor .tiptap li[data-type="taskItem"] > label {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tomo-editor .tiptap li[data-type="taskItem"] > div {
+  flex: 1;
+  min-width: 0;
+}
+.tomo-editor .tiptap li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: #a28d97;
+}
+.tomo-editor .tiptap [data-type="details"] {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid #eadfe3;
+  border-radius: 4px;
+}
+.tomo-editor .tiptap [data-type="details"] > button {
+  flex-shrink: 0;
+  width: 24px;
+  height: 26px;
+  border: 0;
+  background: #f4e6eb;
+  color: #806572;
+  cursor: pointer;
+}
+.tomo-editor .tiptap [data-type="details"] > button:before {
+  content: "▸";
+}
+.tomo-editor .tiptap [data-type="details"].is-open > button:before {
+  content: "▾";
+}
+.tomo-editor .tiptap [data-type="details"] > div {
+  flex: 1;
+  min-width: 0;
+}
+.tomo-editor .tiptap summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+.tomo-editor .tiptap div[data-type="detailsContent"] {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee4e7;
+}
+.tomo-editor [data-youtube-video] {
+  max-width: 100%;
+  margin: 14px 0;
+}
+.tomo-editor [data-youtube-video] iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16/9;
+  height: auto;
+  border: 0;
+  pointer-events: none;
+}
+.tomo-editor .tiptap table {
+  display: table !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed;
+}
+.tomo-editor .tiptap colgroup {
+  display: table-column-group !important;
+}
+.tomo-editor .tiptap tbody {
+  display: table-row-group !important;
+  width: auto !important;
+}
+.tomo-editor .tiptap tr {
+  display: table-row !important;
+  width: auto !important;
+}
+.tomo-editor .tiptap td,
+.tomo-editor .tiptap th {
+  display: table-cell !important;
+  width: auto !important;
+  padding: 8px !important;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+.tomo-editor .tiptap h2:before,
+.tomo-editor .tiptap h3:before,
+.tomo-editor .tiptap h4:before {
+  content: none;
+}
+@media (max-width: 600px) {
+  .tomo-editor-presets {
+    grid-template-columns: 1.1fr 1.3fr 0.9fr;
+    padding: 8px;
+    gap: 6px;
+  }
+  .tomo-editor-presets select {
+    height: 44px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  .tomo-editor-actions {
+    padding: 4px 6px;
+  }
+  .tomo-editor-action-group {
+    padding: 0 6px;
+    gap: 0;
+  }
+  .tomo-editor-actions button {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+  }
+  .tomo-editor-actions select {
+    height: 44px;
+  }
+  .tomo-editor-actions input[type="color"] {
+    width: 36px;
+    height: 36px;
+  }
+  .tomo-editor-tools {
+    padding: 0 8px;
+  }
+  .tomo-editor-tools button {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+  .tomo-editor-panel,
+  .tomo-editor-panel[data-kind="table"] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 12px;
+  }
+  .tomo-editor-panel[data-kind="source"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tomo-editor-panel input,
+  .tomo-editor-link input {
+    height: 44px;
+    font-size: 16px;
+  }
+  .tomo-editor-panel button,
+  .tomo-editor-link button {
+    min-height: 44px;
+    padding: 8px;
+  }
+  .tomo-editor-symbols {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .tomo-editor .tiptap {
+    min-height: 280px;
+    padding: 16px;
+    font-size: 16px;
+  }
+  .tomo-editor.is-expanded {
+    inset: 4px;
+  }
+}
+/* Admin section headings must not inject icons or form typography into the document. */
+.tomo-editor .tiptap h2,
+#container .tomo-editor .tiptap h2 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+.tomo-editor .tiptap h3,
+#container .tomo-editor .tiptap h3 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 20px 0 12px;
+}
+.tomo-editor .tiptap h4,
+#container .tomo-editor .tiptap h4 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 16px 0 8px;
+}
+#container .tomo-editor .tiptap h2:before,
+#container .tomo-editor .tiptap h3:before,
+#container .tomo-editor .tiptap h4:before {
+  content: none;
+}
+.tomo-editor-panel[data-kind="table"] .tomo-editor-tool-group:first-of-type {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tomo-editor-panel[data-kind="table"] > .tomo-editor-danger {
+  order: 3;
+}
+.tomo-editor-footer {
+  font-size: 12px;
+}

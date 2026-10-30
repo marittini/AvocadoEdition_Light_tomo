@@ -25,6 +25,8 @@ if (!$mb['mb_id'] || !login_password_check($mb, $mb_password, $mb['mb_password']
 }
 
 
+if ($approval_message = tomo_member_approval_message($mb)) alert($approval_message, G5_BBS_URL.'/login.php');
+
 // 차단된 아이디인가?
 if ($mb['mb_intercept_date'] && $mb['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
     $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "\\1년 \\2월 \\3일", $mb['mb_intercept_date']);

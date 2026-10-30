@@ -67,7 +67,8 @@ function imageview(id, w, h)
 }
 </script>
 
-<link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/archive-admin.css?v=3">
+<link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/archive-admin.css?v=5">
+<link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/tomo-tools.css?v=2">
 <script>window.archiveAdmin = <?php echo json_encode(["token"=>$_SESSION["archive_token"],"endpoint"=>G5_ADMIN_URL."/archive.ajax.php"], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
 <div id="wrap">
 <button type="button" id="archive-nav-toggle" aria-controls="header" aria-expanded="false">관리 메뉴</button>

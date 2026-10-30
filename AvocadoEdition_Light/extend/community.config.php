@@ -88,7 +88,7 @@ function check_site_auth(){
 	// 사이트가 비공개 설정일 시, 로그인 페이지를 제외한 모든 페이지에서 외부인 접근 시
 	// 로그인 페이지로 이동 시킨다.
 	if(!$config['cf_open']) {
-		if(!$is_member && !$is_page_login) { goto_url(G5_BBS_URL.'/login.php'); }
+		if(!$is_member && !$is_page_login && !(basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === 'register_result.php' && get_session('ss_mb_reg'))) { goto_url(G5_BBS_URL.'/login.php'); }
 	}
 
 }

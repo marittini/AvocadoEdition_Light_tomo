@@ -4,6 +4,7 @@ include_once('./_common.php');
 check_demo();
 if ($is_admin !== 'super') alert('최고관리자만 접근 가능합니다.');
 check_admin_token();
+$main_content = tomo_normalize_editor_html((string)($main_content ?? ''));
 
 $sql_common = " co_html             = '1',
                 co_tag_filter_use   = '0' ";

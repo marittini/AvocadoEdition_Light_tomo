@@ -11,6 +11,10 @@ else
     auth_check($auth[$sub_menu], "w");
 
 check_admin_token();
+if ($co_html) {
+    $co_content = tomo_normalize_editor_html((string)($co_content ?? ''));
+    $co_mobile_content = tomo_normalize_editor_html((string)($co_mobile_content ?? ''));
+}
 
 @mkdir(G5_DATA_PATH."/content", G5_DIR_PERMISSION);
 @chmod(G5_DATA_PATH."/content", G5_DIR_PERMISSION);

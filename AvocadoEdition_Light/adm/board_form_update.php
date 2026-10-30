@@ -9,6 +9,13 @@ auth_check($auth[$sub_menu], 'w');
 
 check_admin_token();
 
+// Synchronize POST and the legacy extracted variables used by group/all updates.
+foreach (['bo_content_head','bo_content_tail','bo_mobile_content_head','bo_mobile_content_tail'] as $editor_field) {
+    $_POST[$editor_field] = tomo_normalize_editor_html((string)($_POST[$editor_field] ?? ''));
+    ${$editor_field} = $_POST[$editor_field];
+}
+
+
 if (!$_POST['gr_id']) { alert('그룹 ID는 반드시 선택하세요.'); }
 if (!$bo_table) { alert('게시판 TABLE명은 반드시 입력하세요.'); }
 if (!preg_match("/^([A-Za-z0-9_]{1,20})$/", $bo_table)) { alert('게시판 TABLE명은 공백없이 영문자, 숫자, _ 만 사용 가능합니다. (20자 이내)'); }

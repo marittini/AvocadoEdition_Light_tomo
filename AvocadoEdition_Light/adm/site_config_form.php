@@ -238,6 +238,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </div>
 
+<?php include __DIR__.'/tomo_members.inc.php'; ?>
 <?php include __DIR__.'/tomo_settings.inc.php'; ?>
 
 <section id="anc_001">

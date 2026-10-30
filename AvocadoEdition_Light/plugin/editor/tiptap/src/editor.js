@@ -1,4 +1,5 @@
 import { Editor, Extension } from "@tiptap/core";
+import { TextSelection } from "@tiptap/pm/state";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { TextStyleKit } from "@tiptap/extension-text-style";
@@ -99,11 +100,31 @@ const Formatting = Extension.create({
   },
 });
 
+// Paragraph wrappers and invisible characters are not authored content.
+// Non-text blocks (including images, tables and media) must survive this check.
+function editorHasContent(editor) {
+  let meaningful = false;
+  editor.state.doc.descendants((node) => {
+    if (meaningful) return false;
+    if (node.isText) meaningful = /[^\s\p{Cf}]/u.test(node.text || "");
+    else if (
+      (node.isAtom && node.type.name !== "hardBreak") ||
+      ["table", "details", "taskList"].includes(node.type.name)
+    )
+      meaningful = true;
+    return !meaningful;
+  });
+  return meaningful;
+}
+
 const editors = new Map();
 window.tomoEditors = editors;
 window.tomoEditorSync = (id) => {
   const item = editors.get(id);
-  if (item) item.field.value = item.editor.getHTML();
+  if (item)
+    item.field.value = editorHasContent(item.editor)
+      ? item.editor.getHTML()
+      : "";
 };
 window.tomoEditorValidate = (id) => {
   const item = editors.get(id);
@@ -117,7 +138,7 @@ window.tomoEditorValidate = (id) => {
     return false;
   }
   window.tomoEditorSync(id);
-  if (item.editor.isEmpty) {
+  if (!editorHasContent(item.editor)) {
     item.status.textContent = "내용을 입력해 주세요.";
     item.editor.commands.focus();
     return false;
@@ -151,7 +172,36 @@ const svg = (key) =>
   '<svg viewBox="0 0 24 26" width="18" height="18" aria-hidden="true"><path d="' +
   icons[key] +
   '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function loadEditorFontFaces() {
+  const data = document.getElementById("tomo-editor-font-css");
+  if (!data || document.getElementById("tomo-editor-loaded-fonts")) return;
+  const style = document.createElement("style");
+  style.id = "tomo-editor-loaded-fonts";
+  style.media = "not all";
+  style.textContent = JSON.parse(data.textContent || '""');
+  document.head.append(style);
+  // Load font declarations without applying the site's theme selectors to the admin.
+  const collect = (rules) =>
+    [...rules]
+      .map((rule) => {
+        if ([CSSRule.FONT_FACE_RULE, CSSRule.IMPORT_RULE].includes(rule.type))
+          return rule.cssText;
+        if (rule.cssRules && rule.conditionText) {
+          const inner = collect(rule.cssRules);
+          return inner
+            ? "@media " + rule.conditionText + "{" + inner + "}"
+            : "";
+        }
+        return "";
+      })
+      .join("\n");
+  const fonts = collect(style.sheet.cssRules);
+  style.textContent = fonts;
+  style.media = "all";
+}
 function init() {
+  loadEditorFontFaces();
+
   document.querySelectorAll(".tomo-rich-editor").forEach((field) => {
     if (editors.has(field.id)) return;
     const wrapper = field.closest(".tomo-editor"),
@@ -172,8 +222,42 @@ function init() {
     field.hidden = true;
     const item = { field, wrapper, status, uploading: 0, editor: null };
     editors.set(field.id, item);
+    const rememberEditorSelection = () => {
+      const view = item.editor?.view,
+        selection = document.getSelection();
+      if (
+        !view ||
+        !(item.editor.state.selection instanceof TextSelection) ||
+        !selection?.anchorNode ||
+        !selection.focusNode ||
+        !view.dom.contains(selection.anchorNode) ||
+        !view.dom.contains(selection.focusNode)
+      )
+        return;
+      try {
+        const anchor = view.posAtDOM(
+            selection.anchorNode,
+            selection.anchorOffset,
+          ),
+          head = view.posAtDOM(selection.focusNode, selection.focusOffset),
+          doc = item.editor.state.doc;
+        const next = TextSelection.between(
+          doc.resolve(anchor),
+          doc.resolve(head),
+        );
+        if (!next.eq(item.editor.state.selection))
+          view.dispatch(item.editor.state.tr.setSelection(next));
+      } catch {
+        /* A just-removed DOM node must not replace the current selection. */
+      }
+    };
+    const focused = () => {
+      item.editor.view.focus();
+      return item.editor.chain();
+    };
+
     const sync = () => {
-      field.value = item.editor.getHTML();
+      window.tomoEditorSync(field.id);
       count.textContent =
         new Intl.NumberFormat("ko-KR").format(item.editor.getText().length) +
         "자";
@@ -206,9 +290,7 @@ function init() {
           if (!response.ok || !result.url)
             throw new Error(result.error || "이미지 업로드에 실패했습니다.");
           const mapped = Math.min(position, item.editor.state.doc.content.size);
-          item.editor
-            .chain()
-            .focus()
+          focused()
             .insertContentAt(mapped, {
               type: "image",
               attrs: { src: result.url, alt: file.name },
@@ -299,13 +381,17 @@ function init() {
       onSelectionUpdate: () => refresh(),
     });
     const buttons = [];
+    const selects = new Map();
     const button = (name, icon, run, active) => {
       const el = document.createElement("button");
       el.type = "button";
       el.title = name;
       el.setAttribute("aria-label", name);
       el.innerHTML = svg(icon);
-      el.addEventListener("mousedown", (event) => event.preventDefault());
+      el.addEventListener("mousedown", (event) => {
+        rememberEditorSelection();
+        event.preventDefault();
+      });
       el.addEventListener("click", () => {
         run();
         refresh();
@@ -318,11 +404,33 @@ function init() {
       const el = document.createElement("select");
       el.setAttribute("aria-label", name);
       options.forEach(([label, value]) => el.add(new Option(label, value)));
+      let bookmark = null;
+      const remember = () => {
+        rememberEditorSelection();
+        bookmark = item.editor.state.selection.getBookmark();
+      };
+      el.addEventListener("pointerdown", remember);
+      el.addEventListener("focus", remember);
       el.addEventListener("change", () => {
-        change(el.value);
+        const value = el.value;
+        if (!bookmark) remember();
+        if (bookmark) {
+          try {
+            item.editor.view.dispatch(
+              item.editor.state.tr.setSelection(
+                bookmark.resolve(item.editor.state.doc),
+              ),
+            );
+          } catch {
+            /* The selection may have been removed by another edit. */
+          }
+        }
+        change(value);
+        bookmark = null;
         refresh();
       });
       toolbar.append(el);
+      selects.set(name, el);
       return el;
     };
     const style = select(
@@ -335,10 +443,8 @@ function init() {
       ],
       (value) =>
         value === "paragraph"
-          ? item.editor.chain().focus().setParagraph().run()
-          : item.editor
-              .chain()
-              .focus()
+          ? focused().setParagraph().run()
+          : focused()
               .toggleHeading({ level: Number(value) })
               .run(),
     );
@@ -354,8 +460,8 @@ function init() {
     ];
     select("글꼴", fontOptions, (value) =>
       value
-        ? item.editor.chain().focus().setFontFamily(value).run()
-        : item.editor.chain().focus().unsetFontFamily().run(),
+        ? focused().setFontFamily(value).run()
+        : focused().unsetFontFamily().run(),
     );
     select(
       "글자 크기",
@@ -368,11 +474,11 @@ function init() {
       ],
       (value) =>
         value
-          ? item.editor.chain().focus().setFontSize(value).run()
-          : item.editor.chain().focus().unsetFontSize().run(),
+          ? focused().setFontSize(value).run()
+          : focused().unsetFontSize().run(),
     );
-    button("실행 취소", "undo", () => item.editor.chain().focus().undo().run());
-    button("다시 실행", "redo", () => item.editor.chain().focus().redo().run());
+    button("실행 취소", "undo", () => focused().undo().run());
+    button("다시 실행", "redo", () => focused().redo().run());
     for (const [name, icon, command, type] of [
       ["굵게", "bold", "toggleBold", "bold"],
       ["기울임", "italic", "toggleItalic", "italic"],
@@ -385,7 +491,7 @@ function init() {
       button(
         name,
         icon,
-        () => item.editor.chain().focus()[command]().run(),
+        () => focused()[command]().run(),
         () => item.editor.isActive(type),
       );
     const color = document.createElement("input");
@@ -394,7 +500,7 @@ function init() {
     color.title = "글자 색상";
     color.setAttribute("aria-label", "글자 색상");
     color.addEventListener("input", () =>
-      item.editor.chain().focus().setColor(color.value).run(),
+      focused().setColor(color.value).run(),
     );
     toolbar.append(color);
     select(
@@ -404,7 +510,7 @@ function init() {
         ["가운데 정렬", "center"],
         ["오른쪽 정렬", "right"],
       ],
-      (value) => item.editor.chain().focus().setTextAlign(value).run(),
+      (value) => focused().setTextAlign(value).run(),
     );
     const linkPanel = document.createElement("div");
     linkPanel.className = "tomo-editor-link";
@@ -442,9 +548,7 @@ function init() {
         const url = new URL(linkInput.value, location.href);
         if (!["https:", "http:", "mailto:"].includes(url.protocol))
           throw Error();
-        item.editor
-          .chain()
-          .focus()
+        focused()
           .setTextSelection({ from: linkSelection.from, to: linkSelection.to })
           .extendMarkRange("link")
           .setLink({ href: url.href })
@@ -455,9 +559,7 @@ function init() {
       }
     });
     unlink.addEventListener("click", () => {
-      item.editor
-        .chain()
-        .focus()
+      focused()
         .setTextSelection({ from: linkSelection.from, to: linkSelection.to })
         .unsetLink()
         .run();
@@ -479,14 +581,10 @@ function init() {
     });
     button("이미지 첨부", "image", () => file.click());
     button("표 삽입", "table", () =>
-      item.editor
-        .chain()
-        .focus()
-        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-        .run(),
+      focused().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
     );
     button("서식 지우기", "clear", () =>
-      item.editor.chain().focus().unsetAllMarks().clearNodes().run(),
+      focused().unsetAllMarks().clearNodes().run(),
     );
     button(
       "화면 넓게 보기",
@@ -568,7 +666,10 @@ function init() {
       const el = document.createElement("button");
       el.type = "button";
       el.textContent = label;
-      el.addEventListener("mousedown", (event) => event.preventDefault());
+      el.addEventListener("mousedown", (event) => {
+        rememberEditorSelection();
+        event.preventDefault();
+      });
       el.addEventListener("click", () => {
         action();
         refresh();
@@ -590,31 +691,19 @@ function init() {
       return input;
     };
     const extra = panel("추가 서식");
-    toolButton(extra, "위 첨자", () =>
-      item.editor.chain().focus().toggleSuperscript().run(),
-    );
-    toolButton(extra, "아래 첨자", () =>
-      item.editor.chain().focus().toggleSubscript().run(),
-    );
-    toolButton(extra, "체크리스트", () =>
-      item.editor.chain().focus().toggleTaskList().run(),
-    );
-    toolButton(extra, "코드 블록", () =>
-      item.editor.chain().focus().toggleCodeBlock().run(),
-    );
-    toolButton(extra, "구분선", () =>
-      item.editor.chain().focus().setHorizontalRule().run(),
-    );
-    toolButton(extra, "접기·펼치기", () =>
-      item.editor.chain().focus().setDetails().run(),
-    );
+    toolButton(extra, "위 첨자", () => focused().toggleSuperscript().run());
+    toolButton(extra, "아래 첨자", () => focused().toggleSubscript().run());
+    toolButton(extra, "체크리스트", () => focused().toggleTaskList().run());
+    toolButton(extra, "코드 블록", () => focused().toggleCodeBlock().run());
+    toolButton(extra, "구분선", () => focused().setHorizontalRule().run());
+    toolButton(extra, "접기·펼치기", () => focused().setDetails().run());
     const highlight = labelInput(extra, "글자 배경색", "color");
     highlight.value = "#fff0ad";
     highlight.addEventListener("input", () =>
-      item.editor.chain().focus().setBackgroundColor(highlight.value).run(),
+      focused().setBackgroundColor(highlight.value).run(),
     );
     toolButton(extra, "배경색 해제", () =>
-      item.editor.chain().focus().unsetBackgroundColor().run(),
+      focused().unsetBackgroundColor().run(),
     );
     const line = labelInput(extra, "줄 간격", "number");
     line.min = "1";
@@ -624,7 +713,7 @@ function init() {
     line.addEventListener("change", () => {
       const value = Number(line.value);
       if (value >= 1 && value <= 3)
-        item.editor.chain().focus().setLineHeight(String(value)).run();
+        focused().setLineHeight(String(value)).run();
     });
     const spacing = labelInput(extra, "문단 아래 여백(px)", "number");
     spacing.min = "0";
@@ -634,11 +723,7 @@ function init() {
       const value = Number(spacing.value);
       if (value >= 0 && value <= 100) {
         const type = item.editor.isActive("heading") ? "heading" : "paragraph";
-        item.editor
-          .chain()
-          .focus()
-          .updateAttributes(type, { paragraphSpacing: value })
-          .run();
+        focused().updateAttributes(type, { paragraphSpacing: value }).run();
       }
     });
     const tablePanel = panel("표 편집");
@@ -662,24 +747,16 @@ function init() {
       toolButton(
         tablePanel,
         label,
-        () => item.editor.chain().focus()[command]().run(),
+        () => focused()[command]().run(),
         () => !item.editor.can()[command](),
       );
     const cellColor = labelInput(tablePanel, "셀 배경색", "color");
     cellColor.value = "#fcf0f3";
     cellColor.addEventListener("input", () =>
-      item.editor
-        .chain()
-        .focus()
-        .setCellAttribute("backgroundColor", cellColor.value)
-        .run(),
+      focused().setCellAttribute("backgroundColor", cellColor.value).run(),
     );
     toolButton(tablePanel, "셀 배경색 해제", () =>
-      item.editor
-        .chain()
-        .focus()
-        .setCellAttribute("backgroundColor", null)
-        .run(),
+      focused().setCellAttribute("backgroundColor", null).run(),
     );
     const imagePanel = panel("이미지 편집");
     const imageHelp = document.createElement("p");
@@ -707,9 +784,7 @@ function init() {
         status.textContent = "이미지 크기는 24~10000px로 입력해 주세요.";
         return;
       }
-      item.editor
-        .chain()
-        .focus()
+      focused()
         .updateAttributes("image", {
           width: width.value ? w : null,
           height: height.value ? h : null,
@@ -725,21 +800,14 @@ function init() {
       toolButton(
         imagePanel,
         label,
-        () =>
-          item.editor
-            .chain()
-            .focus()
-            .updateAttributes("image", { imageAlign: align })
-            .run(),
+        () => focused().updateAttributes("image", { imageAlign: align }).run(),
         () => !item.editor.isActive("image"),
       );
     toolButton(
       imagePanel,
       "원래 크기로",
       () =>
-        item.editor
-          .chain()
-          .focus()
+        focused()
           .updateAttributes("image", { width: null, height: null })
           .run(),
       () => !item.editor.isActive("image"),
@@ -774,12 +842,7 @@ function init() {
         return null;
       }
       matchIndex = (matchIndex + 1) % found.length;
-      item.editor
-        .chain()
-        .focus()
-        .setTextSelection(found[matchIndex])
-        .scrollIntoView()
-        .run();
+      focused().setTextSelection(found[matchIndex]).scrollIntoView().run();
       findStatus.textContent = matchIndex + 1 + " / " + found.length + "개";
       return found[matchIndex];
     };
@@ -865,7 +928,7 @@ function init() {
         status.textContent = "유튜브 동영상 주소를 입력해 주세요.";
         return;
       }
-      if (!item.editor.chain().focus().setYoutubeVideo({ src: url.href }).run())
+      if (!focused().setYoutubeVideo({ src: url.href }).run())
         status.textContent = "유튜브 동영상 주소를 확인해 주세요.";
     });
     const symbols = document.createElement("div");
@@ -894,11 +957,7 @@ function init() {
       "🎨",
     ])
       toolButton(symbols, symbol, () =>
-        item.editor
-          .chain()
-          .focus()
-          .insertContent({ type: "text", text: symbol })
-          .run(),
+        focused().insertContent({ type: "text", text: symbol }).run(),
       );
     const groupTools = (parent, title, labels) => {
       const group = document.createElement("fieldset");
@@ -985,15 +1044,42 @@ function init() {
       }
     });
 
+    const setSelectValue = (name, value) => {
+      const control = selects.get(name);
+      if (!control || document.activeElement === control) return;
+      const normalized = String(value || "");
+      const clean = (v) => v.replace(/["'\s]/g, "").toLowerCase();
+      const option = [...control.options]
+        .filter((option) => !option.hasAttribute("data-current"))
+        .find((option) => clean(option.value) === clean(normalized));
+      control.querySelector("option[data-current]")?.remove();
+      if (option) control.value = option.value;
+      else if (normalized) {
+        const current = new Option(normalized, normalized);
+        current.dataset.current = "1";
+        control.add(current);
+        control.value = normalized;
+      } else control.value = "";
+    };
     const refresh = () => {
       buttons.forEach(({ el, active, disabled }) => {
         if (active) el.setAttribute("aria-pressed", String(active()));
         if (disabled) el.disabled = disabled();
       });
-      style.value = String(
-        item.editor.getAttributes("heading").level || "paragraph",
+      setSelectValue(
+        "문단 스타일",
+        String(item.editor.getAttributes("heading").level || "paragraph"),
+      );
+      const textStyle = item.editor.getAttributes("textStyle");
+      setSelectValue("글꼴", textStyle.fontFamily || "");
+      setSelectValue("글자 크기", textStyle.fontSize || "");
+      const block = item.editor.isActive("heading") ? "heading" : "paragraph";
+      setSelectValue(
+        "정렬",
+        item.editor.getAttributes(block).textAlign || "left",
       );
     };
+    window.tomoEditorSync(field.id);
     item.editor.on("transaction", refresh);
     refresh();
     count.textContent = item.editor.getText().length + "자";

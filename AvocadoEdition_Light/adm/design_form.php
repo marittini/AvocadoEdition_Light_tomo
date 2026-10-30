@@ -80,6 +80,7 @@ th a + a {margin-top:3px;}
 
 
 <?php include __DIR__.'/tomo_fonts.inc.php'; ?>
+<?php include __DIR__.'/tomo_palette.inc.php'; ?>
 
 <section id="anc_007">
 	<h2 class="h2_frm">커스텀 코드</h2>

@@ -207,7 +207,7 @@ $pg_anchor = '<ul class="anchor">
 </ul>';
 
 $frm_submit = '<div class="btn_confirm01 btn_confirm">
-	<input type="submit" value="확인" class="btn_submit" accesskey="s">
+	<input type="submit" value="저장" class="btn_submit" accesskey="s">
 </div>';
 
 if (!$config['cf_icode_server_ip'])   $config['cf_icode_server_ip'] = '211.172.232.124';
@@ -220,6 +220,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 
 <form name="fconfigform" id="fconfigform" method="post" onsubmit="return fconfigform_submit(this);" enctype="multipart/form-data">
 <input type="hidden" name="token" value="" id="token">
+<?php echo $frm_submit; ?>
 
 <section id="anc_001">
 	<h2 class="h2_frm">홈페이지 기본환경 설정</h2>
@@ -449,7 +450,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php echo $frm_submit; ?>
+
 
 <section id="anc_002">
 	<h2 class="h2_frm">게시판 기본 설정</h2>
@@ -531,7 +532,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php echo $frm_submit; ?>
+
 
 <section id="anc_003">
 	<h2 class="h2_frm">회원가입 설정</h2>
@@ -658,7 +659,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php echo $frm_submit; ?>
+
 
 <section id="anc_004" style="display: none;">
 	<h2 class="h2_frm">본인확인 설정</h2>
@@ -759,7 +760,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php //echo $frm_submit; ?>
+
 
 <section id="anc_005" style="display: none;">
 	<h2 class="h2_frm">기본 메일 환경 설정</h2>
@@ -798,7 +799,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php // echo $frm_submit; ?>
+
 
 <section id="anc_006" style="display: none;">
 	<h2 class="h2_frm">게시판 글 작성 시 메일 설정</h2>
@@ -852,7 +853,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php // echo $frm_submit; ?>
+
 
 <section id="anc_007" style="display: none;">
 	<h2 class="h2_frm">회원가입 시 메일 설정</h2>
@@ -885,7 +886,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php // echo $frm_submit; ?>
+
 
 <section id="anc_008">
 	<h2 class="h2_frm">투표 기타의견 작성 시 메일 설정</h2>
@@ -911,7 +912,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php echo $frm_submit; ?>
+
 
 <section id="anc_009" style="display: none;">
 	<h2 class="h2_frm">소셜네트워크서비스(SNS : Social Network Service)</h2>
@@ -962,7 +963,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php //echo $frm_submit; ?>
+
 
 <section id="anc_010">
 	<h2 class="h2_frm">레이아웃 추가설정</h2>
@@ -991,7 +992,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php echo $frm_submit; ?>
+
 
 <section id="anc_011" style="display: none;">
 	<h2 class="h2_frm">SMS</h2>
@@ -1076,7 +1077,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 	</div>
 </section>
 
-<?php // echo $frm_submit; ?>
+
 
 
 </form>

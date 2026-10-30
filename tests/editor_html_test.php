@@ -13,3 +13,8 @@ verify(str_contains($result,'youtube-nocookie.com/embed/')&&str_contains($result
 verify(str_contains($result,'background-color')&&str_contains($result,'<sup>')&&str_contains($result,'<sub>')&&str_contains($result,'<table>'),'highlight, superscript/subscript and tables survive');
 $unsafe=html_purifier('<script>alert(1)</script><img src="x" onerror="alert(1)"><a href="javascript:alert(1)">bad</a><iframe src="https://evil.example/embed/x"></iframe><input type="password" name="secret">');
 verify(!str_contains($unsafe,'<script')&&!str_contains($unsafe,'onerror')&&!str_contains($unsafe,'javascript:')&&!str_contains($unsafe,'evil.example')&&!str_contains($unsafe,'<input'),'unsafe scripts, event handlers, links and iframe hosts remain blocked');
+$annotations=html_purifier('<p><ruby><span class="tomo-ruby-base">漢字</span><rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby><span class="tomo-spoiler">비밀</span><span style="letter-spacing:1.5px">자간</span></p>');
+verify(str_contains($annotations,'<ruby>')&&str_contains($annotations,'<rt>かんじ</rt>')&&str_contains($annotations,'<rp>'),'ruby annotations survive server HTML filtering');
+verify(str_contains($annotations,'class="tomo-spoiler"')&&str_contains($annotations,'letter-spacing:1.5px'),'spoiler class and letter spacing survive without inline scripts');
+$badRuby=html_purifier('<ruby>base<rt><img src="x" onerror="alert(1)"><script>alert(1)</script></rt></ruby>');
+verify(!str_contains($badRuby,'<script')&&!str_contains($badRuby,'onerror'),'annotation elements do not bypass XSS filtering');

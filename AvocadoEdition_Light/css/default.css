@@ -162,3 +162,9 @@ table { width:100%; }
 ul[data-type=taskList]{list-style:none;padding-left:0}li[data-type=taskItem]{display:flex;align-items:flex-start;gap:8px}li[data-type=taskItem]>label{flex-shrink:0}li[data-type=taskItem]>label input{pointer-events:none}li[data-type=taskItem]>div{flex:1;min-width:0}li[data-checked=true]>div{text-decoration:line-through;opacity:.7}
 [data-youtube-video]{max-width:100%;margin:14px 0}[data-youtube-video] iframe{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;border:0}
 details{margin:12px 0}details>summary{cursor:pointer;font-weight:bold}details>[data-type=detailsContent]{padding:10px 0}
+
+/* Editor annotations remain readable across editor/theme setting changes. */
+.tomo-spoiler { filter: blur(5px); cursor: pointer; }
+.tomo-spoiler.tomo-spoiler-visible { filter: none; }
+.tomo-spoiler:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+ruby rt { font-size: .6em; }

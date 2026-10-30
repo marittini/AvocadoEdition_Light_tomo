@@ -82,7 +82,7 @@ const fs = require("node:fs");
     4,
   );
   await p.getByRole("button", { name: "이미지 첨부", exact: true }).click(); // Cancel the chooser; use the same input to provide two files.
-  await p.locator(".tomo-editor input[type=file]").setInputFiles([
+  await p.getByLabel("본문 이미지 첨부", { exact: true }).setInputFiles([
     {
       name: "첫번째.png",
       mimeType: "image/png",

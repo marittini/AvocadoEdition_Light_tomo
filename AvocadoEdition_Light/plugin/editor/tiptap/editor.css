@@ -655,3 +655,198 @@
 .tomo-editor-footer {
   font-size: 12px;
 }
+
+/* Annotation controls and per-document image management; retain the existing theme. */
+.tomo-editor .tiptap .tomo-spoiler {
+  background: #eddee2;
+  border-bottom: 1px dashed #a34148;
+}
+.tomo-editor .tiptap ruby rt {
+  font-size: 0.6em;
+  color: #a34148;
+}
+.tomo-editor .tomo-editor-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+.tomo-editor .tomo-editor-gallery-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  min-width: 0;
+  cursor: pointer;
+}
+.tomo-editor .tomo-editor-gallery-card img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+}
+.tomo-editor .tomo-editor-gallery-card span,
+.tomo-editor .tomo-editor-gallery-card small {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.tomo-editor .tomo-editor-gallery-card input[type="checkbox"] {
+  min-width: 24px;
+  min-height: 24px;
+  margin: 4px;
+}
+.tomo-editor .tomo-editor-panel[data-kind="gallery"] input[type="file"] {
+  max-width: 100%;
+}
+
+/* Compact icon controls: names stay available through title, focus hint and aria-label. */
+.tomo-editor .tomo-editor-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.tomo-editor .tomo-editor-tools {
+  gap: 4px;
+  padding: 4px 12px;
+}
+.tomo-editor .tomo-editor-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 7px;
+  position: relative;
+}
+.tomo-editor .tomo-editor-icon-button svg {
+  display: block;
+  flex: 0 0 19px;
+  pointer-events: none;
+}
+.tomo-editor .tomo-editor-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+}
+.tomo-editor .tomo-editor-panel-title {
+  display: block;
+  flex: 0 0 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+.tomo-editor .tomo-editor-panel > p,
+.tomo-editor .tomo-editor-panel > [role="status"],
+.tomo-editor .tomo-editor-source,
+.tomo-editor .tomo-editor-gallery {
+  flex: 0 0 100%;
+}
+.tomo-editor .tomo-editor-panel > label {
+  flex: 1 1 150px;
+}
+.tomo-editor .tomo-editor-tool-group {
+  display: flex;
+  flex: 1 1 180px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+}
+.tomo-editor .tomo-editor-tool-group legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+}
+.tomo-editor .tomo-editor-tool-group > label {
+  flex: 1 1 100px;
+}
+.tomo-editor .tomo-editor-panel[data-kind="table"] > .tomo-editor-danger {
+  min-width: 36px;
+}
+.tomo-editor .tomo-editor-panel input[type="file"] {
+  flex: 1 1 100%;
+}
+.tomo-editor .tomo-editor-gallery-card input[type="checkbox"] {
+  width: 24px;
+}
+.tomo-editor .tomo-editor-symbols {
+  width: 100%;
+}
+.tomo-editor .tomo-editor-footer {
+  gap: 8px;
+}
+.tomo-editor .tomo-editor-hint {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .tomo-editor .tomo-editor-icon-button {
+    flex-basis: 44px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+  .tomo-editor .tomo-editor-tools {
+    padding: 4px 8px;
+    gap: 2px;
+  }
+  .tomo-editor .tomo-editor-tool-group {
+    flex-basis: 150px;
+  }
+}
+.tomo-editor .tomo-editor-icon-button .tomo-editor-sr-only {
+  left: 0;
+  top: 0;
+}
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="number"]),
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="color"]) {
+  flex: 0 1 150px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+}
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="number"]) input {
+  flex: 0 0 72px;
+  width: 72px;
+}
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="color"]) input {
+  flex: 0 0 44px;
+  width: 44px;
+}
+@media (max-width: 600px) {
+  .tomo-editor .tomo-editor-tool-group > label:has(input) {
+    min-height: 44px;
+  }
+}
+/* Let groups take only the space their controls need, rather than stretching rows. */
+.tomo-editor
+  .tomo-editor-panel[data-kind="format"]
+  .tomo-editor-tool-group:last-of-type {
+  flex: 1 1 300px;
+}
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="number"]) > span,
+.tomo-editor .tomo-editor-tool-group > label:has(input[type="color"]) > span {
+  flex: 1 1 auto;
+}
+.tomo-editor
+  .tomo-editor-panel[data-kind="format"]
+  .tomo-editor-tool-group:first-of-type {
+  flex: 1 1 300px;
+}

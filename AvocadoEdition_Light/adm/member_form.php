@@ -3,6 +3,7 @@ $sub_menu = "200100";
 include_once('./_common.php');
 
 auth_check($auth[$sub_menu], 'w');
+if (!sql_query("SELECT mb_tomo_twitter FROM `{$g5['member_table']}` LIMIT 1", false)) alert('트위터 아이디 필드가 준비되지 않았습니다. 최고관리자가 DB 권한을 확인해 주세요.');
 
 if ($w == '')
 {
@@ -179,6 +180,10 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		<td><input type="text" name="mb_email" value="<?php echo $mb['mb_email'] ?>" id="mb_email" maxlength="100" required class="required frm_input email" size="30"></td>
 		<th scope="row"><label for="mb_birth">생년<strong class="sound_only">필수</strong></label></th>
 		<td><input type="text" name="mb_birth" value="<?php echo $mb['mb_birth'] ?>" id="mb_birth" maxlength="100" class="frm_input" size="5"></td>
+	</tr>
+	<tr>
+		<th scope="row"><label for="mb_tomo_twitter">트위터 아이디</label></th>
+		<td colspan="3"><input type="text" name="mb_tomo_twitter" id="mb_tomo_twitter" value="<?php echo get_text($mb['mb_tomo_twitter'] ?? ''); ?>" class="frm_input" maxlength="16" pattern="@?[A-Za-z0-9_]{1,15}"> 영문, 숫자, 밑줄 1~15자</td>
 	</tr>
 	<tr>
 		<th scope="row"><label for="mb_open">정보 공개</label></th>

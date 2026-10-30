@@ -474,6 +474,7 @@ CREATE TABLE IF NOT EXISTS `avo_member` (
   `mb_level` tinyint(4) NOT NULL default '0',
   `mb_sex` char(1) NOT NULL default '',
   `mb_birth` varchar(255) NOT NULL default '',
+  `mb_tomo_twitter` varchar(15) NOT NULL default '',
   `mb_tel` varchar(255) NOT NULL default '',
   `mb_hp` varchar(255) NOT NULL default '',
   `mb_certify` varchar(20) NOT NULL default '',

@@ -8,7 +8,7 @@ include_once(G5_LIB_PATH.'/mailer.lib.php');
 referer_check();
 
 
-if(!$is_add_register) {
+if(!$is_add_register && $w == '') {
 	// 회원가입 기간 경과
 	alert('계정생성 기간이 아닙니다.');
 }
@@ -37,8 +37,13 @@ $mb_password_re = trim($_POST['mb_password_re']);
 $mb_name        = trim($_POST['mb_name']);
 $mb_nick        = $mb_name;
 $mb_email       = $mb_id."@".$mb_id.".cmm";
+$twitter_input = $_POST['mb_tomo_twitter'] ?? ($w === 'u' ? ($member['mb_tomo_twitter'] ?? '') : '');
+$twitter_input = is_string($twitter_input) ? trim($twitter_input) : null;
+$twitter = $twitter_input === '' && $w === 'u' ? '' : tomo_twitter_handle($twitter_input);
+if ($twitter === null) alert('트위터 아이디를 영문, 숫자, 밑줄 1~15자로 입력해 주세요.');
+if (!sql_query("SELECT mb_tomo_twitter FROM `{$g5['member_table']}` LIMIT 1", false)) alert('회원가입 준비가 필요합니다. 최고관리자가 관리자 페이지에 접속해 주세요.');
 $mb_sex         = isset($_POST['mb_sex'])           ? trim($_POST['mb_sex'])         : "";
-$mb_birth       = isset($_POST['mb_birth'])         ? trim($_POST['mb_birth'])       : "";
+$mb_birth       = isset($_POST['mb_birth'])         ? trim($_POST['mb_birth'])       : ($w == 'u' ? ($member['mb_birth'] ?? '') : '');
 $mb_homepage    = isset($_POST['mb_homepage'])      ? trim($_POST['mb_homepage'])    : "";
 $mb_tel         = isset($_POST['mb_tel'])           ? trim($_POST['mb_tel'])         : "";
 $mb_hp          = isset($_POST['mb_hp'])            ? trim($_POST['mb_hp'])          : "";
@@ -225,6 +230,7 @@ if ($w == '') {
                      mb_open = '{$mb_open}',
                      mb_open_date = '".G5_TIME_YMD."',
 					 mb_birth = '{$mb_birth}',
+                     mb_tomo_twitter = '{$twitter}',
                      mb_1 = '{$mb_1}',
                      mb_2 = '{$mb_2}',
                      mb_3 = '{$mb_3}',
@@ -333,7 +339,7 @@ if ($w == '') {
                     mb_addr_jibeon = '{$mb_addr_jibeon}',
                     mb_signature = '{$mb_signature}',
                     mb_profile = '{$mb_profile}',
-					mb_birth = '{$mb_birth}',
+                    mb_tomo_twitter = '{$twitter}',
                     mb_1 = '{$mb_1}',
                     mb_2 = '{$mb_2}',
                     mb_3 = '{$mb_3}',

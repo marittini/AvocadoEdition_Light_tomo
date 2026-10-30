@@ -70,9 +70,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">생년</th>
+						<th scope="row"><label for="mb_tomo_twitter">트위터 아이디</label></th>
 						<td>
-							<input type="text" name="mb_birth" value="<?php echo isset($member['mb_birth'])?$member['mb_birth']:''; ?>" required class="frm_input required" size="5" maxlength="100">
+							<input type="text" name="mb_tomo_twitter" id="mb_tomo_twitter" value="<?php echo get_text($member['mb_tomo_twitter'] ?? ''); ?>" <?php echo $w == '' ? 'required' : ''; ?> class="frm_input" maxlength="16" pattern="@?[A-Za-z0-9_]{1,15}" aria-describedby="twitter-help">
+							<span id="twitter-help">@를 포함하거나 제외하고 입력해 주세요. 영문, 숫자, 밑줄 1~15자<?php echo $w == 'u' ? ' (기존 회원은 선택 입력)' : ''; ?></span>
 						</td>
 					</tr>
 				</tbody>

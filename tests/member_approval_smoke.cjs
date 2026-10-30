@@ -57,11 +57,19 @@ const assert = require("node:assert/strict");
       d.accept().catch(() => {});
     });
     await page.goto(base + "/bbs/register_form.php");
+    for (const handle of ["", "bad handle", "https://x.com/example"]) {
+      const response = await context.request.post(base + "/bbs/register_form_update.php", {
+        headers: { referer: base + "/bbs/register_form.php" },
+        form: { w: "", mb_id: id, mb_password: process.env.TEST_PASSWORD,
+          mb_password_re: process.env.TEST_PASSWORD, mb_name: "검증", mb_tomo_twitter: handle },
+      });
+      assert((await response.text()).includes("트위터 아이디를 영문"));
+    }
     await page.locator("[name=mb_id]").fill(id);
     await page.locator("[name=mb_password]").fill(process.env.TEST_PASSWORD);
     await page.locator("[name=mb_password_re]").fill(process.env.TEST_PASSWORD);
     await page.locator("[name=mb_name]").fill("승인검증" + id);
-    await page.locator("[name=mb_birth]").fill("2000");
+    await page.locator("[name=mb_tomo_twitter]").fill("@Test_Account");
     await page.locator("#btn_submit").click();
     await page.waitForURL(/register_result.php/);
     return { context, page };
@@ -72,6 +80,11 @@ const assert = require("node:assert/strict");
     (await user.page.locator("body").innerText()).includes("가입 신청 접수"),
   );
   assert((await user.page.locator("body").innerText()).includes("승인"));
+  assert.equal(await user.page.locator(".register-pannel .theme-box").count(), 1);
+  assert.equal(await user.page.getByText("캐릭터 생성", { exact: true }).count(), 0);
+  await user.page.screenshot({path:"docs/screenshots/signup-pending-1440.png", fullPage:true});
+  await user.page.setViewportSize({width:390,height:844});
+  await user.page.screenshot({path:"docs/screenshots/signup-pending-390.png", fullPage:true});
   assert(
     (
       await (
@@ -146,6 +159,10 @@ const assert = require("node:assert/strict");
   assert(
     !(await second.page.locator("body").innerText()).includes("가입 신청 접수"),
   );
+  assert.equal(await second.page.getByText("캐릭터 생성", { exact: true }).count(), 0);
+  await second.page.screenshot({path:"docs/screenshots/signup-complete-1440.png", fullPage:true});
+  await second.page.setViewportSize({width:390,height:844});
+  await second.page.screenshot({path:"docs/screenshots/signup-complete-390.png", fullPage:true});
   assert(
     !(
       await (

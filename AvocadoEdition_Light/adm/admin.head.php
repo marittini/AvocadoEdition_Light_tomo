@@ -71,6 +71,7 @@ function imageview(id, w, h)
 <link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/tomo-tools.css?v=2">
 <script>window.archiveAdmin = <?php echo json_encode(["token"=>$_SESSION["archive_token"],"endpoint"=>G5_ADMIN_URL."/archive.ajax.php"], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
 <div id="wrap">
+<?php if (!empty($tomo_twitter_upgrade_error)) { ?><p role="alert"><?=get_text($tomo_twitter_upgrade_error)?></p><?php } ?>
 <button type="button" id="archive-nav-toggle" aria-controls="header" aria-expanded="false">관리 메뉴</button>
 
 <header id="header">

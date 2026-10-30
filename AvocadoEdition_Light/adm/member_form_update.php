@@ -34,7 +34,14 @@ $_POST['mb_nick'] = $_POST['mb_name'];
 $mb_zip1 = substr($_POST['mb_zip'], 0, 3);
 $mb_zip2 = substr($_POST['mb_zip'], 3);
 
-$sql_common = "  mb_name = '{$_POST['mb_name']}',
+if (!sql_query("SELECT mb_tomo_twitter FROM `{$g5['member_table']}` LIMIT 1", false)) alert('트위터 아이디 필드가 준비되지 않았습니다. 최고관리자가 DB 권한을 확인해 주세요.');
+$twitter_input = $_POST['mb_tomo_twitter'] ?? '';
+$twitter_input = is_string($twitter_input) ? trim($twitter_input) : null;
+$twitter = $twitter_input === '' ? '' : tomo_twitter_handle($twitter_input);
+if ($twitter === null) alert('트위터 아이디를 영문, 숫자, 밑줄 1~15자로 입력해 주세요.');
+
+$sql_common = "  mb_tomo_twitter = '{$twitter}',
+                 mb_name = '{$_POST['mb_name']}',
                  mb_nick = '{$_POST['mb_nick']}',
                  mb_email = '{$_POST['mb_email']}',
                  mb_homepage = '{$_POST['mb_homepage']}',

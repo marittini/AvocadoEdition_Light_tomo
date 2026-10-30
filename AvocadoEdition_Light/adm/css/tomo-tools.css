@@ -1,0 +1,128 @@
+.tomo-palette {
+  max-width: 1000px;
+}
+.tomo-palette > p {
+  color: #73656b;
+  line-height: 1.8;
+}
+.tomo-palette-presets,
+.tomo-palette-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.tomo-palette button {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid #ded4d7;
+  background: #fff;
+  color: #69535b;
+  font: inherit;
+  cursor: pointer;
+}
+.tomo-palette button:hover {
+  border-color: #d18686;
+  background: #fcf0f1;
+}
+.tomo-palette button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+#palette-apply {
+  background: #ecc6c6;
+  border-color: #d18686;
+  color: #49393c;
+}
+.tomo-palette-colors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.tomo-palette-colors > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #69535b;
+  font-size: 13px;
+}
+.tomo-palette-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tomo-palette-control input[type="color"] {
+  width: 44px;
+  height: 36px;
+  flex-shrink: 0;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid #ded4d7;
+}
+.tomo-palette-control input[type="text"] {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #ded4d7;
+  background: #fff;
+  color: #49393c;
+  font: 13px monospace;
+}
+.tomo-approval-filter {
+  padding: 8px 12px;
+  border: 1px solid #ded4d7;
+  color: #69535b;
+  text-decoration: none;
+}
+.tomo-approval-filter.is-active {
+  background: #ecc6c6;
+  border-color: #d18686;
+  color: #49393c;
+}
+.archive-maintenance {
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid #e7dfe1;
+  background: #faf7f8;
+}
+.archive-maintenance summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #69535b;
+}
+.archive-maintenance p {
+  margin: 12px 0;
+  color: #73656b;
+}
+.archive-maintenance a {
+  color: #89545c;
+}
+@media (max-width: 800px) {
+  .tomo-palette-colors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+  .tomo-palette button,
+  .tomo-palette-control input[type="text"],
+  .tomo-palette-control input[type="color"] {
+    min-height: 44px;
+  }
+  .tomo-palette-control input[type="text"] {
+    font-size: 16px;
+  }
+  .tomo-palette-actions button {
+    flex: 1 0 auto;
+  }
+}
+
+.tomo-palette-presets button[aria-pressed="true"] {
+  border-color: #d18686;
+  background: #ecc6c6;
+  color: #49393c;
+}
+
+#tomo-member-settings .frm_info,.tomo-palette .frm_info{color:#73656b}
+#tomo-member-settings .btn_frmline{display:inline-block;min-height:36px;padding:8px 12px;box-sizing:border-box;background:#ecc6c6;color:#49393c;border:1px solid #d18686;text-decoration:none}
+#container [role=tabpanel]:focus-visible{outline:2px solid #d18686;outline-offset:4px}

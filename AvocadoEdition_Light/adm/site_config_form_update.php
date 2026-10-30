@@ -16,6 +16,8 @@ check_admin_token();
 include_once G5_LIB_PATH.'/tomo_settings.lib.php';
 try {
     tomo_settings_upgrade();
+    tomo_members_upgrade();
+    $tomo_approval = isset($_POST['tomo_members_present']) ? (!empty($_POST['cf_tomo_require_approval']) ? 1 : 0) : (int)($config['cf_tomo_require_approval'] ?? 0);
     $tomo_editor = $_POST['cf_editor'] ?? ($config['cf_editor'] ?? '');
     if (!is_string($tomo_editor) || ($tomo_editor !== '' && (!preg_match('/^[a-zA-Z0-9_-]+$/D', $tomo_editor) || !is_file(G5_EDITOR_PATH.'/'.$tomo_editor.'/editor.lib.php')))) throw new InvalidArgumentException('편집기를 확인해 주세요.');
 
@@ -64,7 +66,8 @@ if ($_FILES['cf_cursor_file']['name']) {
 
 
 $sql = " update {$g5['config_table']}
-			set cf_editor = '{$tomo_editor}',
+			set cf_tomo_require_approval = '{$tomo_approval}',
+                cf_editor = '{$tomo_editor}',
                 cf_tomo_webp_quality = '{$tomo_quality}',
                 cf_tomo_protection = '{$tomo_protection}',
                 cf_admin			= '{$_POST['cf_admin']}',

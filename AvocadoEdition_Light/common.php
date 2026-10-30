@@ -131,7 +131,9 @@ $g5     = array();
 $dbconfig_file = G5_DATA_PATH.'/'.G5_DBCONFIG_FILE;
 if (file_exists($dbconfig_file)) {
     include_once($dbconfig_file);
-    include_once(G5_LIB_PATH.'/common.lib.php');    // 공통 라이브러리
+    include_once(G5_LIB_PATH.'/common.lib.php'); // 공통 라이브러리
+    include_once(G5_LIB_PATH.'/tomo_editor.lib.php');
+    include_once(G5_LIB_PATH.'/tomo_members.lib.php');
 
     $connect_db = sql_connect(G5_MYSQL_HOST, G5_MYSQL_USER, G5_MYSQL_PASSWORD) or die('MySQL Connect Error!!!');
     $select_db  = sql_select_db(G5_MYSQL_DB, $connect_db) or die('MySQL DB Error!!!');
@@ -393,7 +395,7 @@ if ($_SESSION['ss_mb_id']) { // 로그인중이라면
     $member = get_member($_SESSION['ss_mb_id']);
 
     // 차단된 회원이면 ss_mb_id 초기화
-    if($member['mb_intercept_date'] && $member['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
+    if(tomo_member_approval_message($member) || ($member['mb_intercept_date'] && $member['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME))) {
         set_session('ss_mb_id', '');
         $member = array();
     } else {
@@ -416,14 +418,14 @@ if ($_SESSION['ss_mb_id']) { // 로그인중이라면
         $tmp_mb_id = substr(preg_replace("/[^a-zA-Z0-9_]*/", "", $tmp_mb_id), 0, 20);
         // 최고관리자는 자동로그인 금지
         if (strtolower($tmp_mb_id) != strtolower($config['cf_admin'])) {
-            $sql = " select mb_password, mb_intercept_date, mb_leave_date, mb_email_certify from {$g5['member_table']} where mb_id = '{$tmp_mb_id}' ";
+            $sql = " select * from {$g5['member_table']} where mb_id = '{$tmp_mb_id}' ";
             $row = sql_fetch($sql);
             $key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']);
             // 쿠키에 저장된 키와 같다면
             $tmp_key = get_cookie('ck_auto');
             if ($tmp_key == $key && $tmp_key) {
                 // 차단, 탈퇴가 아니고 메일인증이 사용이면서 인증을 받았다면
-                if ($row['mb_intercept_date'] == '' &&
+                if (!tomo_member_approval_message($row) && $row['mb_intercept_date'] == '' &&
                     $row['mb_leave_date'] == '' &&
                     (!$config['cf_use_email_certify'] || preg_match('/[1-9]/', $row['mb_email_certify'])) ) {
                     // 세션에 회원아이디를 저장하여 로그인으로 간주
@@ -447,6 +449,11 @@ $write_table = "";
 if ($bo_table) {
     $board = sql_fetch(" select * from {$g5['board_table']} where bo_table = '$bo_table' ");
     if ($board['bo_table']) {
+        // Older editor saves may already contain empty paragraph markup.
+        foreach (['bo_content_head','bo_content_tail','bo_mobile_content_head','bo_mobile_content_tail'] as $editor_field) {
+            $board[$editor_field] = tomo_normalize_editor_html((string)($board[$editor_field] ?? ''));
+        }
+
         set_cookie("ck_bo_table", $board['bo_table'], 86400 * 1);
         $gr_id = $board['gr_id'];
         $write_table = $g5['write_prefix'] . $bo_table; // 게시판 테이블 전체이름

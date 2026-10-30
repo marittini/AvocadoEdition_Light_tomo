@@ -196,6 +196,7 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
 //===============================================================
 
 if ($w == '') {
+    $tomo_registration_pending = !empty($config['cf_tomo_require_approval']);
     $sql = " insert into {$g5['member_table']}
                 set mb_id = '{$mb_id}',
                      mb_password = '".get_encrypt_string($mb_password)."',
@@ -235,6 +236,8 @@ if ($w == '') {
                      mb_9 = '{$mb_9}',
                      mb_10 = '{$mb_10}'
                      {$sql_certify} ";
+
+    if ($tomo_registration_pending) $sql .= ", mb_tomo_approval = 'pending'";
 
     // 이메일 인증을 사용하지 않는다면 이메일 인증시간을 바로 넣는다
     if (!$config['cf_use_email_certify'])
@@ -284,7 +287,7 @@ if ($w == '') {
     }
 
     // 메일인증 사용하지 않는 경우에만 로그인
-    if (!$config['cf_use_email_certify'])
+    if (!$config['cf_use_email_certify'] && !$tomo_registration_pending)
         set_session('ss_mb_id', $mb_id);
 
     set_session('ss_mb_reg', $mb_id);

@@ -159,7 +159,9 @@ $colspan = 10;
 		<td>
 			<?php
 			if ($leave_msg || $intercept_msg) echo $leave_msg.' '.$intercept_msg;
-			else echo "정상";
+			else if (($row['mb_tomo_approval'] ?? '') === 'pending') echo '승인 대기';
+            else if (($row['mb_tomo_approval'] ?? '') === 'rejected') echo '가입 거절';
+            else echo "정상";
 			?>
 		</td>
 		<td>

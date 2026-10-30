@@ -17,4 +17,5 @@ include_once './admin.head.php';
 <div class="archive-disk-details"><div><h3>측정 정보</h3><dl id="disk-summary"></dl></div><div><h3>파일 분류</h3><table><caption class="sound_only">측정 범위 내 파일 분류</caption><thead><tr><th>분류</th><th>크기</th></tr></thead><tbody id="disk-categories"></tbody></table></div></div>
 <p class="archive-disk-note">그래프는 사이트 폴더의 파일 크기를 500MB 기준으로 비교합니다. DB는 별도 추정값으로 표시하며 그래프에 합산하지 않습니다. 다른 사이트·메일·백업 등은 빠질 수 있어 닷홈 관리 화면의 실제 사용량과 다를 수 있습니다. 요금제나 추가 용량을 변경했다면 기준 용량도 다릅니다.</p>
 </section>
+<details class="archive-maintenance"><summary>고급 정리 도구</summary><p>일상적으로 실행할 필요는 없습니다. 오래된 임시 파일을 정리하거나 최신글 표시를 갱신할 때 사용하세요.</p><a href="./session_file_delete.php">오래된 세션 정리</a> · <a href="./cache_file_delete.php">최신글 캐시 비우기</a></details>
 <?php include_once './admin.tail.php'; ?>

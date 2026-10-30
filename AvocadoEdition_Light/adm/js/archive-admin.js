@@ -15,7 +15,7 @@ const toggle=document.getElementById('archive-nav-toggle');
 if(toggle)toggle.addEventListener('click',()=>{const opened=document.body.classList.toggle('archive-menu-open');toggle.setAttribute('aria-expanded',String(opened));});
 const dirtyForms=new Set();
 let submitting=false;
-const forms=[...document.querySelectorAll('#container form')];
+const forms=[...document.querySelectorAll('#container form:not([data-archive-no-settings])')];
 forms.forEach(form=>{
  const status=document.createElement('span');status.className='archive-form-status';status.setAttribute('role','status');status.textContent='현재 저장된 설정';
  const buttons=form.querySelector('.btn_confirm');if(buttons)buttons.prepend(status);
@@ -74,7 +74,7 @@ forms.forEach(form=>{
  };
  tabs.forEach((item,index)=>{
   const button=document.createElement('button');button.type='button';button.id='tab-'+item.id;button.textContent=item.label;button.setAttribute('role','tab');button.setAttribute('aria-controls',item.id);item.button=button;
-  item.panel.setAttribute('role','tabpanel');item.panel.setAttribute('aria-labelledby',button.id);item.panel.tabIndex=0;
+  item.panel.setAttribute('role','tabpanel');item.panel.setAttribute('aria-labelledby',button.id);
   button.addEventListener('click',()=>{select(item);history.replaceState(null,'','#'+item.id);});
   button.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight')next=(index+1)%tabs.length;if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;if(event.key==='Home')next=0;if(event.key==='End')next=tabs.length-1;if(next!==undefined){event.preventDefault();select(tabs[next],true);history.replaceState(null,'','#'+tabs[next].id);}});
   item.panel.addEventListener('archive:show',()=>select(item));nav.append(button);

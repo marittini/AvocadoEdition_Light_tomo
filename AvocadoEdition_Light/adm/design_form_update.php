@@ -1,6 +1,9 @@
 <?php
 $sub_menu = "100300";
 include_once('./_common.php');
+check_demo();
+if ($is_admin !== 'super') alert('최고관리자만 접근 가능합니다.');
+check_admin_token();
 
 $site_style_path = G5_DATA_PATH."/site";
 $site_style_url = G5_DATA_URL."/site";
@@ -10,7 +13,7 @@ $site_style_url = G5_DATA_URL."/site";
 
 
 for($i=0; $i < count($cs_name); $i++) {
-	
+
 	$de = sql_fetch("select * from {$g5['css_table']} where cs_name = '{$cs_name[$i]}'");
 
 	if(is_array($cs_etc_1[$i]))		$cs_etc_1[$i] = "||".implode("||", $cs_etc_1[$i])."||";
@@ -45,10 +48,10 @@ for($i=0; $i < count($cs_name); $i++) {
 		upload_file($_FILES['cs_value_file']['tmp_name'][$i], $image_name, $site_style_path);
 		$cs_value[$i] = $site_style_url."/".$image_name;
 	}
-	
 
 
-	if($de['cs_id']) { 
+
+	if($de['cs_id']) {
 		// 수정
 		$sql = " update {$g5['css_table']}
 					set cs_value	= '{$cs_value[$i]}',
@@ -130,19 +133,22 @@ $css_data_url = G5_DATA_URL."/css";
 @mkdir($css_data_path, G5_DIR_PERMISSION);
 @chmod($css_data_path, G5_DIR_PERMISSION);
 
-$file = '../'.G5_DATA_DIR.'/css/_design.config.css';
 $file_path = $css_data_path.'/_design.config.css';
-unlink($file_path);
-$f = @fopen($file, 'a');
-
 ob_start();
-include("./design_form_css.php");
-$css = ob_get_contents();
-ob_end_flush();
-fwrite($f,$css);
-fclose($f);
-@chmod($file, G5_FILE_PERMISSION);
-
+try {
+    include './design_form_css.php';
+    $generated_css = ob_get_clean();
+    $temporary = $file_path.'.'.bin2hex(random_bytes(8)).'.tmp';
+    if (file_put_contents($temporary, $generated_css, LOCK_EX) === false || !rename($temporary, $file_path)) {
+        @unlink($temporary);
+        throw new RuntimeException('디자인 파일 저장 실패');
+    }
+    chmod($file_path, G5_FILE_PERMISSION);
+} catch (Throwable $e) {
+    if (ob_get_level()) ob_end_clean();
+    error_log('Design save: '.$e->getMessage());
+    alert('디자인 파일을 저장하지 못했습니다. 입력을 유지하고 서버 쓰기 권한을 확인해 주세요.');
+}
 
 goto_url('./design_form.php', false);
 ?>

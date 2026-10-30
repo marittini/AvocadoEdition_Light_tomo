@@ -1,6 +1,9 @@
 <?php
 $sub_menu = "100250";
 include_once('./_common.php');
+check_demo();
+if ($is_admin !== 'super') alert('최고관리자만 접근 가능합니다.');
+check_admin_token();
 
 $sql_common = " co_html             = '1',
                 co_tag_filter_use   = '0' ";

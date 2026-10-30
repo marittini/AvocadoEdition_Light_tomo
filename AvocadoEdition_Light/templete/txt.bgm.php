@@ -1,10 +1,10 @@
-<? if($config['cf_bgm']) { ?>
+<?php  if($config['cf_bgm']) { ?>
 <nav class="bgm-player">
 	<div class="bar-equalizer">
-		<?
+		<?php
 			// 이퀄라이저 바 개수
 			$equal_count = 30;
-			while($equal_count > 0) { echo "<i></i>"; $equal_count--; } 
+			while($equal_count > 0) { echo "<i></i>"; $equal_count--; }
 		?>
 	</div>
 	<ul>
@@ -32,16 +32,16 @@ var set_equalizer = function () {
 	});
 }
 function fn_control_bgm(state) {
-	if(state == 'play') { 
+	if(state == 'play') {
 		$('.bar-equalizer').removeClass('stop');
 		bgm_effect = setInterval(set_equalizer, 300);
-	} else { 
+	} else {
 		$('.bar-equalizer').addClass('stop');
 		clearInterval(bgm_effect);
 		$('.bar-equalizer i').css('height', '2px');
 	}
 
-	if($('html').hasClass('single')) { 
+	if($('html').hasClass('single')) {
 		return false;
 	} else {
 		return true;
@@ -50,4 +50,4 @@ function fn_control_bgm(state) {
 bgm_effect = setInterval(set_equalizer, 300);
 </script>
 
-<? } ?>
+<?php  } ?>

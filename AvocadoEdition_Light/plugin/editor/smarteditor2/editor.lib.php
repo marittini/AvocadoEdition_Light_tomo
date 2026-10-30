@@ -67,7 +67,7 @@ function get_editor_js($id, $is_dhtml_editor=true)
 	$id = str_replace("]", "_", $id);
 
     if ($is_dhtml_editor) {
-        return "var {$id}_editor_data = oEditors.getById['{$id}'].getIR();\noEditors.getById['{$id}'].exec('UPDATE_CONTENTS_FIELD', []);\nif(jQuery.inArray(document.getElementById('{$id}').value.toLowerCase().replace(/^\s*|\s*$/g, ''), ['&nbsp;','<p>&nbsp;</p>','<p><br></p>','<div><br></div>','<p></p>','<br>','']) != -1){document.getElementById('{$id}').value='';}\n";
+        return "if (typeof oEditors !== 'undefined' && oEditors.getById['{$id}']) { oEditors.getById['{$id}'].exec('UPDATE_CONTENTS_FIELD', []); }\nif(document.getElementById('{$id}') && jQuery.inArray(document.getElementById('{$id}').value.toLowerCase().replace(/^\s*|\s*$/g, ''), ['&nbsp;','<p>&nbsp;</p>','<p><br></p>','<div><br></div>','<p></p>','<br>','']) != -1){document.getElementById('{$id}').value='';}\n";
     } else {
         return "var {$id}_editor = document.getElementById('{$id}');\n";
     }

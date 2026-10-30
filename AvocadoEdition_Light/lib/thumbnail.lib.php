@@ -11,7 +11,7 @@ function get_list_thumbnail($bo_table, $wr_id, $thumb_width, $thumb_height, $is_
     $edt = false;
 
     $sql = " select bf_file, bf_content from {$g5['board_file_table']}
-                where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_type between '1' and '3' order by bf_no limit 0, 1 ";
+                where bo_table = '$bo_table' and wr_id = '$wr_id' and (bf_type between '1' and '3' or bf_type = '18') order by bf_no limit 0, 1 ";
     $row = sql_fetch($sql);
 
     if($row['bf_file']) {
@@ -201,7 +201,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         return;
 
     $size = @getimagesize($source_file);
-    if($size[2] < 1 || $size[2] > 3) // gif, jpg, png 에 대해서만 적용
+    if(!$size || !in_array($size[2], [1, 2, 3, IMAGETYPE_WEBP], true)) // gif, jpg, png 에 대해서만 적용
         return;
 
     if (!is_dir($target_path)) {
@@ -219,7 +219,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
             return basename($source_file);
     }
 
-    $ext = array(1 => 'gif', 2 => 'jpg', 3 => 'png');
+    $ext = array(1 => 'gif', 2 => 'jpg', 3 => 'png', IMAGETYPE_WEBP => 'webp');
 
     $thumb_filename = preg_replace("/\.[^\.]+$/i", "", $filename); // 확장자제거
     $thumb_file = "$target_path/thumb-{$thumb_filename}_{$thumb_width}x{$thumb_height}.".$ext[$size[2]];
@@ -275,6 +275,10 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
     } else if ($size[2] == 3) {
         $src = @imagecreatefrompng($source_file);
         @imagealphablending($src, true);
+    } else if ($size[2] == IMAGETYPE_WEBP && function_exists('imagecreatefromwebp')) {
+        $src = @imagecreatefromwebp($source_file);
+        imagealphablending($src, false);
+        imagesavealpha($src, true);
     } else {
         return;
     }
@@ -333,7 +337,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
 
             $dst = imagecreatetruecolor($dst_w, $dst_h);
 
-            if($size[2] == 3) {
+            if(in_array($size[2], [3, IMAGETYPE_WEBP], true)) {
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
             } else if($size[2] == 1) {
@@ -359,7 +363,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
                 $dst_w = $tmp_w;
             }
 
-            if($size[2] == 3) {
+            if(in_array($size[2], [3, IMAGETYPE_WEBP], true)) {
                 $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
                 imagefill($dst, 0, 0, $bgcolor);
                 imagealphablending($dst, false);
@@ -400,7 +404,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
             }
         }
 
-        if($size[2] == 3) {
+        if(in_array($size[2], [3, IMAGETYPE_WEBP], true)) {
             $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
             imagefill($dst, 0, 0, $bgcolor);
             imagealphablending($dst, false);
@@ -430,6 +434,9 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
 
     if($size[2] == 1) {
         imagegif($dst, $thumb_file);
+    } else if($size[2] == IMAGETYPE_WEBP) {
+        imagesavealpha($dst, true);
+        imagewebp($dst, $thumb_file, IMG_WEBP_LOSSLESS);
     } else if($size[2] == 3) {
         if(!defined('G5_THUMB_PNG_COMPRESS'))
             $png_compress = 5;

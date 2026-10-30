@@ -14,17 +14,17 @@ if(!$main_content) {
 ?>
 
 <div id="main_body">
-	<? echo $main_content; ?>
+	<?php  echo $main_content; ?>
 </div>
 
 <script>
-$(function() { 
+$(function() {
 	window.onload = function() {
 		$('#body').css('opacity', 1);
 	};
 });
 </script>
 
-<?
+<?php
 include_once(G5_PATH.'/tail.php');
 ?>

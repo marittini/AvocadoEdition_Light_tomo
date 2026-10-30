@@ -1,8 +1,8 @@
-<?
+<?php
 include_once('./_common.php');
 
 // 권한 확인
-if(!$is_admin) { 
+if(!$is_admin) {
 	if($member['mb_id'] && $write['mb_id'] != $member['mb_id']) { // 본인의 게시물이 아닌 경우
 		exit;
 	} else if ($member['mb_level'] < $board['bo_write_level']) {

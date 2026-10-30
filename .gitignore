@@ -1,0 +1,4 @@
+/AvocadoEdition_Light/data/
+/tests/runtime/
+*.log
+.env

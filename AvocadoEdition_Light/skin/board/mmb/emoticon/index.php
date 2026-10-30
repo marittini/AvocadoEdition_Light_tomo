@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('./_common.php');
 
 // 이모티콘 목록 불러오기
@@ -35,16 +35,16 @@ for($i=0; $row = sql_fetch_array($result); $i++) {
 </head>
 <body>
 
-<? if($is_admin) { ?><form name="frmEmoticon" method="post" id="frmEmoticon" action="./update.php"  onsubmit="return femoticonlist_submit(this);" enctype="multipart/form-data"><? } ?>
+<?php  if($is_admin) { ?><form name="frmEmoticon" method="post" id="frmEmoticon" action="./update.php"  onsubmit="return femoticonlist_submit(this);" enctype="multipart/form-data"><?php  } ?>
 
 	<div id="emoticon_page">
 		<div id="emoticon_content">
-			<? if(count($emotions) <= 0) {
+			<?php  if(count($emotions) <= 0) {
 					echo "<div class='no-data theme-box'><span>등록된 이모티콘이 없습니다.</span></div>";
-				} else { 
+				} else {
 			?>
 				<ul class="theme-box">
-					<? for($i=0; $i < count($emotions); $i++) {
+					<?php  for($i=0; $i < count($emotions); $i++) {
 						$row = $emotions[$i];
 						echo "<li>";
 					 ?>
@@ -52,19 +52,19 @@ for($i=0; $row = sql_fetch_array($result); $i++) {
 								<img src="<?=G5_URL?><?=$row['me_img']?>" alt="" />
 							</div>
 							<div class="txt">
-								<? if($is_admin) { ?>
+								<?php  if($is_admin) { ?>
 									<input type="hidden" name="me_id[<?php echo $i ?>]" value="<?php echo $row['me_id'] ?>" id="me_id_<?php echo $i ?>">
 									<input type="checkbox" name="chk[]" value="<?php echo $i ?>" id="chk_<?php echo $i ?>">
-								<? } ?>
+								<?php  } ?>
 								<span><?=$row['me_text']?></span>
 							</div>
-					<? echo "</li>"; } ?>
+					<?php  echo "</li>"; } ?>
 				</ul>
-			<? } ?>
+			<?php  } ?>
 		</div>
 	</div>
 
-	<? if($is_admin) { ?>
+	<?php  if($is_admin) { ?>
 		<div id="emoticon_control" class="theme-box">
 			<div class="inner">
 				<div class="emoticon-add-form">
@@ -77,8 +77,8 @@ for($i=0; $row = sql_fetch_array($result); $i++) {
 				</div>
 			</div>
 		</div>
-	<? } ?>
-<? if($is_admin) { ?></form>
+	<?php  } ?>
+<?php  if($is_admin) { ?></form>
 
 	<script>
 		function femoticonlist_submit(f) {
@@ -102,9 +102,9 @@ for($i=0; $row = sql_fetch_array($result); $i++) {
 					alert("이미지가 아닙니다.");
 					return;
 				}
- 
+
 				sel_file = f;
- 
+
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					$("#img").attr("src", e.target.result);
@@ -117,7 +117,7 @@ for($i=0; $row = sql_fetch_array($result); $i++) {
 			$('*[name="me_img"]').on('change', handleImgFileSelect);
 		});
 	</script>
-<? } ?>
+<?php  } ?>
 
 </body>
 </html>

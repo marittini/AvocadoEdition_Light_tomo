@@ -11,23 +11,23 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
 ?>
 
 
-<? if($qaconfig['qa_content_head']) { ?>
+<?php  if($qaconfig['qa_content_head']) { ?>
 <div class="board-notice">
 	<?=conv_content($qaconfig['qa_content_head'], 1);?>
 </div>
 <hr class="padding" />
-<? } ?>
+<?php  } ?>
 
 
 <div id="bo_list">
-	
+
 
 	<form name="fqalist" id="fqalist" action="./qadelete.php" onsubmit="return fqalist_submit(this);" method="post">
 	<input type="hidden" name="stx" value="<?php echo $stx; ?>">
 	<input type="hidden" name="sca" value="<?php echo $sca; ?>">
 	<input type="hidden" name="page" value="<?php echo $page; ?>">
 
-	
+
 	<table class="theme-list">
 		<caption><?php echo $board['bo_subject'] ?> 목록</caption>
 		<thead>
@@ -74,13 +74,13 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
 		<?php if ($i == 0) { echo '<tr><td colspan="'.$colspan.'" class="no-data">게시물이 없습니다.</td></tr>'; } ?>
 		</tbody>
 	</table>
-	
+
 
 	<div class="bo_fx">
-		
+
 
 		<div class="btn_bo_user txt-right">
-			<?php if ($is_checkbox) { ?><input type="submit" name="btn_submit" class="ui-btn admin" value="선택삭제" onclick="document.pressed=this.value"><? } ?>
+			<?php if ($is_checkbox) { ?><input type="submit" name="btn_submit" class="ui-btn admin" value="선택삭제" onclick="document.pressed=this.value"><?php  } ?>
 			<?php if ($list_href) { ?><a href="<?php echo $list_href ?>" class="ui-btn">목록</a><?php } ?>
 			<?php if ($write_href) { ?><a href="<?php echo $write_href ?>" class="ui-btn point">문의등록</a><?php } ?>
 		</div>

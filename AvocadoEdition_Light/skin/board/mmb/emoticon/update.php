@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('./_common.php');
 
 if(!$is_admin) alert("권한이 없습니다.");
@@ -18,7 +18,7 @@ if ($_POST['act_button'] == "등록") {
 			$sql_common = " , me_img = '{$emoticon_image_url}' ";
 		}
 	}
-	if($me_text != "") { 
+	if($me_text != "") {
 		sql_query(" insert into {$g5['emoticon_table']} set me_text = '{$me_text}'".$sql_common);
 	}
 } else if ($_POST['act_button'] == "삭제") {

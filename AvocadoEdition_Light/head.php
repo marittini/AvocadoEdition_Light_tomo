@@ -22,7 +22,7 @@ if($logo_data)	$logo_data.= " />";
 ?>
 <script> if(parent && parent !== this) parent.show_menu(); </script>
 
-<? include_once(G5_PATH."/menu.php"); ?>
+<?php  include_once(G5_PATH."/menu.php"); ?>
 
 
 

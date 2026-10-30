@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once($board_skin_path.'/_setting.php');
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
@@ -33,33 +33,33 @@ if($w==''){
 
 
 <section id="bo_w">
-	
-	<? if($board['bo_content_head']) { ?>
+
+	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
 			<?=stripslashes($board['bo_content_head']);?>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<!-- 게시물 작성/수정 시작 { -->
-	<form name="fwrite" id="fwrite" action="<? echo $action_url ?>" onsubmit="return fwrite_submit(this);" method="post" enctype="multipart/form-data" autocomplete="off">
-	<input type="hidden" name="uid" value="<? echo get_uniqid(); ?>">
-	<input type="hidden" name="w" value="<? echo $w ?>">
-	<input type="hidden" name="bo_table" value="<? echo $bo_table ?>">
-	<input type="hidden" name="wr_id" value="<? echo $wr_id ?>">
-	<input type="hidden" name="sca" value="<? echo $sca ?>">
-	<input type="hidden" name="sfl" value="<? echo $sfl ?>">
-	<input type="hidden" name="stx" value="<? echo $stx ?>">
-	<input type="hidden" name="spt" value="<? echo $spt ?>">
-	<input type="hidden" name="sst" value="<? echo $sst ?>">
-	<input type="hidden" name="sod" value="<? echo $sod ?>">
-	<input type="hidden" name="page" value="<? echo $page ?>">
-	<input type="hidden" name="type" value="<? echo $type ?>">
-	<?
+	<form name="fwrite" id="fwrite" action="<?php  echo $action_url ?>" onsubmit="return fwrite_submit(this);" method="post" enctype="multipart/form-data" autocomplete="off">
+	<input type="hidden" name="uid" value="<?php  echo get_uniqid(); ?>">
+	<input type="hidden" name="w" value="<?php  echo $w ?>">
+	<input type="hidden" name="bo_table" value="<?php  echo $bo_table ?>">
+	<input type="hidden" name="wr_id" value="<?php  echo $wr_id ?>">
+	<input type="hidden" name="sca" value="<?php  echo $sca ?>">
+	<input type="hidden" name="sfl" value="<?php  echo $sfl ?>">
+	<input type="hidden" name="stx" value="<?php  echo $stx ?>">
+	<input type="hidden" name="spt" value="<?php  echo $spt ?>">
+	<input type="hidden" name="sst" value="<?php  echo $sst ?>">
+	<input type="hidden" name="sod" value="<?php  echo $sod ?>">
+	<input type="hidden" name="page" value="<?php  echo $page ?>">
+	<input type="hidden" name="type" value="<?php  echo $type ?>">
+	<?php
 	$option = '';
 	$option_hidden = '';
 	if ($is_html || $is_secret || $is_mail) {
 		$option = '';
-		
+
 		if ($is_html) {
 			if ($is_dhtml_editor) {
 				$option_hidden .= '<input type="hidden" value="html1" name="html">';
@@ -90,67 +90,67 @@ if($w==''){
 			<col />
 		</colgroup>
 		<tbody>
-		<? if ($is_name) { ?>
+		<?php  if ($is_name) { ?>
 		<tr>
 			<th scope="row"><label for="wr_name">이름<strong class="sound_only">필수</strong></label></th>
-			<td><input type="text" name="wr_name" value="<? echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
+			<td><input type="text" name="wr_name" value="<?php  echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
-		<? if ($is_password) { ?>
+		<?php  if ($is_password) { ?>
 		<tr>
 			<th scope="row"><label for="wr_password">비밀번호<strong class="sound_only">필수</strong></label></th>
-			<td><input type="password" name="wr_password" id="wr_password" <? echo $password_required ?> class="frm_input <? echo $password_required ?>" maxlength="20"></td>
+			<td><input type="password" name="wr_password" id="wr_password" <?php  echo $password_required ?> class="frm_input <?php  echo $password_required ?>" maxlength="20"></td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
-		<? if ($is_email) { ?>
+		<?php  if ($is_email) { ?>
 		<tr>
 			<th scope="row"><label for="wr_email">이메일</label></th>
-			<td><input type="text" name="wr_email" value="<? echo $email ?>" id="wr_email" class="frm_input email" size="50" maxlength="100"></td>
+			<td><input type="text" name="wr_email" value="<?php  echo $email ?>" id="wr_email" class="frm_input email" size="50" maxlength="100"></td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
-		<? if ($is_homepage) { ?>
+		<?php  if ($is_homepage) { ?>
 		<tr>
 			<th scope="row"><label for="wr_homepage">홈페이지</label></th>
-			<td><input type="text" name="wr_homepage" value="<? echo $homepage ?>" id="wr_homepage" class="frm_input" size="50"></td>
+			<td><input type="text" name="wr_homepage" value="<?php  echo $homepage ?>" id="wr_homepage" class="frm_input" size="50"></td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
-		<? if ($option) { ?>
+		<?php  if ($option) { ?>
 		<tr>
 			<th scope="row">옵션</th>
-			<td><? echo $option ?></td>
+			<td><?php  echo $option ?></td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
-		<? if ($is_category) { ?>
+		<?php  if ($is_category) { ?>
 		<tr>
 			<th scope="row"><label for="ca_name">분류<strong class="sound_only">필수</strong></label></th>
 			<td>
 				<select name="ca_name" id="ca_name" required class="required" >
 					<option value="">선택하세요</option>
-					<? echo $category_option ?>
+					<?php  echo $category_option ?>
 				</select>
 			</td>
 		</tr>
-		<? }
+		<?php  }
 
-			if($type == 'pair') { 
+			if($type == 'pair') {
 				include_once($board_skin_path."/write.pair.skin.php");
 			} else {
 				include_once($board_skin_path."/write.character.skin.php");
 			}
-			
+
 		if ($is_guest) { //자동등록방지  ?>
 		<tr>
 			<th scope="row">자동등록방지</th>
 			<td>
-				<? echo $captcha_html ?>
+				<?php  echo $captcha_html ?>
 			</td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 
 		</tbody>
 	</table>
@@ -158,7 +158,7 @@ if($w==''){
 	<div class="btn_confirm">
 		<button type="submit" id="btn_submit" accesskey="s" class="ui-btn point"><i class="material-icons">edit</i> 작성</button>
 		<?php if ($delete_href) { ?><a href="<?php echo $delete_href ?>" class="ui-btn etc" onclick="del(this.href); return false;"><i class="material-icons">delete</i> 삭제</a><?php } ?>
-		<a href="./board.php?bo_table=<? echo $bo_table ?>&sst=<?=$sst?>" class="ui-btn"><i class="material-icons">list</i> 목록</a>
+		<a href="./board.php?bo_table=<?php  echo $bo_table ?>&sst=<?=$sst?>" class="ui-btn"><i class="material-icons">list</i> 목록</a>
 	</div>
 	</form>
 
@@ -182,7 +182,7 @@ if($w==''){
 			}
 		});
 
-		<? echo $captcha_js; // 캡챠 사용시 자바스크립트에서 입력된 캡챠를 검사함  ?>
+		<?php  echo $captcha_js; // 캡챠 사용시 자바스크립트에서 입력된 캡챠를 검사함  ?>
 		document.getElementById("btn_submit").disabled = "disabled";
 		return true;
 	}

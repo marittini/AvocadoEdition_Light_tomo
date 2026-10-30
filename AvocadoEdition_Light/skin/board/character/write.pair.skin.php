@@ -59,8 +59,8 @@ $(function(){
 			</td>
 			<td>
 				<select name="wr_2">
-					<?
-						for($i=0; $i < count($character_ids); $i++) { 
+					<?php
+						for($i=0; $i < count($character_ids); $i++) {
 							echo "<option value='{$character_ids[$i]['wr_id']}' ";
 							if($write['wr_2'] == $character_ids[$i]['wr_id']) echo "selected";
 							echo ">{$character_ids[$i]['wr_subject']}</option>";
@@ -83,8 +83,8 @@ $(function(){
 			</td>
 			<td>
 				<select name="wr_3">
-					<?
-						for($i=0; $i < count($character_ids); $i++) { 
+					<?php
+						for($i=0; $i < count($character_ids); $i++) {
 							echo "<option value='{$character_ids[$i]['wr_id']}' ";
 							if($write['wr_3'] == $character_ids[$i]['wr_id']) echo "selected";
 							echo ">{$character_ids[$i]['wr_subject']}</option>";

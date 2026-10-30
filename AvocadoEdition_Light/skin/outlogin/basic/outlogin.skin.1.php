@@ -22,13 +22,13 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 		<button type="submit" class="ui-btn point">로그인</button>
 	</fieldset>
 
-<? if($is_add_register) { 
+<?php  if($is_add_register) {
 	// 사이트 설정이 계정 생성이 가능할 시
 ?>
 	<fieldset class="box-join">
 		<a href="<?php echo G5_BBS_URL ?>/register.php" class="ui-btn">계정생성</a>
 	</fieldset>
-<? } ?>
+<?php  } ?>
 
 </form>
 </div>

@@ -29,7 +29,7 @@ $f_img_out = $box_f_img['cs_etc_3'] != "" ? $box_f_img['cs_etc_3'] : 0;
 ?>
 
 <style>
-<?
+<?php
 	/**************************************************
 		Design Setting
 		--------------------------------
@@ -47,27 +47,27 @@ $f_img_out = $box_f_img['cs_etc_3'] != "" ? $box_f_img['cs_etc_3'] : 0;
 #body {display:block; position:relative; width:100%; height:100% !important; overflow:auto; box-sizing:border-box;}
 #body > .fix-layout > .mid-layout {padding:10px !important;}
 
-<?
+<?php
 	/**************************************************
 		설정값에 따른 변동 부분
 	**************************************************/
 ?>
 
-#design_frameBox {<? echo "width:{$b_w}px; height:{$b_h}px; margin-left:-".($b_w/2)."px; margin-top:-".($b_h/2)."px; padding:{$p_t}px {$p_r}px {$p_b}px {$p_l}px;"; ?>}
+#design_frameBox {<?php  echo "width:{$b_w}px; height:{$b_h}px; margin-left:-".($b_w/2)."px; margin-top:-".($b_h/2)."px; padding:{$p_t}px {$p_r}px {$p_b}px {$p_l}px;"; ?>}
 
 @media all and (max-width:<?=($b_w+20)?>px) {#design_frameBox {left:10px; right:10px; width:auto; margin-left:0;}}
 @media all and (max-height:<?=($b_h+20)?>px) {#design_frameBox {top:10px; bottom:10px; height:auto; margin-top:0;}}
-@media all and (max-width:1024px) {	#design_frameBox {<? echo "padding:{$mp_t}px {$mp_r}px {$mp_b}px {$mp_l}px;"; ?>}}
+@media all and (max-width:1024px) {	#design_frameBox {<?php  echo "padding:{$mp_t}px {$mp_r}px {$mp_b}px {$mp_l}px;"; ?>}}
 
-<? if($f_img_url) { // 이미지 테두리가 적용되어 있을 경우 ?>
-	#design_frameBox:before {<?
+<?php  if($f_img_url) { // 이미지 테두리가 적용되어 있을 경우 ?>
+	#design_frameBox:before {<?php
 		echo "border:{$f_img_sli}px solid;";
 		echo "border-image:url({$f_img_url}) {$f_img_sli} / {$f_img_sli}px / {$f_img_out}px {$f_img_rep};";
 	?>}
 	#design_frameBox:after {border:none !important;}
-<? } ?>
+<?php  } ?>
 
-#design_frameBox:after {<?
+#design_frameBox:after {<?php
 	if($box_f_line['cs_value']) echo "border-color:".hex2rgba($box_f_line['cs_value'], $box_f_line['cs_etc_1'])."; ";
 	$box_f_line['border'] = explode("||", $box_f_line['cs_etc_4']);
 	for($i=0; $i < count($box_f_line['border']); $i++) {

@@ -13,6 +13,7 @@ if( !function_exists('che_reprocessImage') ){
             "image/jpg"       => array("imagecreatefromjpeg", "imagejpeg"),
             "image/jpeg"      => array("imagecreatefromjpeg", "imagejpeg"),
             "image/png"       => array("imagecreatefrompng", "imagepng"),
+            "image/webp" => array("imagecreatefromwebp", "imagewebp"),
             "image/bmp"       => array("imagecreatefromwbmp", "imagewbmp")
         );
 
@@ -82,6 +83,7 @@ switch ($type) {
 	case "jpeg":
 	case "gif":
 	case "png":
+    case "webp":
 		$found = true;
 }
 
@@ -97,6 +99,11 @@ $filename = che_replace_filename($filename);
 $savefile = SAVE_DIR . '/' . $filename;
 
 move_uploaded_file($tempfile, $savefile);
+include_once G5_LIB_PATH.'/archive.lib.php';
+try {
+    $converted = archive_convert_saved_upload($savefile);
+    if ($converted['converted']) { $savefile = $converted['path']; $filename = basename($savefile); }
+} catch (RuntimeException $e) { error_log('WebP conversion: '.$e->getMessage()); }
 $imgsize = getimagesize($savefile);
 $filesize = filesize($savefile);
 

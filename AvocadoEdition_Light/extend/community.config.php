@@ -36,7 +36,7 @@ function get_mmb_image($bo_table, $wr_id)
 	$filename = $alt = "";
 
 	$sql = " select bf_file, bf_width, bf_height from {$g5['board_file_table']}
-				where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_type between '1' and '3' order by bf_no limit 0, 1 ";
+				where bo_table = '$bo_table' and wr_id = '$wr_id' and (bf_type between '1' and '3' or bf_type = '18') order by bf_no limit 0, 1 ";
 	$row = sql_fetch($sql);
 
 	if($row['bf_file']) {
@@ -84,10 +84,10 @@ function check_site_auth(){
 	global $g5, $config, $is_member;
 
 	$is_page_login = (strstr($_SERVER["REQUEST_URI"], 'login') == "") ? false : true;
-	
+
 	// 사이트가 비공개 설정일 시, 로그인 페이지를 제외한 모든 페이지에서 외부인 접근 시
 	// 로그인 페이지로 이동 시킨다.
-	if(!$config['cf_open']) { 
+	if(!$config['cf_open']) {
 		if(!$is_member && !$is_page_login) { goto_url(G5_BBS_URL.'/login.php'); }
 	}
 
@@ -146,7 +146,7 @@ function get_site_content($co_id) {
 	if($is_member) { $no_mem = " style='display: none;' "; }
 	if(!$is_member) { $use_mem = " style='display: none;' "; }
 
-	if(strstr($pc_str, "{{LOGIN}}") || strstr($mo_str, "{{LOGIN}}")) { 
+	if(strstr($pc_str, "{{LOGIN}}") || strstr($mo_str, "{{LOGIN}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.login.php';
 		$login_str = ob_get_contents();
@@ -156,7 +156,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{LOGIN}}", $login_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{LOGOUT}}") || strstr($mo_str, "{{LOGOUT}}")) { 
+	if(strstr($pc_str, "{{LOGOUT}}") || strstr($mo_str, "{{LOGOUT}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.logout.php';
 		$logout_str = ob_get_contents();
@@ -166,7 +166,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{LOGOUT}}", $logout_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{JOIN}}") || strstr($mo_str, "{{JOIN}}")) { 
+	if(strstr($pc_str, "{{JOIN}}") || strstr($mo_str, "{{JOIN}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.join.php';
 		$join_str = ob_get_contents();
@@ -176,7 +176,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{JOIN}}", $join_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{MYPAGE}}") || strstr($mo_str, "{{MYPAGE}}")) { 
+	if(strstr($pc_str, "{{MYPAGE}}") || strstr($mo_str, "{{MYPAGE}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.mypage.php';
 		$mypage_str = ob_get_contents();
@@ -186,7 +186,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{MYPAGE}}", $mypage_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{BGM}}") || strstr($mo_str, "{{BGM}}")) { 
+	if(strstr($pc_str, "{{BGM}}") || strstr($mo_str, "{{BGM}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.bgm.php';
 		$visual_str = ob_get_contents();
@@ -196,7 +196,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{BGM}}", $visual_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{VISUAL_SLIDE}}") || strstr($mo_str, "{{VISUAL_SLIDE}}")) { 
+	if(strstr($pc_str, "{{VISUAL_SLIDE}}") || strstr($mo_str, "{{VISUAL_SLIDE}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.visual.php';
 		$visual_str = ob_get_contents();
@@ -206,7 +206,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{VISUAL_SLIDE}}", $visual_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{TWITTER}}") || strstr($mo_str, "{{TWITTER}}")) { 
+	if(strstr($pc_str, "{{TWITTER}}") || strstr($mo_str, "{{TWITTER}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.twitter.php';
 		$visual_str = ob_get_contents();
@@ -216,7 +216,7 @@ function get_site_content($co_id) {
 		$mo_str = str_replace("{{TWITTER}}", $visual_str, $mo_str);
 	}
 
-	if(strstr($pc_str, "{{OUTLOGIN}}") || strstr($mo_str, "{{OUTLOGIN}}")) { 
+	if(strstr($pc_str, "{{OUTLOGIN}}") || strstr($mo_str, "{{OUTLOGIN}}")) {
 		ob_start();
 		include G5_PATH.'/templete/txt.outlogin.php';
 		$visual_str = ob_get_contents();
@@ -243,11 +243,11 @@ function get_site_content($co_id) {
 
 function emote_ev($comment) {
 	global $g5;
-	
+
 	$emo_result = sql_query("select * from {$g5['emoticon_table']}");
 	$str = $comment;
 
-	for($i=0; $row=sql_fetch_array($emo_result); $i++) { 
+	for($i=0; $row=sql_fetch_array($emo_result); $i++) {
 		$str = str_replace($row['me_text'], "<img src=\"".G5_URL.$row["me_img"]."\">" ,$str);
 	}
 	return $str;
@@ -259,19 +259,19 @@ function have_jongsung ($chr) {
 }
 
 function j ($s, $have_jongsung) {
-	switch($have_jongsung) { 
-		case "은" : 
+	switch($have_jongsung) {
+		case "은" :
 			$no_jongsung = "는";
 		break;
-		case "이" : 
+		case "이" :
 			$no_jongsung = "가";
 		break;
-		case "을" : 
+		case "을" :
 			$no_jongsung = "를";
 		break;
 	}
 
-	
+
     $last_chr = mb_substr($s, -1, 1, 'UTF-8');
     return have_jongsung($last_chr) ?
         $have_jongsung :
@@ -281,7 +281,7 @@ function j ($s, $have_jongsung) {
 
 function hex2rgba($color, $opacity = false) {
 	$default = 'rgb(0,0,0)';
-	if(empty($color)) return $default; 
+	if(empty($color)) return $default;
 	if ($color[0] == '#' ) {
 		$color = substr($color, 1);
 	}

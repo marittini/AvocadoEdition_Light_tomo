@@ -1,4 +1,4 @@
-<?
+<?php
 // 캡챠 세션값과 비교하여 맞는지? 틀린지? 결과값을 출력합니다.
 include_once("_common.php");
 //header("Content-Type: text/html; charset=$g4[charset]");

@@ -1,6 +1,7 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 $begin_time = get_microtime();
+if (empty($_SESSION['archive_token'])) $_SESSION['archive_token'] = bin2hex(random_bytes(32));
 include_once(G5_PATH.'/head.sub.php');
 
 function print_menu1($key, $no)
@@ -16,16 +17,16 @@ function print_menu2($key, $no)
 {
     global $menu, $auth_menu, $is_admin, $auth, $g5, $sub_menu;
 
-    $str .= "<ul class=\"gnb_2dul\">";
+    $str = "<ul class=\"gnb_2dul\">";
     for($i=1; $i<count($menu[$key]); $i++)
     {
         if ($is_admin != 'super' && (!array_key_exists($menu[$key][$i][0],$auth) || !strstr($auth[$menu[$key][$i][0]], 'r')))
             continue;
 
-        if (($menu[$key][$i][4] == 1 && $gnb_grp_style == false) || ($menu[$key][$i][4] != 1 && $gnb_grp_style == true)) $gnb_grp_div = 'gnb_grp_div';
+        if ((($menu[$key][$i][4] ?? 0) == 1 && ($gnb_grp_style ?? false) == false) || (($menu[$key][$i][4] ?? 0) != 1 && ($gnb_grp_style ?? false) == true)) $gnb_grp_div = 'gnb_grp_div';
         else $gnb_grp_div = '';
 
-        if ($menu[$key][$i][4] == 1) $gnb_grp_style = 'gnb_grp_style';
+        if (($menu[$key][$i][4] ?? 0) == 1) $gnb_grp_style = 'gnb_grp_style';
         else $gnb_grp_style = '';
 
 		$check_gnb_grp_style = "";
@@ -66,7 +67,10 @@ function imageview(id, w, h)
 }
 </script>
 
+<link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/archive-admin.css?v=1">
+<script>window.archiveAdmin = <?php echo json_encode(["token"=>$_SESSION["archive_token"],"endpoint"=>G5_ADMIN_URL."/archive.ajax.php"], JSON_HEX_TAG | JSON_HEX_AMP); ?>;</script>
 <div id="wrap">
+<button type="button" id="archive-nav-toggle" aria-controls="header" aria-expanded="false">관리 메뉴</button>
 
 <header id="header">
 	<div id="admin_prof">
@@ -86,7 +90,7 @@ function imageview(id, w, h)
 	 	<ul>
 			<li style="border-bottom:1px solid #444;">
 				<a href="<?=G5_URL?>" target="_blank">
-					커뮤니티
+					내 블로그 보기
 				</a>
 			</li>
 		</ul>

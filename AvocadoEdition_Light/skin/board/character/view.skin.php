@@ -47,18 +47,18 @@ $default_font = hex2rgba($default_font['cs_value'], $default_font['cs_etc_1']);
 	</div>
 </div>
 <div class="characterViewer">
-	
-	<? if($write['wr_2']) { ?>
+
+	<?php  if($write['wr_2']) { ?>
 		<div class="ch-body" onclick="$(this).toggleClass('pop');">
 			<div class="img">
 				<div><em style="background-image:url(<?=$check_body?>);"></em><img src="<?=$check_body?>" alt="" onerror="this.remove();"/></div>
 			</div>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<div class="extend-icon-links">
 		<div class="icons-link-box link-box">
-			<?
+			<?php
 				$extend_link_file = array();
 				$tmp = dir(G5_PATH."/plugin/board");
 				while ($entry = $tmp->read()) {
@@ -81,21 +81,21 @@ $default_font = hex2rgba($default_font['cs_value'], $default_font['cs_etc_1']);
 		<div class="inner">
 			<div class="mid">
 				<div class="name-box txt-point">
-					<? if($write['wr_3']){?><span><?=$write['wr_3']?></span><? } ?>
+					<?php  if($write['wr_3']){?><span><?=$write['wr_3']?></span><?php  } ?>
 					<strong><?=$write['wr_subject']?></strong>
 				</div>
-				<? if($write['wr_content']) { ?>
+				<?php  if($write['wr_content']) { ?>
 					<div class="info">
 						<?=$write['wr_content']?>
 					</div>
-				<? } ?>
+				<?php  } ?>
 
 				<hr class="line" />
 
 				<div class="control">
 					<?php if ($update_href) { ?><a href="<?php echo $update_href ?>" class="ui-btn etc"><i class="material-icons">edit</i> 수정</a><?php } ?>
 					<?php if ($delete_href) { ?><a href="<?php echo $delete_href ?>" class="ui-btn etc" onclick="del(this.href); return false;"><i class="material-icons">delete</i> 삭제</a><?php } ?>
-					<?php if ($update_href && $write['wr_2'] != '') { ?><a href="javascript:$('.body-add-form').toggle();" class="ui-btn point"><i class="material-icons">checkroom</i> 전신추가</a><? } ?>
+					<?php if ($update_href && $write['wr_2'] != '') { ?><a href="javascript:$('.body-add-form').toggle();" class="ui-btn point"><i class="material-icons">checkroom</i> 전신추가</a><?php  } ?>
 					<a href="<?php echo $list_href ?><?=$qstr?>" class="ui-btn etc"><i class="material-icons">list</i> 목록</a>
 				</div>
 				<?php if ($update_href && $write['wr_2'] != '') { ?>
@@ -130,7 +130,7 @@ $default_font = hex2rgba($default_font['cs_value'], $default_font['cs_etc_1']);
 								type : 'POST',
 								processData: false,
 								contentType: false,
-								data : formData, 
+								data : formData,
 								success: function(data) {
 									// Toss
 									var response = data;
@@ -140,39 +140,39 @@ $default_font = hex2rgba($default_font['cs_value'], $default_font['cs_etc_1']);
 								error: function(data, status, err) {
 									console.log("error!!");
 								},
-								complete: function() { 
+								complete: function() {
 									// Complete
 									$('.loading').removeClass('mask');
 								}
 							});
 						}
 					</script>
-				<? } ?>
+				<?php  } ?>
 
 
 				<hr class="line" />
 				<div class='char-body-list'>
-				<? if($body_cnt > 0 && $write['wr_2'] != '') { 
+				<?php  if($body_cnt > 0 && $write['wr_2'] != '') {
 						// 전신 리스트 출력 (단, 추가로 등록한 전신이 있을 경우에만)
 						include_once($board_skin_path."/view_body.skin.php");
 					}
 				?>
 				</div>
 
-				<? if ($write['wr_4']) { ?><div class="sub-title txt-default"><?=$write['wr_4']?></div><? } ?>
-				<? if ($write['wr_4_txt']) { ?><div class="descript"><?=nl2br($write['wr_4_txt'])?></div><? } ?>
+				<?php  if ($write['wr_4']) { ?><div class="sub-title txt-default"><?=$write['wr_4']?></div><?php  } ?>
+				<?php  if ($write['wr_4_txt']) { ?><div class="descript"><?=nl2br($write['wr_4_txt'])?></div><?php  } ?>
 
-				<? if ($write['wr_5']) { ?><div class="sub-title txt-default"><?=$write['wr_5']?></div><? } ?>
-				<? if ($write['wr_5_txt']) { ?><div class="descript"><?=nl2br($write['wr_5_txt'])?></div><? } ?>
+				<?php  if ($write['wr_5']) { ?><div class="sub-title txt-default"><?=$write['wr_5']?></div><?php  } ?>
+				<?php  if ($write['wr_5_txt']) { ?><div class="descript"><?=nl2br($write['wr_5_txt'])?></div><?php  } ?>
 
-				<? if ($write['wr_6']) { ?><div class="sub-title txt-default"><?=$write['wr_6']?></div><? } ?>
-				<? if ($write['wr_6_txt']) { ?><div class="descript"><?=nl2br($write['wr_6_txt'])?></div><? } ?>
+				<?php  if ($write['wr_6']) { ?><div class="sub-title txt-default"><?=$write['wr_6']?></div><?php  } ?>
+				<?php  if ($write['wr_6_txt']) { ?><div class="descript"><?=nl2br($write['wr_6_txt'])?></div><?php  } ?>
 
-				<? if ($write['wr_7']) { ?><div class="sub-title txt-default"><?=$write['wr_7']?></div><? } ?>
-				<? if ($write['wr_7_txt']) { ?><div class="descript"><?=nl2br($write['wr_7_txt'])?></div><? } ?>
+				<?php  if ($write['wr_7']) { ?><div class="sub-title txt-default"><?=$write['wr_7']?></div><?php  } ?>
+				<?php  if ($write['wr_7_txt']) { ?><div class="descript"><?=nl2br($write['wr_7_txt'])?></div><?php  } ?>
 
-				<? if ($write['wr_8']) { ?><div class="sub-title txt-default"><?=$write['wr_8']?></div><? } ?>
-				<? if ($write['wr_8_txt']) { ?><div class="descript"><?=nl2br($write['wr_8_txt'])?></div><? } ?>
+				<?php  if ($write['wr_8']) { ?><div class="sub-title txt-default"><?=$write['wr_8']?></div><?php  } ?>
+				<?php  if ($write['wr_8_txt']) { ?><div class="descript"><?=nl2br($write['wr_8_txt'])?></div><?php  } ?>
 
 			</div>
 		</div>

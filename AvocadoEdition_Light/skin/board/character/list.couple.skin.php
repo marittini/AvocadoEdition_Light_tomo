@@ -26,7 +26,7 @@ $p_gallery_w = $gallery_w + 20;
 
 <li class="pair-group">
 	<div class="pair-bak-box" style="background-image:url(<?=$list[$i]['wr_1']?>);">
-		
+
 		<div class="row">
 			<div class="ch-box" style="width:<?=$p_gallery_w?>px;">
 				<div class="character-card-frame">
@@ -35,7 +35,7 @@ $p_gallery_w = $gallery_w + 20;
 						<?=$left_img_content?>
 					</a>
 				</div>
-			</div><?
+			</div><?php
 
 			?><div class="ch-box" style="width:<?=$p_gallery_w?>px;">
 				<div class="character-card-frame">
@@ -61,22 +61,22 @@ $p_gallery_w = $gallery_w + 20;
 
 		<div class="row">
 			<div class="ch-box" style="width:<?=$p_gallery_w?>px;">
-				<? if($list[$i]['wr_4']) { ?>
+				<?php  if($list[$i]['wr_4']) { ?>
 					<div class="ui-btn relation-name">
 						<?=$list[$i]['wr_4']?>
 					</div>
-				<? } ?>
+				<?php  } ?>
 				<div class="txt-default ch-name">
 					<?=$left['wr_subject']?>
 				</div>
-			</div><?
+			</div><?php
 
 			?><div class="ch-box" style="width:<?=$p_gallery_w?>px;">
-				<? if($list[$i]['wr_5']) { ?>
+				<?php  if($list[$i]['wr_5']) { ?>
 					<div class="ui-btn relation-name">
 						<?=$list[$i]['wr_5']?>
 					</div>
-				<? } ?>
+				<?php  } ?>
 				<div class="txt-default ch-name">
 					<?=$right['wr_subject']?>
 				</div>
@@ -84,9 +84,9 @@ $p_gallery_w = $gallery_w + 20;
 		</div>
 	</div>
 
-	<? if($list[$i]['mb_id'] == $member['mb_id']) { ?>
+	<?php  if($list[$i]['mb_id'] == $member['mb_id']) { ?>
 	<div class="txt-center">
 		<a href="./write.php?bo_table=<?=$bo_table?>&wr_id=<?=$list[$i]['wr_id']?>&w=u" class="ui-btn"><i class="material-icons">settings</i> 수정하기</a>
 	</div>
-	<? } ?>
+	<?php  } ?>
 </li>

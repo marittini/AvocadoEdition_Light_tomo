@@ -26,6 +26,7 @@ class UploadHandler
         "image/jpg"       => array("imagecreatefromjpeg", "imagejpeg"),
         "image/jpeg"      => array("imagecreatefromjpeg", "imagejpeg"),
         "image/png"       => array("imagecreatefrompng", "imagepng"),
+            "image/webp" => array("imagecreatefromwebp", "imagewebp"),
         "image/bmp"       => array("imagecreatefromwbmp", "imagewbmp")
     );
 
@@ -93,10 +94,10 @@ class UploadHandler
             // is enabled, set to 0 to disable chunked reading of files:
             'readfile_chunk_size' => 10 * 1024 * 1024, // 10 MiB
             // Defines which files can be displayed inline when downloaded:
-            'inline_file_types' => '/\.(gif|jpe?g|bmp|png)$/i',
+            'inline_file_types' => '/\.(gif|jpe?g|bmp|png|webp)$/i',
             // Defines which files (based on their names) are accepted for upload:
             //'accept_file_types' => '/.+$/i',
-            'accept_file_types' => '/\.(gif|jpe?g|bmp|png)$/i',
+            'accept_file_types' => '/\.(gif|jpe?g|bmp|png|webp)$/i',
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
@@ -104,7 +105,7 @@ class UploadHandler
             // The maximum number of files for the upload directory:
             'max_number_of_files' => null,
             // Defines which files are handled as image files:
-            'image_file_types' => '/\.(gif|jpe?g|bmp|png)$/i',
+            'image_file_types' => '/\.(gif|jpe?g|bmp|png|webp)$/i',
             'is_resize' => (defined('SMARTEDITOR_UPLOAD_RESIZE') && SMARTEDITOR_UPLOAD_RESIZE) ? true : false,
             'resize_max_width' => (defined('SMARTEDITOR_UPLOAD_MAX_WIDTH') && SMARTEDITOR_UPLOAD_MAX_WIDTH) ? SMARTEDITOR_UPLOAD_MAX_WIDTH : 800,
             'resize_max_height' => (defined('SMARTEDITOR_UPLOAD_MAX_HEIGHT') && SMARTEDITOR_UPLOAD_MAX_HEIGHT) ? SMARTEDITOR_UPLOAD_MAX_HEIGHT : 800,
@@ -187,7 +188,7 @@ class UploadHandler
             case 'GET':
                 if( $_GET['del'] ){
                     $this->delete();
-                } else { 
+                } else {
                     $this->get();
                 }
                 break;
@@ -361,7 +362,9 @@ class UploadHandler
 
     function get_config_bytes($val) {
         $val = trim($val);
+        if ($val === '') return 0;
         $last = strtolower($val[strlen($val)-1]);
+        $val = (float)$val;
         switch($last) {
             case 'g':
                 $val *= 1024;
@@ -423,7 +426,7 @@ class UploadHandler
            && preg_match($this->options['image_file_types'], $file->name)) {
             list($img_width, $img_height) = $this->get_image_size($uploaded_file);
         }
-        
+
         if (!empty($img_width)) {
             if ($max_width && $img_width > $max_width) {
                 $file->error = $this->get_error_message('max_width');
@@ -1041,12 +1044,12 @@ class UploadHandler
         }
         if (count($failed_versions)) {
             $file->error = $this->get_error_message('image_resize')
-                    .' ('.implode($failed_versions,', ').')';
+                    .' ('.implode(', ', $failed_versions).')';
         }
         // Free memory:
         $this->destroy_image_object($file_path);
     }
-    
+
     protected function get_microtime(){
         list($usec, $sec) = explode(" ",microtime());
         return ((float)$usec + (float)$sec);
@@ -1105,7 +1108,7 @@ class UploadHandler
         $file = new \stdClass();
         $file->oriname = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
-        
+
         $filename_ext = pathinfo($name, PATHINFO_EXTENSION);
         $file->name = $this->get_file_passname().'_'.str_replace(".", "_", $this->get_microtime()).".".$filename_ext;
 
@@ -1147,6 +1150,21 @@ class UploadHandler
                 );
             }
             $file_size = $this->get_file_size($file_path, $append_file);
+            if (!$content_range && is_file($file_path)) {
+                include_once G5_LIB_PATH.'/archive.lib.php';
+                try {
+                    $converted = archive_convert_saved_upload($file_path);
+                    if ($converted['converted']) {
+                        $file_path = $converted['path'];
+                        $file->name = basename($file_path);
+                        $file->size = $file_size = filesize($file_path);
+                        $file->type = 'image/webp';
+                    }
+                } catch (RuntimeException $e) {
+                    $file->conversion_warning = 'WebP 변환 실패: 원본 보관';
+                }
+            }
+
 
             try {
                 if(defined('G5_FILE_PERMISSION')) chmod($file_path, G5_FILE_PERMISSION);
@@ -1212,7 +1230,7 @@ class UploadHandler
     protected function body($str) {
         echo $str;
     }
-    
+
     protected function header($str) {
         header($str);
     }
@@ -1277,6 +1295,8 @@ class UploadHandler
                 return 'image/png';
             case 'gif':
                 return 'image/gif';
+            case 'webp':
+                return 'image/webp';
             default:
                 return '';
         }
@@ -1440,6 +1460,10 @@ class UploadHandler
         foreach($file_names as $file_name) {
             if( substr($file_name, 0 , 32) != $this->get_file_passname() ) continue;    //session_id() 와 비교하여 틀리면 지우지 않음
             $file_path = $this->get_upload_path($file_name);
+            if (is_file($file_path) && $file_name[0] !== '.') {
+                include_once G5_LIB_PATH.'/archive.lib.php';
+                archive_delete_companions($file_path);
+            }
             $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
             if ($success) {
                 foreach($this->options['image_versions'] as $version => $options) {

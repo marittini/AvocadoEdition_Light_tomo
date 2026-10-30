@@ -97,6 +97,12 @@ function print_r2($var)
 // header("location:URL") 을 대체
 function goto_url($url)
 {
+    if (defined('G5_IS_ADMIN') && G5_IS_ADMIN && ($_SERVER['HTTP_X_ARCHIVE_SAVE'] ?? '') === '1' && ($GLOBALS['is_admin'] ?? '') === 'super') {
+        while (ob_get_level()) ob_end_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        echo json_encode(['saved'=>true,'url'=>$url], JSON_UNESCAPED_UNICODE); exit;
+    }
 	$url = str_replace("&amp;", "&", $url);
 	//echo "<script> location.replace('$url'); </script>";
 
@@ -154,6 +160,12 @@ function get_cookie($cookie_name)
 // 경고메세지를 경고창으로
 function alert($msg='', $url='', $error=true, $post=false)
 {
+    if (defined('G5_IS_ADMIN') && G5_IS_ADMIN && ($_SERVER['HTTP_X_ARCHIVE_SAVE'] ?? '') === '1') {
+        while (ob_get_level()) ob_end_clean();
+        http_response_code(422);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error'=>strip_tags($msg ?: '입력값을 확인해 주세요.')], JSON_UNESCAPED_UNICODE); exit;
+    }
 	global $g5, $config, $member;
 	global $is_admin;
 
@@ -1421,12 +1433,13 @@ function html_symbol($str)
 *************************************************************************/
 
 // DB 연결
-function sql_connect($host, $user, $pass, $db=G5_MYSQL_DB)
+function sql_connect($host, $user, $pass, $db=null)
 {
 	global $g5;
 
 	if(function_exists('mysqli_connect') && G5_MYSQLI_USE) {
-		$link = mysqli_connect($host, $user, $pass, $db);
+		mysqli_report(MYSQLI_REPORT_OFF);
+		$link = mysqli_connect($host, $user, $pass, $db ?? (defined('G5_MYSQL_DB') ? G5_MYSQL_DB : null));
 
 		// 연결 오류 발생 시 스크립트 종료
 		if (mysqli_connect_errno()) {
@@ -1519,6 +1532,7 @@ function sql_fetch($sql, $error=G5_DISPLAY_SQL_ERROR, $link=null)
 // 결과값에서 한행 연관배열(이름으로)로 얻는다.
 function sql_fetch_array($result)
 {
+    if (!$result) return array();
 	if(function_exists('mysqli_fetch_assoc') && G5_MYSQLI_USE)
 		$row = @mysqli_fetch_assoc($result);
 	else
@@ -1566,6 +1580,7 @@ function sql_insert_id($link=null)
 
 function sql_num_rows($result)
 {
+    if (!$result) return 0;
 	if(function_exists('mysqli_num_rows') && G5_MYSQLI_USE)
 		return mysqli_num_rows($result);
 	else
@@ -1674,7 +1689,7 @@ function get_table_define($table, $crlf="\n")
 	} // end while
 	sql_free_result($result);
 
-	while (list($x, $columns) = @each($index)) {
+	foreach (($index ?? array()) as $x => $columns) {
 		$schema_create     .= ',' . $crlf;
 		if ($x == 'PRIMARY') {
 			$schema_create .= '    PRIMARY KEY (';
@@ -1685,7 +1700,7 @@ function get_table_define($table, $crlf="\n")
 		} else {
 			$schema_create .= '    KEY ' . $x . ' (';
 		}
-		$schema_create     .= implode($columns, ', ') . ')';
+		$schema_create     .= implode(', ', $columns) . ')';
 	} // end while
 
 	$schema_create .= $crlf . ') ENGINE=MyISAM DEFAULT CHARSET=utf8';
@@ -1919,7 +1934,7 @@ function bad_tag_convert($code)
 		//$code = preg_replace_callback("#(\<(embed|object)[^\>]*)\>(\<\/(embed|object)\>)?#i",
 		// embed 또는 object 태그를 막지 않는 경우 필터링이 되도록 수정
 		$code = preg_replace_callback("#(\<(embed|object)[^\>]*)\>?(\<\/(embed|object)\>)?#i",
-					create_function('$matches', 'return "<div class=\"embedx\">보안문제로 인하여 관리자 아이디로는 embed 또는 object 태그를 볼 수 없습니다. 확인하시려면 관리권한이 없는 다른 아이디로 접속하세요.</div>";'),
+					static function ($matches) { return '<div class="embedx">보안문제로 인하여 관리자 아이디로는 embed 또는 object 태그를 볼 수 없습니다. 확인하시려면 관리권한이 없는 다른 아이디로 접속하세요.</div>'; },
 					$code);
 	}
 
@@ -2479,7 +2494,7 @@ class html_process {
 		$nl = '';
 		if($javascript)
 			$nl = "\n";
-		$buffer = preg_replace('#(</head>[^<]*<body[^>]*>)#', "$javascript{$nl}$1", $buffer);
+		$buffer = preg_replace('#(</head>[^<]*<body[^>]*>)#', "{$javascript}{$nl}$1", $buffer);
 
 		return $buffer;
 	}
@@ -3008,7 +3023,7 @@ function login_password_check($mb, $pass, $hash)
                 $sql = "ALTER TABLE `{$g5['member_table']}` ADD `mb_password2` varchar(255) NOT NULL default '' AFTER `mb_password`";
                 sql_query($sql);
             }
-            
+
             $new_password = create_hash($pass);
             $sql = " update {$g5['member_table']} set mb_password = '$new_password', mb_password2 = '$hash' where mb_id = '$mb_id' ";
             sql_query($sql);

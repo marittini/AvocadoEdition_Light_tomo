@@ -10,12 +10,12 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 <script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
 <article id="bo_v">
-	
-	<? if($board['bo_content_head']) { ?>
+
+	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
 			<?=stripslashes($board['bo_content_head']);?>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<div class="board-title">
 		<?php

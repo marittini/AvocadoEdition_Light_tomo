@@ -6,8 +6,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 
 <div class="logined-skin-basic">
 	<div class="ui-thumb">
-<? if($character['ch_id']) { 
-	if($character['ch_thumb']) { 
+<?php  if($character['ch_id']) {
+	if($character['ch_thumb']) {
 		echo "
 			<a href='".G5_URL."/mypage/character/viewer.php?ch_id={$character['ch_id']}' class='thumb-box'>
 				<img src='{$character['ch_thumb']}' />
@@ -25,22 +25,22 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 	</div>
 
 	<div class="info">
-<?
-	if($character['ch_name']) { 
+<?php
+	if($character['ch_name']) {
 		echo "<p class='character txt-point'>{$character['ch_name']}</p>";
 	}
 ?>
 		<p class="name">
 			<?php echo $nick ?>
-		<? if($is_admin) { ?>
+		<?php  if($is_admin) { ?>
 			<a href="<?=G5_ADMIN_URL?>" class="ui-btn admin" target="_blank">관리자</a>
-		<? } ?>
+		<?php  } ?>
 		</p>
-<?
-	if(!$character['ch_name']) { 
-		if($is_add_character) { 
+<?php
+	if(!$character['ch_name']) {
+		if($is_add_character) {
 			echo "<p class='descript'>보유중인 캐릭터가 없습니다.</p>";
-		} else { 
+		} else {
 			echo "<p class='descript'>캐릭터 생성기간이 아닙니다.</p>";
 		}
 	}
@@ -48,17 +48,17 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 
 		<ul class="control-group">
 			<li class="link-memo">
-			<? if($memo_not_read) { // 새로운 쪽지가 도착 했을 때
+			<?php  if($memo_not_read) { // 새로운 쪽지가 도착 했을 때
 			?>
 				<a href="<?php echo G5_URL ?>/mypage/memo/" class="ui-btn point">
 					쪽지
 					<i><?php echo $memo_not_read ?></i>
 				</a>
-			<? } else { ?>
+			<?php  } else { ?>
 				<a href="<?php echo G5_URL ?>/mypage/memo/" class="ui-btn">
 					쪽지
 				</a>
-			<? } ?>
+			<?php  } ?>
 			</li>
 			<li class="link-my">
 				<a href="<?php echo G5_URL ?>/mypage/" class="ui-btn">

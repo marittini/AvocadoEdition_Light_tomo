@@ -259,6 +259,22 @@ ini_set("session.cookie_domain", G5_COOKIE_DOMAIN);
 //------------------------------------------------------------------------------
 // 기본환경설정
 // 기본적으로 사용하는 필드만 얻은 후 상황에 따라 필드를 추가로 얻음
+// Recover an interrupted design save before serving a mixture of DB values and generated CSS.
+include_once G5_LIB_PATH.'/tomo_design.lib.php';
+$tomo_design_store = new TomoDesignStore();
+if ($tomo_design_store->pending()) {
+    try { $tomo_design_store->recover(); }
+    catch (Throwable $e) {
+        error_log('Design recovery: '.$e->getMessage());
+        http_response_code(503);header('Retry-After: 5');header('Cache-Control: no-store');
+        $message='디자인 저장 복구가 완료되지 않았습니다. 잠시 후 다시 시도하거나 관리자에게 저장 폴더와 DB 권한 확인을 요청해 주세요.';
+        if (($_SERVER['HTTP_X_ARCHIVE_SAVE'] ?? '') === '1') {
+            header('Content-Type: application/json; charset=utf-8');echo json_encode(['error'=>$message],JSON_UNESCAPED_UNICODE);exit;
+        }
+        exit($message);
+    }
+}
+unset($tomo_design_store);
 $config = sql_fetch(" select * from {$g5['config_table']} ");
 if (!preg_match("/(^|[|])webp([|]|$)/i", $config["cf_image_extension"] ?? "")) $config["cf_image_extension"] = ($config["cf_image_extension"] ?? "gif|jpg|jpeg|png")."|webp";
 $article = !empty($g5["article_default_table"]) ? sql_fetch("select * from {$g5['article_default_table']}") : array();

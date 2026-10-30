@@ -46,3 +46,7 @@
 ## 비동기 설정 저장 응답
 
 디자인/환경설정 저장은 `tomo_settings_saved()`가 `saved`, `url`, `fields`, `clear_files`를 JSON으로 반환합니다. `fields`는 기존 폼의 정확한 name과 서버 확정값의 매핑이며, `clear_files`는 성공한 파일 입력의 name 목록입니다. 클라이언트는 요청 스냅샷 이후 변경되지 않은 값만 갱신합니다. 입력 중 추가 수정은 별도 미저장 상태로 남깁니다. 다른 기존 설정 저장의 `saved`/`url` 응답도 계속 지원합니다.
+
+## 디자인 저장 모듈
+
+`lib/tomo_design.lib.php`의 `TomoDesignStore`가 후보 값 검증·CSS 생성·파일 준비·DB 저장·실패 복구를 담당한다. 컨트롤러는 인증/토큰 검사 후 common.php의 POST 이스케이프를 한 번 해제해 넘긴다. 실제 폼의 `tomo_design_revision`을 반드시 전송하고 성공 응답의 새 revision을 반영한다.409이면 입력을 보관하고 최신 설정을 읽어 다시 적용한다. 복구는 `common.php`의 설정 조회 전에 실행되므로 코어 업데이트 시 이 연결부를 누락하지 않는다. [세부 계약](DESIGN-SAVE-RECOVERY.md)을 참고한다.

@@ -14,6 +14,7 @@ if ($is_admin != 'super')
 $g5['title'] = '디자인 설정';
 include_once G5_LIB_PATH.'/tomo_settings.lib.php';
 include_once G5_LIB_PATH.'/tomo_fonts.lib.php';
+include_once G5_LIB_PATH.'/tomo_design.lib.php';
 try { tomo_settings_upgrade(); } catch (Throwable $e) { alert($e->getMessage()); }
 include_once ('./admin.head.php');
 
@@ -48,6 +49,8 @@ if(!isset($config['cf_css_version'])) {
 					ADD `cf_css_version` varchar(255) NOT NULL DEFAULT '' AFTER `cf_sms_use` ", true);
 }
 
+$design_revision = tomo_design_revision(array_values($de), sql_fetch("SELECT * FROM {$g5['config_table']}"));
+
 if($config['cf_add_fonts']) {
 	$config['cf_add_fonts'] = get_text($config['cf_add_fonts'], 0);
 }
@@ -69,6 +72,7 @@ th a + a {margin-top:3px;}
 
 <form name="fconfigform" id="fconfigform" method="post" onsubmit="return fconfigform_submit(this);" enctype="multipart/form-data">
 <input type="hidden" name="token" value="" id="token">
+<input type="hidden" name="tomo_design_revision" value="<?=tomo_html($design_revision)?>">
 
 <div class="btn_confirm">
 	<a href="./design_guide_preview.php" onclick="popup_window(this.href, 'preview', 'width=700 height=800'); return false;" class="btn ty3" title="가이드 미리보기"><span class="material-icons">preview</span></a>

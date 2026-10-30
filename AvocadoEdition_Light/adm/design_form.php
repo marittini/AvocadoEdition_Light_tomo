@@ -86,7 +86,7 @@ th a + a {margin-top:3px;}
 
 	<div class="tbl_frm01 tbl_wrap">
 		<table>
-			
+
 			<colgroup>
 				<col style="width: 140px;">
 				<col style="width: 140px;">
@@ -155,7 +155,7 @@ th a + a {margin-top:3px;}
 							<option value="N" <?=$de['use_header']['cs_value'] == 'N' ? "selected" : ""?>>사용하지 않음</option>
 						</select>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th scope="row">
 						<em><?=$css_index?></em>화면가로영역
@@ -168,7 +168,7 @@ th a + a {margin-top:3px;}
 						<?php echo help('컨텐츠가 보일 가로 크기를 지정해주세요.') ?>
 						<input type="number" name="cs_value[<?=$css_index?>]" value="<?=$de['content_width']['cs_value']?>" size="5" style="width:5em;"/>px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 			</tbody>
 		</table>
 		<br />
@@ -185,11 +185,11 @@ th a + a {margin-top:3px;}
 						<input type="text" name="cs_name[<?=$css_index?>]" value="logo" readonly size="15"/>
 					</th>
 					<td rowspan="2" class="bo-right bo-left txt-center">
-						<? if($de['logo']['cs_value']) { ?>
+						<?php  if($de['logo']['cs_value']) { ?>
 							<img src="<?=$de['logo']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
@@ -197,7 +197,7 @@ th a + a {margin-top:3px;}
 					<td>
 						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['logo']['cs_value']?>" size="50"/>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="3" scope="row">
@@ -205,17 +205,17 @@ th a + a {margin-top:3px;}
 						<input type="text" name="cs_name[<?=$css_index?>]" value="background" readonly size="15"/>
 					</th>
 					<td rowspan="3" class="bo-right bo-left txt-center">
-						<? if($de['background']['cs_value']) { ?>
+						<?php  if($de['background']['cs_value']) { ?>
 							<img src="<?=$de['background']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 					</td></tr><tr>
 					<td>
-						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['background']['cs_value']?>" size="50"/>				
+						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['background']['cs_value']?>" size="50"/>
 					</td></tr><tr>
 					<td>
 						배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['background']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['background']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -255,7 +255,7 @@ th a + a {margin-top:3px;}
 						</select>
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="3" scope="row">
@@ -263,17 +263,17 @@ th a + a {margin-top:3px;}
 						<input type="text" name="cs_name[<?=$css_index?>]" value="m_background" readonly size="15"/>
 					</th>
 					<td rowspan="3" class="bo-right bo-left txt-center">
-						<? if($de['m_background']['cs_value']) { ?>
+						<?php  if($de['m_background']['cs_value']) { ?>
 							<img src="<?=$de['m_background']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 					</td></tr><tr>
 					<td>
-						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['m_background']['cs_value']?>" size="50"/>				
+						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['m_background']['cs_value']?>" size="50"/>
 					</td></tr><tr>
 					<td>
 						배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['m_background']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['m_background']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -313,7 +313,7 @@ th a + a {margin-top:3px;}
 						</select>
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 			</tbody>
 		</table>
@@ -348,7 +348,7 @@ th a + a {margin-top:3px;}
 						<?php echo help('스킨에 따라 없는 경우도 있습니다.') ?>
 						<?php echo get_skin_select('menu', '', 'cs_value['.$css_index.']', $de['menu_skin']['cs_value'], ''); ?>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="3" scope="row">
@@ -384,7 +384,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_8[<?=$css_index?>]" value="<?=$de['menu_tooltip']['cs_etc_8']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="4" scope="row">
 						<em><?=$css_index?></em>메뉴 아이콘
@@ -401,7 +401,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						그라데이션&nbsp;&nbsp;
 						0% <input type="text" name="cs_etc_2[<?=$css_index?>]" value="<?php echo $de['menu_icon']['cs_etc_2'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_3[<?=$css_index?>]" value="<?=$de['menu_icon']['cs_etc_3']?>" placeholder="0" title="투명도" style="width:45px;"/>%
-						~ 
+						~
 						100% <input type="text" name="cs_etc_4[<?=$css_index?>]" value="<?php echo $de['menu_icon']['cs_etc_4'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_5[<?=$css_index?>]" value="<?=$de['menu_icon']['cs_etc_5']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 					</td></tr><tr>
 					<td class="bo-right bo-left txt-center">
@@ -438,11 +438,11 @@ th a + a {margin-top:3px;}
 							<option value="square" <?=$de['menu_icon']['cs_etc_13'] == 'square' ? "selected" : ""?>>사각형</option>
 						</select>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 			</tbody>
 		</table>
 		<br />
-		<?
+		<?php
 			//------- 메뉴 스킨 확장 설정 처리 부분
 			@include_once(G5_PATH."/skin/menu/".$de['menu_skin']['cs_value']."/admin.setting.php");
 		?>
@@ -481,24 +481,24 @@ th a + a {margin-top:3px;}
 							<option value="N" <?=$de['intro_use']['cs_value'] == 'N' ? "selected" : ""?>>사용하지 않음</option>
 						</select>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th scope="row" rowspan="3">
 						<em><?=$css_index?></em>대문 배경설정
 						<input type="text" name="cs_name[<?=$css_index?>]" value="intro_background" readonly size="15" />
 					</th>
 					<td rowspan="3" class="bo-right bo-left txt-center">
-						<? if($de['intro_background']['cs_value']) { ?>
+						<?php  if($de['intro_background']['cs_value']) { ?>
 							<img src="<?=$de['intro_background']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 					</td></tr><tr>
 					<td>
-						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['intro_background']['cs_value']?>" size="50"/>				
+						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['intro_background']['cs_value']?>" size="50"/>
 					</td></tr><tr>
 					<td>
 						배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['intro_background']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['intro_background']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -538,18 +538,18 @@ th a + a {margin-top:3px;}
 						</select>
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th scope="row" rowspan="4">
 						<em><?=$css_index?></em>내용 설정
 						<input type="text" name="cs_name[<?=$css_index?>]" value="intro" readonly size="15" />
 					</th>
 					<td rowspan="2" class="bo-right bo-left txt-center">
-						<? if($de['intro']['cs_value']) { ?>
+						<?php  if($de['intro']['cs_value']) { ?>
 							<img src="<?=$de['intro']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
@@ -573,7 +573,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자모양&nbsp;&nbsp; <input type="text" name="cs_etc_5[<?=$css_index?>]" value="<?=$de['intro']['cs_etc_5']?>" size="30">
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 			</tbody>
 		</table>
 	</div>
@@ -639,7 +639,7 @@ th a + a {margin-top:3px;}
 					&nbsp;&nbsp;
 					좌측하단 <input type="text" name="cs_etc_15[<?=$css_index?>]" value="<?=$de['btn_point']['cs_etc_15']?>" size="3"/> px
 				</td>
-			</tr <? $css_index++; ?>>
+			</tr <?php  $css_index++; ?>>
 
 			<tr>
 				<th rowspan="3" scope="row">
@@ -685,7 +685,7 @@ th a + a {margin-top:3px;}
 					&nbsp;&nbsp;
 					좌측하단 <input type="text" name="cs_etc_15[<?=$css_index?>]" value="<?=$de['btn_point']['cs_etc_15']?>" size="3"/> px
 				</td>
-			</tr <? $css_index++; ?>>
+			</tr <?php  $css_index++; ?>>
 
 			<tr>
 				<th rowspan="3" scope="row">
@@ -731,7 +731,7 @@ th a + a {margin-top:3px;}
 					&nbsp;&nbsp;
 					좌측하단 <input type="text" name="cs_etc_15[<?=$css_index?>]" value="<?=$de['btn_etc']['cs_etc_15']?>" size="3"/> px
 				</td>
-			</tr <? $css_index++; ?>>
+			</tr <?php  $css_index++; ?>>
 
 		</tbody>
 		</table>
@@ -749,14 +749,14 @@ th a + a {margin-top:3px;}
 
 	<div class="tbl_frm01 tbl_wrap">
 		<table>
-			
+
 			<colgroup>
 				<col style="width: 140px;">
 				<col style="width: 140px;">
 				<col>
 			</colgroup>
 			<tbody>
-				
+
 				<tr>
 					<th rowspan="4" scope="row">
 						<em><?=$css_index?></em>공지사항 박스
@@ -806,7 +806,7 @@ th a + a {margin-top:3px;}
 
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_board_notice" value="right" <?=strstr($de['board_notice']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_mmb_list_item">우</label>
-						
+
 					</td></tr><tr>
 					<td class="bo-right txt-center">
 						모서리 라운드
@@ -820,7 +820,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_12[<?=$css_index?>]" value="<?=$de['board_notice']['cs_etc_12']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="3" scope="row">
 						<em><?=$css_index?></em>전체테이블
@@ -881,7 +881,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_12[<?=$css_index?>]" value="<?=$de['board_table']['cs_etc_12']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="2" scope="row">
 						<em><?=$css_index?></em>목록 : 제목
@@ -929,7 +929,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_list_header" value="right" <?=strstr($de['list_header']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_list_header">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="2" scope="row">
 						<em><?=$css_index?></em>목록 : 내용
@@ -977,7 +977,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_list_body" value="right" <?=strstr($de['list_body']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_list_body">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="2" scope="row">
 						<em><?=$css_index?></em>양식 : 제목
@@ -1025,7 +1025,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_form_header" value="right" <?=strstr($de['form_header']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_form_header">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 				<tr>
 					<th rowspan="2" scope="row">
 						<em><?=$css_index?></em>양식 : 내용
@@ -1073,7 +1073,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_form_body" value="right" <?=strstr($de['form_body']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_form_body">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 			</tbody>
 		</table>
 	</div>
@@ -1101,17 +1101,17 @@ th a + a {margin-top:3px;}
 						<input type="text" name="cs_name[<?=$css_index?>]" value="mmb_contain_bak" readonly size="15"/>
 					</th>
 					<td rowspan="3" class="bo-right bo-left txt-center">
-						<? if($de['mmb_contain_bak']['cs_value']) { ?>
+						<?php  if($de['mmb_contain_bak']['cs_value']) { ?>
 							<img src="<?=$de['mmb_contain_bak']['cs_value']?>" class="prev_thumb"/>
-						<? } else { ?>
+						<?php  } else { ?>
 						이미지 미등록
-						<? } ?>
+						<?php  } ?>
 					</td>
 					<td>
 						직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 					</td></tr><tr>
 					<td>
-						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['mmb_contain_bak']['cs_value']?>" size="50"/>				
+						외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['mmb_contain_bak']['cs_value']?>" size="50"/>
 					</td></tr><tr>
 					<td>
 						배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['mmb_contain_bak']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['mmb_contain_bak']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -1151,7 +1151,7 @@ th a + a {margin-top:3px;}
 						</select>
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="2" scope="row">
@@ -1200,7 +1200,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_mmb_list" value="right" <?=strstr($de['mmb_list']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_mmb_list">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="3" scope="row">
@@ -1255,7 +1255,7 @@ th a + a {margin-top:3px;}
 					<td>
 						<input type="text" name="cs_etc_9[<?=$css_index?>]" value="<?=$de['mmb_list_item']['cs_etc_9']?>" size="10"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="2" scope="row">
@@ -1304,7 +1304,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_mmb_log" value="right" <?=strstr($de['mmb_log']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_mmb_log">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="2" scope="row">
@@ -1353,7 +1353,7 @@ th a + a {margin-top:3px;}
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_mmb_reply" value="right" <?=strstr($de['mmb_reply']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_mmb_list_item">우</label>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th rowspan="3" scope="row">
@@ -1408,7 +1408,7 @@ th a + a {margin-top:3px;}
 					<td>
 						<input type="text" name="cs_etc_9[<?=$css_index?>]" value="<?=$de['mmb_reply_item']['cs_etc_9']?>" size="10"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1423,7 +1423,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['mmb_name']['cs_etc_2']?>" size="5"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1442,7 +1442,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						접미문자&nbsp;&nbsp; <input type="text" name="cs_etc_4[<?=$css_index?>]" value="<?=$de['mmb_owner_name']['cs_etc_4']?>" size="5"/>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1457,7 +1457,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['mmb_datetime']['cs_etc_2']?>" size="5"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1471,7 +1471,7 @@ th a + a {margin-top:3px;}
 						글자색상&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['mmb_link']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['mmb_link']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1485,7 +1485,7 @@ th a + a {margin-top:3px;}
 						글자색상&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['mmb_log_ank']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['mmb_log_ank']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1499,7 +1499,7 @@ th a + a {margin-top:3px;}
 						글자색상&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['mmb_hash']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['mmb_hash']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 			</tbody>
 		</table>
@@ -1516,7 +1516,7 @@ th a + a {margin-top:3px;}
 
 	<div class="tbl_frm01 tbl_wrap">
 		<table>
-			
+
 			<colgroup>
 				<col style="width: 140px;">
 				<col style="width: 140px;">
@@ -1539,7 +1539,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						글자모양&nbsp;&nbsp; <input type="text" name="cs_etc_3[<?=$css_index?>]" value="<?=$de['default_font']['cs_etc_3']?>" size="40"/>
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1553,7 +1553,7 @@ th a + a {margin-top:3px;}
 						색상코드&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['color_default']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['color_default']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1567,7 +1567,7 @@ th a + a {margin-top:3px;}
 						색상코드&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['color_bak']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['color_bak']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row">
@@ -1581,7 +1581,7 @@ th a + a {margin-top:3px;}
 						색상코드&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?php echo $de['color_point']['cs_value'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_1[<?=$css_index?>]" value="<?=$de['color_point']['cs_etc_1']?>" placeholder="0" title="투명도" style="width:45px;"/>%
 						&nbsp;&nbsp;
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row" rowspan="4">
@@ -1622,7 +1622,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_11[<?=$css_index?>]" value="<?=$de['input_bak']['cs_etc_11']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row" rowspan="4">
@@ -1673,7 +1673,7 @@ th a + a {margin-top:3px;}
 
 						<input type="checkbox" name="cs_etc_8[<?=$css_index?>][]" id="cs_etc_8_4_box_style" value="right" <?=strstr($de['box_style']['cs_etc_8'], 'right') ? "checked" : ""?> />
 						<label for="cs_etc_8_4_mmb_list_item">우</label>
-						
+
 					</td></tr><tr>
 					<td class="bo-right txt-center">
 						모서리 라운드
@@ -1687,7 +1687,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_12[<?=$css_index?>]" value="<?=$de['box_style']['cs_etc_12']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 				<tr>
 					<th scope="row" rowspan="4">
@@ -1721,7 +1721,7 @@ th a + a {margin-top:3px;}
 						&nbsp;&nbsp;
 						좌측하단 <input type="text" name="cs_etc_8[<?=$css_index?>]" value="<?=$de['scrollbar']['cs_etc_8']?>" size="3"/> px
 					</td>
-				</tr <? $css_index++; ?>>
+				</tr <?php  $css_index++; ?>>
 
 			</tbody>
 		</table>
@@ -1743,7 +1743,7 @@ $(function() {
 function fconfigform_submit(f)
 {
 	f.action = "./design_form_update.php";
-	<?
+	<?php
 		if(is_array($editor_list) && count($editor_list) > 0) {
 			foreach($editor_list as $edit) {
 				echo get_editor_js($edit);

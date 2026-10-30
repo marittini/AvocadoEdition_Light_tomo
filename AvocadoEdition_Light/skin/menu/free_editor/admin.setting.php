@@ -23,9 +23,9 @@ if (!defined('_GNUBOARD_')) exit;
 				세로 : <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['menu_size']['cs_etc_1'] ?>" size="5"/>px
 			</td>
 
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
-		<?
+		<?php
 			// 에디터 배열에 메뉴영역 추가하기
 			array_push($editor_list, 'cs_value['.$css_index.']');
 		?>
@@ -38,7 +38,7 @@ if (!defined('_GNUBOARD_')) exit;
 				<?php echo help('메뉴 들어갈 내용을 자유롭게 작성해 주시길 바랍니다.') ?>
 				<?php echo editor_html('cs_value['.$css_index.']', get_text($de['menu_content']['cs_value'], 0)); ?>
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 	</tbody>
 </table>

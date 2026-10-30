@@ -31,7 +31,7 @@ if (!defined('_GNUBOARD_')) exit;
 				세로 : <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['menu_size']['cs_etc_1'] ?>" size="5"/>px
 			</td>
 
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 		<tr>
 			<th rowspan="3" scope="row">
@@ -39,17 +39,17 @@ if (!defined('_GNUBOARD_')) exit;
 				<input type="text" name="cs_name[<?=$css_index?>]" value="menu_bak" readonly size="15"/>
 			</th>
 			<td rowspan="3" class="bo-right bo-left txt-center">
-				<? if($de['menu_bak']['cs_value']) { ?>
+				<?php  if($de['menu_bak']['cs_value']) { ?>
 					<img src="<?=$de['menu_bak']['cs_value']?>" class="prev_thumb"/>
-				<? } else { ?>
+				<?php  } else { ?>
 				이미지 미등록
-				<? } ?>
+				<?php  } ?>
 			</td>
 			<td>
 				직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 			</td></tr><tr>
 			<td>
-				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['menu_bak']['cs_value']?>" size="50"/>				
+				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['menu_bak']['cs_value']?>" size="50"/>
 			</td></tr><tr>
 			<td>
 				배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['menu_bak']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['menu_bak']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -89,7 +89,7 @@ if (!defined('_GNUBOARD_')) exit;
 				</select>
 				&nbsp;&nbsp;
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 		<tr>
 			<th rowspan="3" scope="row">
@@ -114,7 +114,7 @@ if (!defined('_GNUBOARD_')) exit;
 				&nbsp;&nbsp;
 				글자크기&nbsp;&nbsp; <input type="text" name="cs_etc_6[<?=$css_index?>]" value="<?=$de['menu_text_link']['cs_etc_6']?>" size="5"/> px
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 	</tbody>
 </table>

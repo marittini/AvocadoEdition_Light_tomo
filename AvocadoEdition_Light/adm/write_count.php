@@ -176,8 +176,8 @@ if (empty($line1) || empty($line2)) {
 <div>
 <script>
 $(document).ready(function(){
-    var line1 = [<?php echo implode($line1, ','); ?>];
-    var line2 = [<?php echo implode($line2, ','); ?>];
+    var line1 = [<?php echo implode(',', $line1); ?>];
+    var line2 = [<?php echo implode(',', $line2); ?>];
     var plot1 = $.jqplot ('chart1', [line1, line2], {
             seriesDefaults: {
                 <?php if ($graph == 'bar') { ?>

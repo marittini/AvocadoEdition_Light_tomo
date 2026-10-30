@@ -50,7 +50,7 @@ if (!defined('_GNUBOARD_')) exit;
 				&nbsp;&nbsp;
 				우 : <input type="text" name="cs_etc_9[<?=$css_index?>]" value="<?php echo $de['box_frame_size']['cs_etc_9'] ?>" size="5"/> px
 			</td></tr>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 		<tr>
 			<th rowspan="4" scope="row">
@@ -62,21 +62,21 @@ if (!defined('_GNUBOARD_')) exit;
 			<td colspan="2">
 				<div class="single-info">
 					<?php echo help('이미지로 설정된 테두리가 우선적으로 적용됩니다. 단순 테두리를 사용하고 싶으실 경우, 이미지 경로를 제거해주세요.') ?>
-					
+
 				</div>
 			</td></tr><tr>
 			<td rowspan="3" class="bo-right bo-left txt-center">
-				<? if($de['box_frame_img']['cs_value']) { ?>
+				<?php  if($de['box_frame_img']['cs_value']) { ?>
 					<img src="<?=$de['box_frame_img']['cs_value']?>" class="prev_thumb"/>
-				<? } else { ?>
+				<?php  } else { ?>
 				이미지 미등록
-				<? } ?>
+				<?php  } ?>
 			</td>
 			<td>
 				직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 			</td></tr><tr>
 			<td>
-				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['box_frame_img']['cs_value']?>" size="50"/>				
+				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['box_frame_img']['cs_value']?>" size="50"/>
 			</td></tr><tr>
 			<td>
 				조각크기 <span style="color:#ff4742; font-weight:600;">(Slice)</span>&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['box_frame_img']['cs_etc_1'] ?>" size="5" maxlength="255" /> px
@@ -95,7 +95,7 @@ if (!defined('_GNUBOARD_')) exit;
 				<input type="text" name="cs_etc_3[<?=$css_index?>]" value="<?php echo $de['box_frame_img']['cs_etc_3'] ?>" size="5" maxlength="255" /> px
 				&nbsp;&nbsp;
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 		<tr>
 			<th rowspan="2" scope="row">
@@ -133,7 +133,7 @@ if (!defined('_GNUBOARD_')) exit;
 
 				<input type="checkbox" name="cs_etc_4[<?=$css_index?>][]" id="cs_etc_4_4_box_frame_line" value="right" <?=strstr($de['box_frame_line']['cs_etc_4'], 'right') ? "checked" : ""?> />
 				<label for="cs_etc_4_4_mmb_list_item">우</label>
-				
+
 			</td></tr><tr>
 			<td class="bo-right txt-center">
 				모서리 라운드
@@ -147,7 +147,7 @@ if (!defined('_GNUBOARD_')) exit;
 				&nbsp;&nbsp;
 				좌측하단 <input type="text" name="cs_etc_8[<?=$css_index?>]" value="<?=$de['box_frame_line']['cs_etc_8']?>" size="3"/> px
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 		<tr>
 			<th rowspan="3" scope="row">
@@ -155,17 +155,17 @@ if (!defined('_GNUBOARD_')) exit;
 				<input type="text" name="cs_name[<?=$css_index?>]" value="box_frame_bak" readonly size="15"/>
 			</th>
 			<td rowspan="3" class="bo-right bo-left txt-center">
-				<? if($de['box_frame_bak']['cs_value']) { ?>
+				<?php  if($de['box_frame_bak']['cs_value']) { ?>
 					<img src="<?=$de['box_frame_bak']['cs_value']?>" class="prev_thumb"/>
-				<? } else { ?>
+				<?php  } else { ?>
 				이미지 미등록
-				<? } ?>
+				<?php  } ?>
 			</td>
 			<td>
 				직접등록&nbsp;&nbsp; <input type="file" name="cs_value_file[<?=$css_index?>]" value="" size="50">
 			</td></tr><tr>
 			<td>
-				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['box_frame_bak']['cs_value']?>" size="50"/>				
+				외부경로&nbsp;&nbsp; <input type="text" name="cs_value[<?=$css_index?>]" value="<?=$de['box_frame_bak']['cs_value']?>" size="50"/>
 			</td></tr><tr>
 			<td>
 				배경색상&nbsp;&nbsp; <input type="text" name="cs_etc_1[<?=$css_index?>]" value="<?php echo $de['box_frame_bak']['cs_etc_1'] ?>" class="colorpicker" size="30" maxlength="255" placeholder="#색상코드" /><input type="number" name="cs_etc_2[<?=$css_index?>]" value="<?=$de['box_frame_bak']['cs_etc_2']?>" placeholder="0" title="투명도" style="width:45px;"/>%
@@ -205,7 +205,7 @@ if (!defined('_GNUBOARD_')) exit;
 				</select>
 				&nbsp;&nbsp;
 			</td>
-		</tr <? $css_index++; ?>>
+		</tr <?php  $css_index++; ?>>
 
 	</tbody>
 </table>

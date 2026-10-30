@@ -1,7 +1,10 @@
-<? 
-@include_once('./_common.php');
+<?php
+if (!defined('ARCHIVE_CSS_RENDER')) include_once __DIR__.'/_common.php';
 
 
+if (isset($archive_preview_css)) {
+    $css = $archive_preview_css;
+} else {
 // CSS 설정 가져오기
 $css_sql = sql_query("select * from {$g5['css_table']}");
 $css = array();
@@ -29,6 +32,7 @@ for($i=0; $cs = sql_fetch_array($css_sql); $i++) {
 	$css[$cs['cs_name']][19] = $cs['cs_etc_19'];
 	$css[$cs['cs_name']][20] = $cs['cs_etc_20'];
 }
+}
 $tab_width = 1024;
 
 $is_item_area = false;
@@ -40,26 +44,26 @@ $is_comment_area = false;
 /***************************************************************
 	Design Manager Setting Style: 자동생성 CSS
 ---------------------------------------------------------------
-	- 최종 수정일 : <?=date('Y-m-d H:i:s')?> 
+	- 최종 수정일 : <?=date('Y-m-d H:i:s')?>
 	- 모바일 사이즈 기준 (공통) : <?=$tab_width?>px
 ***************************************************************/
 
-<?=stripslashes($cf_add_fonts)?> 
+<?=stripslashes($cf_add_fonts)?>
 
 
 /**************************************************************
 	기본 레이아웃
 ***************************************************************/
-<?
+<?php
 	// -- 레이아웃 변수 계산하기
 	$content_width = !$css['content_width'][0] ? 1000 : $css['content_width'][0];
 	$max_content_width = $content_width + 160;
 	$middle_content_width = $content_width + 40;
 ?>
 
-.fix-layout { <? echo "max-width:{$max_content_width}px; "; ?>}
+.fix-layout { <?php  echo "max-width:{$max_content_width}px; "; ?>}
 @media all and (max-width:<?=$max_content_width?>px) {
-	.fix-layout { <? echo "max-width:{$middle_content_width}px; "; ?>}
+	.fix-layout { <?php  echo "max-width:{$middle_content_width}px; "; ?>}
 	#body > .fix-layout > .mid-layout {padding-left:20px; padding-right:20px;}
 }
 
@@ -68,43 +72,43 @@ $is_comment_area = false;
 	기본 폰트 설정
 ***************************************************************/
 
-* {<? if($css['default_font'][3]) echo "font-family:{$css['default_font'][3]}, sans-serif; "; ?>}
-body { <?
+* {<?php  if($css['default_font'][3]) echo "font-family:{$css['default_font'][3]}, sans-serif; "; ?>}
+body { <?php
 	if($css['default_font'][0]) echo "color:".hex2rgba($css['default_font'][0], $css['default_font'][1])."; ";
 	if($css['default_font'][2]) echo "font-size:{$css['default_font'][2]}px; ";
 	if($css['default_font'][3]) echo "font-family:{$css['default_font'][3]}, sans-serif; ";
 ?>}
-.txt-default { <?
+.txt-default { <?php
 	if($css['color_default'][0]) echo "color:".hex2rgba($css['color_default'][0], $css['color_default'][1])."; ";
 ?>}
-a, .txt-point, .sch_word { <?
+a, .txt-point, .sch_word { <?php
 	if($css['color_point'][0]) echo "color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 ?>}
 
-.txt-menu-font {<? if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
+.txt-menu-font {<?php  if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
 
 
 /**************************************************************
 	사이트 배경 설정
 ***************************************************************/
 
-.enterWrapper { <?
+.enterWrapper { <?php
 	if($css['intro_background'][0]) echo "background-image:url('{$css['intro_background'][0]}'); ";
 	if($css['intro_background'][1]) echo "background-color:".hex2rgba($css['intro_background'][1], $css['intro_background'][2])."; ";
 	if($css['intro_background'][3]) echo "background-repeat:{$css['intro_background'][3]}; ";
 	if($css['intro_background'][4]) echo "background-position:{$css['intro_background'][4]}; ";
 	if($css['intro_background'][5]) echo "background-size:{$css['intro_background'][5]}; ";
 ?>}
-.enterWrapper .guide { <?
+.enterWrapper .guide { <?php
 	if($css['intro'][2]) echo "color:".hex2rgba($css['intro'][2], $css['intro'][3])."; ";
 	if($css['intro'][4]) echo "font-size:{$css['intro'][4]}px; ";
 	if($css['intro'][5]) echo "font-family:{$css['intro'][5]}, sans-serif; ";
 ?>}
 
 
-@media all and (min-width: <?=($tab_width + 1)?>px) { 
+@media all and (min-width: <?=($tab_width + 1)?>px) {
 	.admin-preview-box,
-	html.single:before { <?
+	html.single:before { <?php
 		if($css['background'][0]) echo "background-image:url('{$css['background'][0]}'); ";
 		if($css['background'][1]) echo "background-color:".hex2rgba($css['background'][1], $css['background'][2])."; ";
 		if($css['background'][3]) echo "background-repeat:{$css['background'][3]}; ";
@@ -115,7 +119,7 @@ a, .txt-point, .sch_word { <?
 
 @media all and (max-width: <?=$tab_width?>px) {
 	.admin-preview-box,
-	html.single:before { <?
+	html.single:before { <?php
 		if($css['m_background'][0]) echo "background-image:url('{$css['m_background'][0]}'); ";
 		if($css['m_background'][1]) echo "background-color:".hex2rgba($css['m_background'][1], $css['m_background'][2])."; ";
 		if($css['m_background'][3]) echo "background-repeat:{$css['m_background'][3]}; ";
@@ -130,19 +134,19 @@ a, .txt-point, .sch_word { <?
 ***************************************************************/
 
 /* 관리자 미리보기 스타일 정의 */
-.admin-preview-box .gnbWrap { <? if($css['menu_icon'][12]) echo "font-size:{$css['menu_icon'][12]}px; "; ?>}
-.admin-preview-box .gnbWrap .tooltips { <? if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
+.admin-preview-box .gnbWrap { <?php  if($css['menu_icon'][12]) echo "font-size:{$css['menu_icon'][12]}px; "; ?>}
+.admin-preview-box .gnbWrap .tooltips { <?php  if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
 
 #topCont a .icons,
 .icons-link-box .icons,
-.admin-preview-box .gnbWrap .icons { <?
+.admin-preview-box .gnbWrap .icons { <?php
 	if($css['menu_icon'][10]) echo "color:".hex2rgba($css['menu_icon'][10], $css['menu_icon'][11])."; ";
 	if($css['menu_icon'][13] == 'diamond') echo "height:3.3em; ";
 ?>}
 
 #topCont a .icons:before,
 .icons-link-box a .icons:before,
-.admin-preview-box .gnbWrap .icons:before { <?
+.admin-preview-box .gnbWrap .icons:before { <?php
 	switch($css['menu_icon'][13]) {
 		case "diamond":
 			echo "top:50%; left:50%; right:auto; bottom:auto; width:2.1em; height:2.1em; margin:-1.05em 0 0 -1.05em; transform:rotate(-45deg); -webkit-transform:rotate(-45deg); ";
@@ -160,7 +164,7 @@ a, .txt-point, .sch_word { <?
 	if($css['menu_icon'][8]) echo "border-style:{$css['menu_icon'][8]}; ";
 	if($css['menu_icon'][9]) echo "border-width:{$css['menu_icon'][9]}px; ";
 ?>}
-.admin-preview-box .gnbWrap .tooltips { <?
+.admin-preview-box .gnbWrap .tooltips { <?php
 	if($css['menu_tooltip'][0]) echo "background-color:".hex2rgba($css['menu_tooltip'][0], $css['menu_tooltip'][1])."; ";
 	if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	if($css['menu_tooltip'][4]) echo "font-size:{$css['menu_tooltip'][4]}px; ";
@@ -172,12 +176,12 @@ a, .txt-point, .sch_word { <?
 
 /* 사용자단 스타일 정의 */
 #header .gnbWrap,
-#mo_header .gnbWrap { <? if($css['menu_icon'][12]) echo "font-size:{$css['menu_icon'][12]}px; "; ?>}
+#mo_header .gnbWrap { <?php  if($css['menu_icon'][12]) echo "font-size:{$css['menu_icon'][12]}px; "; ?>}
 #header .gnbWrap .tooltips,
-#mo_header .gnbWrap .tooltips { <? if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
+#mo_header .gnbWrap .tooltips { <?php  if($css['menu_tooltip'][9]) echo "font-family:{$css['menu_tooltip'][9]}, sans-serif; "; ?>}
 
-@media all and (min-width: <?=($tab_width + 1)?>px) { 
-	#header { <?
+@media all and (min-width: <?=($tab_width + 1)?>px) {
+	#header { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo "top:0; bottom:0; left:20px; ";
@@ -193,7 +197,7 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	#header .gnbWrap { <?
+	#header .gnbWrap { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo "top:50%; left:0; transform:translateY(-50%); -webkit-transform:translateY(-50%); ";
@@ -209,7 +213,7 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	#header .gnbWrap li { <?
+	#header .gnbWrap li { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo " ";
@@ -225,7 +229,7 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	#header .gnbWrap li.line { <?
+	#header .gnbWrap li.line { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo "display:block; position:relative; height:.5em; ";
@@ -241,7 +245,7 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	#header .gnbWrap .tooltips { <?
+	#header .gnbWrap .tooltips { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo "margin-left:.5em; left:80%; top:50%; transform:translateY(-50%); -webkit-transform:translateY(-50%); ";
@@ -257,7 +261,7 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	#header .gnbWrap a:hover .tooltips { <?
+	#header .gnbWrap a:hover .tooltips { <?php
 		switch($css['use_header'][0]) {
 			case "" : // 좌측 배치
 				echo "left:100%; ";
@@ -273,12 +277,12 @@ a, .txt-point, .sch_word { <?
 			break;
 		}
 	?>}
-	
-	#header .gnbWrap .icons { <?
+
+	#header .gnbWrap .icons { <?php
 		if($css['menu_icon'][10]) echo "color:".hex2rgba($css['menu_icon'][10], $css['menu_icon'][11])."; ";
 		if($css['menu_icon'][13] == 'diamond') echo "height:3.3em; ";
 	?>}
-	#header .gnbWrap .icons:before { <?
+	#header .gnbWrap .icons:before { <?php
 		switch($css['menu_icon'][13]) {
 			case "diamond":
 				echo "top:50%; left:50%; right:auto; bottom:auto; width:2.1em; height:2.1em; margin:-1.05em 0 0 -1.05em; transform:rotate(-45deg); -webkit-transform:rotate(-45deg); ";
@@ -296,7 +300,7 @@ a, .txt-point, .sch_word { <?
 		if($css['menu_icon'][8]) echo "border-style:{$css['menu_icon'][8]}; ";
 		if($css['menu_icon'][9]) echo "border-width:{$css['menu_icon'][9]}px; ";
 	?>}
-	#header .gnbWrap .tooltips { <?
+	#header .gnbWrap .tooltips { <?php
 		if($css['menu_tooltip'][0]) echo "background-color:".hex2rgba($css['menu_tooltip'][0], $css['menu_tooltip'][1])."; ";
 		if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 		if($css['menu_tooltip'][4]) echo "font-size:{$css['menu_tooltip'][4]}px; ";
@@ -307,17 +311,17 @@ a, .txt-point, .sch_word { <?
 	?>}
 }
 @media all and (max-width: <?=$tab_width?>px) {
-	#mo_header { <?
+	#mo_header { <?php
 		if($css['menu_tooltip'][0]) echo "background-color:".hex2rgba($css['menu_tooltip'][0], $css['menu_tooltip'][1])."; ";
 		if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}
-	#mo_header .gnbWrap a { <?
+	#mo_header .gnbWrap a { <?php
 		if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}
-	#mo_header .gnbWrap li.line { <?
+	#mo_header .gnbWrap li.line { <?php
 		if($css['menu_tooltip'][2]) echo "background-color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}
-	body.open-gnb .control-mobile-menu { <?
+	body.open-gnb .control-mobile-menu { <?php
 		if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}
 }
@@ -328,13 +332,13 @@ a, .txt-point, .sch_word { <?
 	스크롤 / 마우스 드래그 블록 색상 지정
 ***************************************************************/
 
-*::-webkit-scrollbar { <?
+*::-webkit-scrollbar { <?php
 	if($css['scrollbar'][2]) echo "width:{$css['scrollbar'][2]}px; height:{$css['scrollbar'][2]}px; ";
 ?>}
-*::-webkit-scrollbar-track { <?
+*::-webkit-scrollbar-track { <?php
 	if($css['scrollbar'][0]) echo "background-color:".hex2rgba($css['scrollbar'][0], $css['scrollbar'][1])."; ";
 ?>}
-*::-webkit-scrollbar-thumb { <?
+*::-webkit-scrollbar-thumb { <?php
 	if($css['scrollbar'][3]) echo "background-color:".hex2rgba($css['scrollbar'][3], $css['scrollbar'][4])."; ";
 	if($css['scrollbar'][5]) echo "border-top-left-radius:{$css['scrollbar'][5]}px; ";
 	if($css['scrollbar'][6]) echo "border-top-right-radius:{$css['scrollbar'][6]}px; ";
@@ -342,17 +346,17 @@ a, .txt-point, .sch_word { <?
 	if($css['scrollbar'][8]) echo "border-bottom-left-radius:{$css['scrollbar'][8]}px; ";
 ?>}
 
-* { <? if($css['color_point'][0]) echo "outline-color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; "; ?>}
+* { <?php  if($css['color_point'][0]) echo "outline-color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; "; ?>}
 
-::selection { <?
+::selection { <?php
 	if($css['color_point'][0]) echo "background:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 	if($css['color_bak'][0]) echo "color:".hex2rgba($css['color_bak'][0], $css['color_bak'][1])."; ";
 ?>}
-::-moz-selection { <?
+::-moz-selection { <?php
 	if($css['color_point'][0]) echo "background:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 	if($css['color_bak'][0]) echo "color:".hex2rgba($css['color_bak'][0], $css['color_bak'][1])."; ";
 ?>}
-::-webkit-selection { <?
+::-webkit-selection { <?php
 	if($css['color_point'][0]) echo "background:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 	if($css['color_bak'][0]) echo "color:".hex2rgba($css['color_bak'][0], $css['color_bak'][1])."; ";
 ?>}
@@ -362,7 +366,7 @@ a, .txt-point, .sch_word { <?
 	버튼 색상 지정
 ***************************************************************/
 
-.ui-btn { <?
+.ui-btn { <?php
 	if($css['input_bak'][2]) echo "height:{$css['input_bak'][2]}px; ";
 	if($css['input_bak'][5]) echo "font-size:{$css['input_bak'][5]}px; ";
 
@@ -375,12 +379,12 @@ a, .txt-point, .sch_word { <?
 	if($css['btn_default'][2]) echo "color:".hex2rgba($css['btn_default'][2], $css['btn_default'][3])."; ";
 	if($css['btn_default'][4]) echo "border-color:".hex2rgba($css['btn_default'][4], $css['btn_default'][5])."; ";
 ?>}
-.ui-btn:hover { <?
+.ui-btn:hover { <?php
 	if($css['btn_default'][6]) echo "background-color:".hex2rgba($css['btn_default'][6], $css['btn_default'][7])."; ";
 	if($css['btn_default'][8]) echo "color:".hex2rgba($css['btn_default'][8], $css['btn_default'][9])."; ";
 	if($css['btn_default'][10]) echo "border-color:".hex2rgba($css['btn_default'][10], $css['btn_default'][11])."; ";
 ?>}
-.ui-btn.point { <?
+.ui-btn.point { <?php
 	if($css['btn_point'][12]) echo "border-top-left-radius:{$css['btn_point'][12]}px; ";
 	if($css['btn_point'][13]) echo "border-top-right-radius:{$css['btn_point'][13]}px; ";
 	if($css['btn_point'][14]) echo "border-bottom-right-radius:{$css['btn_point'][14]}px; ";
@@ -390,12 +394,12 @@ a, .txt-point, .sch_word { <?
 	if($css['btn_point'][2]) echo "color:".hex2rgba($css['btn_point'][2], $css['btn_point'][3])."; ";
 	if($css['btn_point'][4]) echo "border-color:".hex2rgba($css['btn_point'][4], $css['btn_point'][5])."; ";
 ?>}
-.ui-btn.point:hover { <?
+.ui-btn.point:hover { <?php
 	if($css['btn_point'][6]) echo "background-color:".hex2rgba($css['btn_point'][6], $css['btn_point'][7])."; ";
 	if($css['btn_point'][8]) echo "color:".hex2rgba($css['btn_point'][8], $css['btn_point'][9])."; ";
 	if($css['btn_point'][10]) echo "border-color:".hex2rgba($css['btn_point'][10], $css['btn_point'][11])."; ";
 ?>}
-.ui-btn.etc { <?
+.ui-btn.etc { <?php
 	if($css['btn_etc'][12]) echo "border-top-left-radius:{$css['btn_etc'][12]}px; ";
 	if($css['btn_etc'][13]) echo "border-top-right-radius:{$css['btn_etc'][13]}px; ";
 	if($css['btn_etc'][14]) echo "border-bottom-right-radius:{$css['btn_etc'][14]}px; ";
@@ -405,26 +409,26 @@ a, .txt-point, .sch_word { <?
 	if($css['btn_etc'][2]) echo "color:".hex2rgba($css['btn_etc'][2], $css['btn_etc'][3])."; ";
 	if($css['btn_etc'][4]) echo "border-color:".hex2rgba($css['btn_etc'][4], $css['btn_etc'][5])."; ";
 ?>}
-.ui-btn.etc:hover { <?
+.ui-btn.etc:hover { <?php
 	if($css['btn_etc'][6]) echo "background-color:".hex2rgba($css['btn_etc'][6], $css['btn_etc'][7])."; ";
 	if($css['btn_etc'][8]) echo "color:".hex2rgba($css['btn_etc'][8], $css['btn_etc'][9])."; ";
 	if($css['btn_etc'][10]) echo "border-color:".hex2rgba($css['btn_etc'][10], $css['btn_etc'][11])."; ";
 ?>}
 
-a.ui-btn { <?
+a.ui-btn { <?php
 	if($css['input_bak'][2]) echo "line-height:".($css['input_bak'][2]-2)."px; ";
 ?>}
-.ui-btn.small { <?
+.ui-btn.small { <?php
 	if($css['input_bak'][2]) echo "height:".($css['input_bak'][2]-10)."px; ";
 ?>}
-a.ui-btn.small { <?
+a.ui-btn.small { <?php
 	if($css['input_bak'][2]) echo "line-height:".($css['input_bak'][2]-10)."px; ";
 ?>}
-.ui-btn.big { <?
+.ui-btn.big { <?php
 	if($css['input_bak'][5]) echo "font-size:".($css['input_bak'][5]+3)."px; ";
 	if($css['input_bak'][2]) echo "height:".($css['input_bak'][2]+10)."px; ";
 ?>}
-a.ui-btn.big { <?
+a.ui-btn.big { <?php
 	if($css['input_bak'][2]) echo "line-height:".($css['input_bak'][2]+8)."px; ";
 ?>}
 
@@ -433,8 +437,8 @@ a.ui-btn.big { <?
 	검색박스 영역
 ***************************************************************/
 
-#bo_sch { <? if($css['input_bak'][2]) echo "margin-top:".($css['input_bak'][2])."px; ";?>}
-#bo_sch button { <? if($css['input_bak'][2]) echo "width:".($css['input_bak'][2])."px; height:".($css['input_bak'][2])."px; font-size:".($css['input_bak'][2]/2)."px; ";?>}
+#bo_sch { <?php  if($css['input_bak'][2]) echo "margin-top:".($css['input_bak'][2])."px; ";?>}
+#bo_sch button { <?php  if($css['input_bak'][2]) echo "width:".($css['input_bak'][2])."px; height:".($css['input_bak'][2])."px; font-size:".($css['input_bak'][2]/2)."px; ";?>}
 
 
 /**************************************************************
@@ -443,7 +447,7 @@ a.ui-btn.big { <?
 
 #bo_list,
 #bo_w,
-#bo_v { <?
+#bo_v { <?php
 	if($css['board_table'][0]) echo "padding:1.5em; background-color:".hex2rgba($css['board_table'][0], $css['board_table'][1])."; ";
 	if($css['board_table'][2]) echo "color:".hex2rgba($css['board_table'][2], $css['board_table'][3])."; ";
 	if($css['board_table'][4]) echo "border-color:".hex2rgba($css['board_table'][4], $css['board_table'][5])."; ";
@@ -464,24 +468,24 @@ a.ui-btn.big { <?
 #bo_v .board-title,
 #bo_v .board-info,
 #bo_v #bo_vc,
-#bo_v #bo_v_bot { <?
+#bo_v #bo_v_bot { <?php
 	if($css['form_body'][4]) echo "border-color:".hex2rgba($css['form_body'][4], $css['form_body'][5])."; ";
 ?>}
 #bo_v .board-title,
-#bo_v .board-info { <?
+#bo_v .board-info { <?php
 	if($css['form_body'][6]) echo "border-bottom-style:{$css['form_body'][6]}; ";
 	if($css['form_body'][7]) echo "border-bottom-width:{$css['form_body'][7]}px; ";
 ?>}
 #bo_v #bo_vc,
-#bo_v #bo_v_bot { <?
+#bo_v #bo_v_bot { <?php
 	if($css['form_body'][6]) echo "border-top-style:{$css['form_body'][6]}; ";
 	if($css['form_body'][7]) echo "border-top-width:{$css['form_body'][7]}px; ";
 ?>}
 
-#bo_v .board-title > * { <?
+#bo_v .board-title > * { <?php
 	if($css['color_point'][0]) echo "color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 ?>}
-#bo_v #bo_vc .is-reply { <?
+#bo_v #bo_vc .is-reply { <?php
 	if($css['form_body'][4]) echo "border-color:".hex2rgba($css['form_body'][4], $css['form_body'][5])."; ";
 ?>}
 
@@ -491,19 +495,19 @@ a.ui-btn.big { <?
 	페이징 스타일 설정
 ***************************************************************/
 
-.pg_wrap { <?
+.pg_wrap { <?php
 	if($css['input_bak'][5]) echo "font-size:{$css['input_bak'][5]}px; ";
 ?>}
-.pg_wrap .pg_page { <?
+.pg_wrap .pg_page { <?php
 	if($css['default_font'][0]) echo "color:".hex2rgba($css['default_font'][0], $css['default_font'][1])."; ";
 ?>}
-.pg_wrap .pg_page:hover { <?
+.pg_wrap .pg_page:hover { <?php
 	if($css['color_point'][0]) echo "color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 ?>}
-.pg_wrap .pg_control { <?
+.pg_wrap .pg_control { <?php
 	if($css['color_default'][0]) echo "color:".hex2rgba($css['color_default'][0], $css['color_default'][1])."; ";
 ?>}
-.pg_wrap .pg_current { <?
+.pg_wrap .pg_current { <?php
 	if($css['color_point'][0]) echo "color:".hex2rgba($css['color_point'][0], $css['color_point'][1])."; ";
 ?>}
 
@@ -512,8 +516,8 @@ a.ui-btn.big { <?
 	구분선 설정
 ***************************************************************/
 
-hr.line	{ <?
-	if($css['default_font'][0]) echo "background:".hex2rgba($css['default_font'][0], $css['default_font'][1])."; ";	
+hr.line	{ <?php
+	if($css['default_font'][0]) echo "background:".hex2rgba($css['default_font'][0], $css['default_font'][1])."; ";
 ?>}
 
 
@@ -526,7 +530,7 @@ input[type="file"],
 input[type="text"],
 input[type="number"],
 input[type="password"],
-select { <?
+select { <?php
 	if($css['input_bak'][2]) echo "height:{$css['input_bak'][2]}px; ";
 ?>}
 
@@ -536,7 +540,7 @@ input[type="text"],
 input[type="number"],
 input[type="password"],
 textarea,
-select { <?
+select { <?php
 	$css['input_bak'][4] = $css['input_bak'][4] == "" ? 0 : $css['input_bak'][4];
 	if($css['input_bak'][0]) echo "background-color:".hex2rgba($css['input_bak'][0], $css['input_bak'][1])."; ";
 	if($css['input_bak'][6]) echo "border-color:".hex2rgba($css['input_bak'][6], $css['input_bak'][7])."; ";
@@ -549,14 +553,14 @@ select { <?
 	if($css['input_bak'][11]) echo "border-bottom-left-radius:{$css['input_bak'][11]}px; ";
 ?>}
 
-*::placeholder { <?if($css['input_bak'][3]) echo "color:".hex2rgba($css['input_bak'][3], ($css['input_bak'][4]+50))."; ";?>}
+*::placeholder { <?php if($css['input_bak'][3]) echo "color:".hex2rgba($css['input_bak'][3], ($css['input_bak'][4]+50))."; ";?>}
 
 
 /**************************************************************
 	기본박스 설정
 ***************************************************************/
 
-.theme-box { <?
+.theme-box { <?php
 	if($css['box_style'][0]) echo "background-color:".hex2rgba($css['box_style'][0], $css['box_style'][1])."; ";
 	if($css['box_style'][2]) echo "color:".hex2rgba($css['box_style'][2], $css['box_style'][3])."; ";
 	if($css['box_style'][4]) echo "border-color:".hex2rgba($css['box_style'][4], $css['box_style'][5])."; ";
@@ -575,7 +579,7 @@ select { <?
 	}
 ?>}
 
-.board-notice-box { <?
+.board-notice-box { <?php
 	if($css['board_notice'][0]) echo "background-color:".hex2rgba($css['board_notice'][0], $css['board_notice'][1])."; ";
 	if($css['board_notice'][2]) echo "color:".hex2rgba($css['board_notice'][2], $css['board_notice'][3])."; ";
 	if($css['board_notice'][4]) echo "border-color:".hex2rgba($css['board_notice'][4], $css['board_notice'][5])."; ";
@@ -599,7 +603,7 @@ select { <?
 	테이블 설정
 ***************************************************************/
 
-.theme-list thead th { <?
+.theme-list thead th { <?php
 	if($css['list_header'][0]) echo "background-color:".hex2rgba($css['list_header'][0], $css['list_header'][1])."; ";
 	if($css['list_header'][2]) echo "color:".hex2rgba($css['list_header'][2], $css['list_header'][3])."; ";
 	if($css['list_header'][4]) echo "border-color:".hex2rgba($css['list_header'][4], $css['list_header'][5])."; ";
@@ -612,7 +616,7 @@ select { <?
 	}
 ?>}
 .theme-list tbody th,
-.theme-list tbody td { <?
+.theme-list tbody td { <?php
 	if($css['list_body'][0]) echo "background-color:".hex2rgba($css['list_body'][0], $css['list_body'][1])."; ";
 	if($css['list_body'][2]) echo "color:".hex2rgba($css['list_body'][2], $css['list_body'][3])."; ";
 	if($css['list_body'][4]) echo "border-color:".hex2rgba($css['list_body'][4], $css['list_body'][5])."; ";
@@ -625,7 +629,7 @@ select { <?
 	}
 ?>}
 
-.theme-form tbody th { <?
+.theme-form tbody th { <?php
 	if($css['form_header'][0]) echo "background-color:".hex2rgba($css['form_header'][0], $css['form_header'][1])."; ";
 	if($css['form_header'][2]) echo "color:".hex2rgba($css['form_header'][2], $css['form_header'][3])."; ";
 	if($css['form_header'][4]) echo "border-color:".hex2rgba($css['form_header'][4], $css['form_header'][5])."; ";
@@ -637,7 +641,7 @@ select { <?
 		}
 	}
 ?>}
-.theme-form tbody td { <?
+.theme-form tbody td { <?php
 	if($css['form_body'][0]) echo "background-color:".hex2rgba($css['form_body'][0], $css['form_body'][1])."; ";
 	if($css['form_body'][2]) echo "color:".hex2rgba($css['form_body'][2], $css['form_body'][3])."; ";
 	if($css['form_body'][4]) echo "border-color:".hex2rgba($css['form_body'][4], $css['form_body'][5])."; ";
@@ -657,7 +661,7 @@ select { <?
 	로드비 게시판 설정
 ***************************************************************/
 
-#load_log_board { <?
+#load_log_board { <?php
 	if($css['mmb_contain_bak'][0]) echo "background-image:url('{$css['mmb_contain_bak'][0]}'); ";
 	if($css['mmb_contain_bak'][1]) echo "background-color:".hex2rgba($css['mmb_contain_bak'][1], $css['mmb_contain_bak'][2])."; ";
 	if($css['mmb_contain_bak'][3]) echo "background-repeat:{$css['mmb_contain_bak'][3]}; ";
@@ -665,7 +669,7 @@ select { <?
 	if($css['mmb_contain_bak'][5]) echo "background-size:{$css['mmb_contain_bak'][5]}; ";
 ?>}
 
-#log_list { <?
+#log_list { <?php
 	if($css['mmb_list'][0]) echo "background-color:".hex2rgba($css['mmb_list'][0], $css['mmb_list'][1])."; ";
 	if($css['mmb_list'][2]) echo "color:".hex2rgba($css['mmb_list'][2], $css['mmb_list'][3])."; ";
 	if($css['mmb_list'][4]) echo "border-color:".hex2rgba($css['mmb_list'][4], $css['mmb_list'][5])."; ";
@@ -678,7 +682,7 @@ select { <?
 	}
 ?>}
 
-#log_list .item { <?
+#log_list .item { <?php
 	if($css['mmb_list_item'][0]) $is_item_area = true;
 	if($css['mmb_list_item'][0]) echo "background-color:".hex2rgba($css['mmb_list_item'][0], $css['mmb_list_item'][1])."; ";
 	if($css['mmb_list_item'][2]) echo "color:".hex2rgba($css['mmb_list_item'][2], $css['mmb_list_item'][3])."; ";
@@ -693,7 +697,7 @@ select { <?
 	if($css['mmb_list_item'][9]) echo "margin-bottom:{$css['mmb_list_item'][9]}px; ";
 ?>}
 
-#log_list .item .item-inner .ui-pic { <?
+#log_list .item .item-inner .ui-pic { <?php
 	if($css['mmb_log'][0]) echo "background-color:".hex2rgba($css['mmb_log'][0], $css['mmb_log'][1])."; ";
 	if($css['mmb_log'][2]) echo "color:".hex2rgba($css['mmb_log'][2], $css['mmb_log'][3])."; ";
 	if($css['mmb_log'][4]) echo "border-color:".hex2rgba($css['mmb_log'][4], $css['mmb_log'][5])."; ";
@@ -706,7 +710,7 @@ select { <?
 	}
 ?>}
 
-#log_list .item .item-inner .item-comment { <?
+#log_list .item .item-inner .item-comment { <?php
 	if($css['mmb_reply_item'][0]) $is_comment_area = true;
 	if($css['mmb_reply_item'][0]) echo "background-color:".hex2rgba($css['mmb_reply_item'][0], $css['mmb_reply_item'][1])."; ";
 	if($css['mmb_reply_item'][2]) echo "color:".hex2rgba($css['mmb_reply_item'][2], $css['mmb_reply_item'][3])."; ";
@@ -721,7 +725,7 @@ select { <?
 	if($css['mmb_reply_item'][9]) echo "margin-bottom:{$css['mmb_reply_item'][9]}px; ";
 ?>}
 
-#log_list .item .item-inner .ui-comment { <?
+#log_list .item .item-inner .ui-comment { <?php
 	if($css['mmb_reply'][0]) $is_comment_area = true;
 	if($css['mmb_reply'][0]) echo "background-color:".hex2rgba($css['mmb_reply'][0], $css['mmb_reply'][1])."; ";
 	if($css['mmb_reply'][2]) echo "color:".hex2rgba($css['mmb_reply'][2], $css['mmb_reply'][3])."; ";
@@ -737,30 +741,30 @@ select { <?
 ?>}
 
 #log_list .item .item-inner .co-header p,
-#log_list .item .item-inner .co-header p a { <?
+#log_list .item .item-inner .co-header p a { <?php
 	if($css['mmb_name'][0]) echo "color:".hex2rgba($css['mmb_name'][0], $css['mmb_name'][1])."; ";
 	if($css['mmb_name'][2]) echo "font-size:{$css['mmb_name'][2]}px; ";
 ?>}
 
 #log_list .item .item-inner .co-header p.owner,
-#log_list .item .item-inner .co-header p.owner a { <?
+#log_list .item .item-inner .co-header p.owner a { <?php
 	if($css['mmb_owner_name'][0]) echo "color:".hex2rgba($css['mmb_owner_name'][0], $css['mmb_owner_name'][1])."; ";
 	if($css['mmb_owner_name'][2]) echo "font-size:{$css['mmb_owner_name'][2]}px; ";
 ?>}
 
-#log_list .item .item-inner .co-footer .date { <?
+#log_list .item .item-inner .co-footer .date { <?php
 	if($css['mmb_datetime'][0]) echo "color:".hex2rgba($css['mmb_datetime'][0], $css['mmb_datetime'][1])."; ";
 	if($css['mmb_datetime'][2]) echo "font-size:{$css['mmb_datetime'][2]}px; ";
 ?>}
 
-#log_list .item .item-inner .co-content .other-site-link { <?
+#log_list .item .item-inner .co-content .other-site-link { <?php
 	if($css['mmb_link'][0]) echo "color:".hex2rgba($css['mmb_link'][0], $css['mmb_link'][1])."; ";
 ?>}
 
-#log_list .item .item-inner .co-content .link_hash_tag { <?
+#log_list .item .item-inner .co-content .link_hash_tag { <?php
 	if($css['mmb_hash'][0]) echo "color:".hex2rgba($css['mmb_hash'][0], $css['mmb_hash'][1])."; ";
 ?>}
 
-#log_list .item .item-inner .co-content .log_link_tag { <?
+#log_list .item .item-inner .co-content .log_link_tag { <?php
 	if($css['mmb_log_ank'][0]) echo "color:".hex2rgba($css['mmb_log_ank'][0], $css['mmb_log_ank'][1])."; ";
 ?>}

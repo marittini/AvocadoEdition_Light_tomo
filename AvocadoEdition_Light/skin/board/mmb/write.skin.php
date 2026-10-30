@@ -28,7 +28,7 @@ if ($is_notice || $is_html || $is_secret || $is_mail) {
 	}
 }
 
-if(!$is_error) { 
+if(!$is_error) {
 
 	// 카테고리 재정의
 	$is_category = false;
@@ -46,16 +46,16 @@ if(!$is_error) {
 			$category = trim($categories[$i]);
 			if (!$category) continue;
 
-			if($i==0 && $ca_name == '') { 
+			if($i==0 && $ca_name == '') {
 				$ca_name = $category;
 			}
 			if ($category == $ca_name) {
 				$class = ' class="on"';
 				$checked = 'checked';
 			}
-			
+
 			$category_option .= "<li $class>";
-			
+
 			$category_option .= "
 				<input type='radio' name='ca_name' value='{$category}' id='ca_name_{$i}' {$checked} />
 				<label for='ca_name_{$i}' data-index='view_{$i}'>$category</label>
@@ -66,11 +66,11 @@ if(!$is_error) {
 	}
 
 	$image_url = $board_skin_url."/img/no_image.png";
-	if($w == 'u') { 
+	if($w == 'u') {
 		if($write['wr_type'] == 'URL') {
 			$image_url = $write['wr_url'];
 			$img_data = "width : ".$write['wr_width']."px / height : ".$write['wr_height']."px";
-		} else if($file[0]['file']) { 
+		} else if($file[0]['file']) {
 			$image_url = $file[0]['path']."/".$file[0]['file'];
 			$img_data = "width : ".$file[0]['wr_width']."px / height : ".$file[0]['wr_height']."px";
 		}
@@ -79,7 +79,7 @@ if(!$is_error) {
 			$write['wr_subject'] = $member['mb_name'];
 			if(!$write['wr_subject']) $write['wr_subject'] = 'GUEST';
 		}
-	} else { 
+	} else {
 		$write['wr_subject'] = $member['mb_name'];
 		if(!$write['wr_subject']) $write['wr_subject'] = 'GUEST';
 	}
@@ -104,14 +104,14 @@ if(!$is_error) {
 			<input type="hidden" name="wr_width" id="wr_width" value="<?php echo $write['wr_width']; ?>">
 			<input type="hidden" name="wr_height" id="wr_height" value="<?php echo $write['wr_height']; ?>">
 			<?php echo $option_hidden; ?>
-			
+
 			<!-- LOG 등록 부분 -->
 			<div id="view_image" class="theme-box">
 				<span><?=$img_data?></span>
 				<em id="view_image_loading">...LOADING...</em>
-				<? if($image_url) { ?>
+				<?php  if($image_url) { ?>
 				<img src="<?=$image_url?>" id="prev_view_image" />
-				<? } ?>
+				<?php  } ?>
 			</div>
 
 			<dl>
@@ -133,7 +133,7 @@ if(!$is_error) {
 					</div>
 				</dd>
 			</dl>
-			
+
 			<div class="theme-box">
 			<?php if ($is_category) { ?>
 				<ul id="board_category">
@@ -143,7 +143,7 @@ if(!$is_error) {
 
 				<div class="inner">
 					<!-- 일반 커맨드 -->
-					<?
+					<?php
 						/******************************************************
 						* :: 주사위의 경우, 한번 굴린 데이터가 남아 있을 시 수정 불가
 						* :: 이때, 다른 카테고리의 선택을 할 수 없다.
@@ -154,7 +154,7 @@ if(!$is_error) {
 							<i class="icon gear"></i>Option
 						</dt>
 						<dd>
-					<? if($is_member) { ?>
+					<?php  if($is_member) { ?>
 							<fieldset>
 								<input type="checkbox" id="wr_secret" name="wr_secret" value="1" <?=$write['wr_secret'] ? "checked" : ""?>/>
 								<label for="wr_secret">멤버공개</label>
@@ -163,7 +163,7 @@ if(!$is_error) {
 								<input type="checkbox" id="wr_adult" name="wr_adult" value="1" <?=$write['wr_adult'] ? "checked" : ""?>/>
 								<label for="wr_adult">19금</label>
 							</fieldset>
-					<? } ?>
+					<?php  } ?>
 							<fieldset>
 								<input type="checkbox" id="wr_wide" name="wr_wide" value="1" <?=$write['wr_wide'] ? "checked" : ""?>/>
 								<label for="wr_wide">리플창 아래로</label>
@@ -174,7 +174,7 @@ if(!$is_error) {
 							</fieldset>
 						</dd>
 					</dl>
-					
+
 					<?php if ($is_name) { ?>
 					<dl>
 						<dt>
@@ -207,17 +207,17 @@ if(!$is_error) {
 						</dd>
 					</dl>
 					<?php } ?>
-					
+
 				</div>
 			</div>
-			
+
 			<hr class="padding small" />
 
 			<div class="comments">
 				<textarea name="wr_content" rows="5"><?=$write['wr_content']?></textarea>
 				<p class="ui-btn help">해시태그 : #해시태그내용 / 로그링크 : @로그번호</p>
 			</div>
-			
+
 			<hr class="padding" />
 
 			<div class="txt-center">
@@ -304,19 +304,19 @@ if(!$is_error) {
 			}
 		}
 
-<? if($w == '') { ?>
+<?php  if($w == '') { ?>
 		if(f.wr_type.value == 'UPLOAD') {
-			if(document.getElementById('wr_file').value == '') { 
+			if(document.getElementById('wr_file').value == '') {
 				alert("업로드할 로그를 등록해 주시길 바랍니다.");
 				return false;
 			}
-		} else if(f.wr_type.value == 'URL') { 
-			if(document.getElementById('wr_url').value == '') { 
+		} else if(f.wr_type.value == 'URL') {
+			if(document.getElementById('wr_url').value == '') {
 				alert("등록할 로그 URL을 입력해 주시길 바랍니다.");
 				return false;
 			}
 		}
-<? } ?>
+<?php  } ?>
 		document.getElementById("btn_submit").disabled = "disabled";
 		return true;
 	}
@@ -350,7 +350,7 @@ if(!$is_error) {
 	}
 
 	function previewImage(targetObj, previewId) {
-		var preview = document.getElementById(previewId); //div id   
+		var preview = document.getElementById(previewId); //div id
 		var ua = window.navigator.userAgent;
 		var files = targetObj.files;
 
@@ -394,9 +394,9 @@ if(!$is_error) {
 				}
 			}
 		}
-		
-		if(i > 0) { 
-			
+
+		if(i > 0) {
+
 			//preview.style.background="none";
 		} else {
 			complete('F');
@@ -406,7 +406,7 @@ if(!$is_error) {
 
 	function checkImage(url, callback, timeout, previewId) {
 		timeout = timeout || 5000;
-		
+
 		$('#view_image_loading').show();
 
 		var timedOut = false, timer;
@@ -436,20 +436,20 @@ if(!$is_error) {
 		timer = setTimeout(function() {
 			timedOut = true;
 			callback("F");
-		}, timeout); 
+		}, timeout);
 	}
 
 	function complete(message, w, h) {
-		if(message == 'S') { 
+		if(message == 'S') {
 			$('#wr_width').val(w);
 			$('#wr_height').val(h);
 			$('#view_image > span').text("width : " + w + "px / height : " + h + "px");
-		} else { 
+		} else {
 			$('#view_image > span').text("");
 		}
 	}
 
-	function fn_log_type(type) { 
+	function fn_log_type(type) {
 		$('#add_'+type).siblings().hide();
 		$('#add_'+type).show();
 
@@ -465,7 +465,7 @@ if(!$is_error) {
 $('#fwrite select').change(function() {
 	$('#fwrite select').find("option").attr('disabled', false);
 	$('#fwrite select').each(function() {
-		if($(this).val()) { 
+		if($(this).val()) {
 			$('#fwrite select').not(this).find("option[value="+ $(this).val() + "]").attr('disabled', true);
 		}
 	});
@@ -474,4 +474,4 @@ $('#fwrite select').change(function() {
 
 </script>
 
-<? } ?>
+<?php  } ?>

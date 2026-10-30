@@ -1,5 +1,6 @@
 <?php
 include_once('./_common.php');
+include_once G5_LIB_PATH.'/archive.lib.php';
 include_once(G5_LIB_PATH.'/naver_syndi.lib.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
@@ -260,10 +261,10 @@ if ($w == '' || $w == 'r') {
                      wr_last = '".G5_TIME_YMDHIS."',
                      wr_ip = '{$_SERVER['REMOTE_ADDR']}',
 
-					 ch_id = '$character['ch_id']',
-					 ch_side = '$character['ch_side']',
-					 ch_class = '$character['ch_class']',
-					 ti_id = '$character['ch_title']',
+					 ch_id = '{$character['ch_id']}',
+					 ch_side = '{$character['ch_side']}',
+					 ch_class = '{$character['ch_class']}',
+					 ti_id = '{$character['ch_title']}',
 					 wr_width = '$wr_width',
 					 wr_height = '$wr_height',
 					 wr_url = '$wr_url',
@@ -485,7 +486,8 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
         $upload[$i]['del_check'] = true;
 
         $row = sql_fetch(" select bf_file from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' and bf_no = '{$i}' ");
-        @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
+        archive_delete_companions(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
+            @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
         // 썸네일삭제
         if(preg_match("/\.({$config['cf_image_extension']})$/i", $row['bf_file'])) {
             delete_board_thumbnail($bo_table, $row['bf_file']);
@@ -527,7 +529,7 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
         // image type
         if ( preg_match("/\.({$config['cf_image_extension']})$/i", $filename) ||
              preg_match("/\.({$config['cf_flash_extension']})$/i", $filename) ) {
-            if ($timg['2'] < 1 || $timg['2'] > 16)
+            if (!$timg || !in_array($timg[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true))
                 continue;
         }
         //=================================================================
@@ -538,6 +540,7 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
         if ($w == 'u') {
             // 존재하는 파일이 있다면 삭제합니다.
             $row = sql_fetch(" select bf_file from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$i' ");
+            archive_delete_companions(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
             @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
             // 이미지파일이면 썸네일삭제
             if(preg_match("/\.({$config['cf_image_extension']})$/i", $row['bf_file'])) {
@@ -562,6 +565,20 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
 
         // 업로드가 안된다면 에러메세지 출력하고 죽어버립니다.
         $error_code = move_uploaded_file($tmp_file, $dest_file) or die($_FILES['bf_file']['error'][$i]);
+        include_once G5_LIB_PATH.'/archive.lib.php';
+        try {
+            $converted = archive_convert_saved_upload($dest_file);
+            if ($converted['converted']) {
+                $dest_file = $converted['path'];
+                $upload[$i]['file'] = basename($dest_file);
+                $upload[$i]['filesize'] = filesize($dest_file);
+                $upload[$i]['image'] = getimagesize($dest_file);
+            }
+        } catch (RuntimeException $e) {
+            // Never discard the original when conversion is unavailable; surface the result.
+            $file_upload_msg .= '이미지 변환 실패: 원본으로 첨부했습니다. '.$e->getMessage().'\n';
+        }
+
 
         // 올라간 파일의 퍼미션을 변경합니다.
         chmod($dest_file, G5_FILE_PERMISSION);
@@ -571,7 +588,7 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
 // 나중에 테이블에 저장하는 이유는 $wr_id 값을 저장해야 하기 때문입니다.
 for ($i=0; $i<count($upload); $i++)
 {
-    if (!get_magic_quotes_gpc()) {
+    if (true) { // PHP no longer adds magic quotes.
         $upload[$i]['source'] = addslashes($upload[$i]['source']);
     }
 

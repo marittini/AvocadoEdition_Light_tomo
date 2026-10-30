@@ -18,50 +18,50 @@ $owner_behind = $owner_behind['cs_etc_4'];
 
 <div id="load_log_board">
 
-	<? if($board['bo_content_head']) { ?>
+	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
 			<?=stripslashes($board['bo_content_head']);?>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<!-- 게시판 카테고리 시작 { -->
 	<?php if ($is_category) { ?>
 	<nav  class="board-category">
 		<ul>
 			<li><a href="./board.php?bo_table=<?=$bo_table?>" class="ui-btn <?=!$sca || $sca == ''? 'point' : 'etc'?>">ALL</a></li>
-			<? echo $category_list ?>
+			<?php  echo $category_list ?>
 		</ul>
 	</nav>
 	<?php } ?>
 	<!-- } 게시판 카테고리 끝 -->
-	
+
 	<div class="ui-mmb-button">
 	<?php if ($write_href) { ?>
 		<a href="<?php echo $write_href ?>" class="ui-btn point">등록하기</a>
-	<? } ?>
+	<?php  } ?>
 		<a href="<?php echo $list_href ?>" class="ui-btn">새로고침</a>
 		<a href="<?php echo $board_skin_url ?>/emoticon/" class="ui-btn etc new_win">이모티콘</a>
 	</div>
 
-	<? if($write_pages) { ?><?php echo $write_pages; ?><? } ?>
+	<?php  if($write_pages) { ?><?php echo $write_pages; ?><?php  } ?>
 
 
 	<!-- 리스트 시작 -->
 	<div id="log_list" class="none-trans">
-	<?
+	<?php
 		for ($i=0; $i<count($list); $i++) {
 			$list_item = $list[$i];
 			include($board_skin_path."/list.log.skin.php");
 		}
-		if (count($list) == 0) { echo "<div class=\"empty_list\">등록된 로그가 없습니다.</div>"; } 
+		if (count($list) == 0) { echo "<div class=\"empty_list\">등록된 로그가 없습니다.</div>"; }
 	?>
 	</div>
 
-	<? if($write_pages) { ?>
+	<?php  if($write_pages) { ?>
 	<div class="ui-paging">
 		<?php echo $write_pages;  ?>
 	</div>
-<? } ?>
+<?php  } ?>
 
 	<div class="searc-sub-box">
 
@@ -86,7 +86,7 @@ $owner_behind = $owner_behind['cs_etc_4'];
 					<button type="submit" class="ui-btn point">검색</button>
 				</fieldset>
 			</div>
-			
+
 		</form>
 	</div>
 
@@ -125,7 +125,7 @@ function fviewcomment_submit(f)
 		f.wr_content.focus();
 		return false;
 	}
-	
+
 	if (!f.wr_content.value) {
 		alert("댓글을 입력하여 주십시오.");
 		return false;
@@ -161,7 +161,7 @@ function comment_delete()
 	return confirm("이 댓글을 삭제하시겠습니까?");
 }
 
-function comment_box(co_id, wr_id) { 
+function comment_box(co_id, wr_id) {
 
 	if($('#c_'+co_id).find('.modify_area').is(':visible')) {
 		$('.modify_area').hide();
@@ -182,7 +182,7 @@ function comment_box(co_id, wr_id) {
 	modify_form.comment_id.value = co_id;
 }
 
-function modify_commnet(co_id) { 
+function modify_commnet(co_id) {
 	var modify_form = document.getElementById('frm_modify_comment');
 	var wr_content = $('#save_co_comment_'+co_id).val();
 

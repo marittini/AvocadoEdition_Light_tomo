@@ -413,6 +413,8 @@ function admin_referer_check($return=false)
     }
 }
 
+$auth = array();
+
 // 접근 권한 검사
 if (!$member['mb_id'])
 {
@@ -447,7 +449,7 @@ if (get_session('ss_mb_key') !== $admin_key) {
     alert_close('정상적으로 로그인하여 접근하시기 바랍니다.');
 }
 
-@ksort($auth);
+if (is_array($auth ?? null)) ksort($auth);
 
 // 가변 메뉴
 unset($auth_menu);

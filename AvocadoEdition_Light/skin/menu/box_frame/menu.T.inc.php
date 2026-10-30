@@ -15,10 +15,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$menu_skin_url.'/css/style.T.css"
 
 ?>
 <style>
-<? if($header_inside) { // 메뉴가 박스 안쪽에 위치해야 할 경우 ?>
-	@media all and (min-width:1025px) { #header {<? echo "top:50%; margin-top:-".(($b_h/2) - 20)."px;"; ?>}}
+<?php  if($header_inside) { // 메뉴가 박스 안쪽에 위치해야 할 경우 ?>
+	@media all and (min-width:1025px) { #header {<?php  echo "top:50%; margin-top:-".(($b_h/2) - 20)."px;"; ?>}}
 	@media all and (max-height:<?=($b_h+20)?>px) and (min-width:1025px) { #header {top:20px; margin-top:0px;}}
-<? } ?>
+<?php  } ?>
 </style>
 
-<? @include_once($menu_skin_path.'/menu.cmm.inc.php'); ?>
+<?php  @include_once($menu_skin_path.'/menu.cmm.inc.php'); ?>

@@ -21,11 +21,11 @@ if($sfl != 'ch_state' && $stx != '삭제') {
 	$sql_search .= " and ch_state != '삭제' ";
 }
 
-if($s_side) { 
+if($s_side) {
 	$sql_search .= " and ch_side = '{$s_side}' ";
 }
 
-if($s_class) { 
+if($s_class) {
 	$sql_search .= " and ch_class = '{$s_class}' ";
 }
 
@@ -75,7 +75,7 @@ $colspan = 8;
 $ch_si = array();
 if($config['cf_side_title']) {
 	$side_result = sql_query("select si_id, si_name from {$g5['side_table']} where si_auth <= '{$member['mb_level']}' order by si_id asc");
-	for($i=0; $row = sql_fetch_array($side_result); $i++) { 
+	for($i=0; $row = sql_fetch_array($side_result); $i++) {
 		$ch_si[$i]['name'] = $row['si_name'];
 		$ch_si[$i]['id'] = $row['si_id'];
 	}
@@ -85,7 +85,7 @@ if($config['cf_side_title']) {
 $ch_cl = array();
 if($config['cf_class_title']) {
 	$class_result = sql_query("select cl_id, cl_name from {$g5['class_table']} where cl_auth <= '{$member['mb_level']}' order by cl_id asc");
-	for($i=0; $row = sql_fetch_array($class_result); $i++) { 
+	for($i=0; $row = sql_fetch_array($class_result); $i++) {
 		$ch_cl[$i]['name'] = $row['cl_name'];
 		$ch_cl[$i]['id'] = $row['cl_id'];
 	}
@@ -104,8 +104,8 @@ if($profile['ad_use_rank']) {
 	<?php echo $listall ?>
 	총캐릭터수 <?php echo number_format($total_count) ?>명
 	<span style="float: right;">
-		<a href="?sfl=ch_state&amp;stx=대기">승인대기 <?php echo number_format($leave_count) ?></a>명 | 
-		<a href="?sfl=ch_state&amp;stx=수정중">수정중 <?php echo number_format($modify_count) ?></a>명 | 
+		<a href="?sfl=ch_state&amp;stx=대기">승인대기 <?php echo number_format($leave_count) ?></a>명 |
+		<a href="?sfl=ch_state&amp;stx=수정중">수정중 <?php echo number_format($modify_count) ?></a>명 |
 		<a href="?sfl=ch_state&amp;stx=삭제">삭제 <?php echo number_format($del_count) ?></a>명
 	</span>
 </div>
@@ -113,26 +113,26 @@ if($profile['ad_use_rank']) {
 <form id="fsearch" name="fsearch" class="local_sch01 local_sch" method="get">
 <label for="sfl" class="sound_only">검색대상</label>
 
-<?
+<?php
 	if(count($ch_si) > 0) {
 ?>
 <select name="s_side" id="c_side">
 	<option value=""><?=$config['cf_side_title']?>선택</option>
-<? for($i=0; $i < count($ch_si); $i++) { ?>
+<?php  for($i=0; $i < count($ch_si); $i++) { ?>
 	<option value="<?=$ch_si[$i]['id']?>" <?php echo get_selected($_GET['s_side'], $ch_si[$i]['id']); ?>><?=$ch_si[$i]['name']?></option>
-<? } ?>
+<?php  } ?>
 </select>
-<? } ?>
-<?
+<?php  } ?>
+<?php
 	if(count($ch_cl) > 0) {
 ?>
 <select name="s_class" id="c_class">
 	<option value=""><?=$config['cf_class_title']?>선택</option>
-<? for($i=0; $i < count($ch_cl); $i++) { ?>
+<?php  for($i=0; $i < count($ch_cl); $i++) { ?>
 	<option value="<?=$ch_cl[$i]['id']?>" <?php echo get_selected($_GET['s_class'], $ch_cl[$i]['id']); ?>><?=$ch_cl[$i]['name']?></option>
-<? } ?>
+<?php  } ?>
 </select>
-<? } ?>
+<?php  } ?>
 
 <select name="sfl" id="sfl">
 	<option value="ch_name"<?php echo get_selected($_GET['sfl'], "ch_name"); ?>>캐릭터 이름</option>
@@ -167,15 +167,15 @@ if($profile['ad_use_rank']) {
 		<col />
 
 
-<? if($profile['ad_use_rank']) { ?>
+<?php  if($profile['ad_use_rank']) { ?>
 		<col style="width: 120px;" />
-<? } ?>
-<? if($config['cf_side_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_side_title']) { ?>
 		<col style="width: 120px;" />
-<? } ?>
-<? if($config['cf_class_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_class_title']) { ?>
 		<col style="width: 120px;" />
-<? } ?>
+<?php  } ?>
 		<col style="width: 80px;" />
 		<col style="width: 100px;" />
 	</colgroup>
@@ -189,15 +189,15 @@ if($profile['ad_use_rank']) {
 		<th>이름</th>
 
 
-<? if($profile['ad_use_rank']) { ?>
+<?php  if($profile['ad_use_rank']) { ?>
 		<th>랭킹</th>
-<? } ?>
-<? if($config['cf_side_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_side_title']) { ?>
 		<th><?=$config['cf_side_title']?></th>
-<? } ?>
-<? if($config['cf_class_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_class_title']) { ?>
 		<th><?=$config['cf_class_title']?></th>
-<? } ?>
+<?php  } ?>
 		<th>상태</th>
 		<th>관리</th>
 	</tr>
@@ -231,31 +231,31 @@ if($profile['ad_use_rank']) {
 		<td class="txt-left"><?php echo get_text($row['ch_name']); ?></td>
 
 
-<? if($profile['ad_use_rank']) { ?>
+<?php  if($profile['ad_use_rank']) { ?>
 		<td>
 			<?=get_rank_name($row['ch_rank'])?>
 		</td>
-<? } ?>
-<? if($config['cf_side_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_side_title']) { ?>
 		<td>
 			<select name="ch_side[<?=$i?>]" class="frm_input">
 				<option value=""><?=$config['cf_side_title']?>선택</option>
-			<? for($k=0; $k < count($ch_si); $k++) { ?>
+			<?php  for($k=0; $k < count($ch_si); $k++) { ?>
 				<option value="<?=$ch_si[$k]['id']?>" <?php echo get_selected($row['ch_side'], $ch_si[$k]['id']); ?>><?=$ch_si[$k]['name']?></option>
-			<? } ?>
+			<?php  } ?>
 			</select>
 		</td>
-<? } ?>
-<? if($config['cf_class_title']) { ?>
+<?php  } ?>
+<?php  if($config['cf_class_title']) { ?>
 		<td>
 			<select name="ch_class[<?=$i?>]" class="frm_input">
 				<option value=""><?=$config['cf_class_title']?>선택</option>
-			<? for($k=0; $k < count($ch_cl); $k++) { ?>
+			<?php  for($k=0; $k < count($ch_cl); $k++) { ?>
 				<option value="<?=$ch_cl[$k]['id']?>" <?php echo get_selected($row['ch_class'], $ch_cl[$k]['id']); ?>><?=$ch_cl[$k]['name']?></option>
-			<? } ?>
+			<?php  } ?>
 			</select>
 		</td>
-<? } ?>
+<?php  } ?>
 		<td>
 			<select name="ch_state[<?=$i?>]" class="frm_input">
 				<option value="수정중">수정중</option>
@@ -267,7 +267,7 @@ if($profile['ad_use_rank']) {
 
 		<td><?php echo $s_mod ?>&nbsp;&nbsp;<?php echo $s_del ?></td>
 	</tr>
-  
+
 	<?php
 	}
 	if ($i == 0)

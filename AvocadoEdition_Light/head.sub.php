@@ -24,7 +24,7 @@ if (strstr($g5['lo_url'], '/'.G5_ADMIN_DIR.'/') || $is_admin == 'super') $g5['lo
 
 $is_page_login = (strstr($_SERVER["REQUEST_URI"], 'login') == "") ? false : true;
 
-if (defined('_INDEX_')) { 
+if (defined('_INDEX_')) {
 	echo "<script>if(parent && parent!=this) location.href='./main.php';</script>";
 } ?>
 <!doctype html>
@@ -36,7 +36,9 @@ if (defined('_INDEX_')) {
 
 
 <?php
-if (G5_IS_MOBILE) {
+if (defined('G5_IS_ADMIN') && G5_IS_ADMIN) {
+    echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
+} elseif (G5_IS_MOBILE) {
     echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">'.PHP_EOL;
     echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
     echo '<meta name="format-detection" content="telephone=no">'.PHP_EOL;
@@ -49,9 +51,9 @@ if($config['cf_add_meta'])
     echo $config['cf_add_meta'].PHP_EOL;
 ?>
 
-<? if($config['cf_site_img']) { ?>
+<?php  if($config['cf_site_img']) { ?>
 <link rel="image_src" href="<?=$config['cf_site_img']?>" />
-<? } ?>
+<?php  } ?>
 
 <meta name="description" content="<?=$config['cf_site_descript']?>" />
 <meta name="twitter:card" content="summary" />
@@ -59,14 +61,14 @@ if($config['cf_add_meta'])
 <meta name="twitter:title" content="<?php echo $g5_head_title; ?>" />
 <meta name="twitter:description" content="<?=$config['cf_site_descript']?>" />
 
-<? if($config['cf_site_img']) { ?>
+<?php  if($config['cf_site_img']) { ?>
 <meta name="twitter:image" content="<?=$config['cf_site_img']?>" />
-<? } ?>
+<?php  } ?>
 
 <title><?php echo $g5_head_title; ?></title>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-<?
+<?php
 if (defined('G5_IS_ADMIN')) {
 	echo '<link rel="stylesheet" href="'.G5_ADMIN_URL.'/css/admin.css" type="text/css">'.PHP_EOL;
 	echo '<link rel="stylesheet" href="'.G5_ADMIN_URL.'/css/admin.layout.css" type="text/css">'.PHP_EOL;
@@ -77,20 +79,20 @@ if (defined('G5_IS_ADMIN')) {
 }
 ?>
 
-<? if($config['cf_favicon']) { ?>
+<?php  if($config['cf_favicon']) { ?>
 <link rel="shortcut icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">
 <link rel="icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">
-<? } ?>
+<?php  } ?>
 
 <!--[if lte IE 8]>
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>
 <![endif]-->
 <script>
 
-<? if($config['cf_use_http']) { ?>
+<?php  if($config['cf_use_http']) { ?>
 if (window.location.protocol == "https:")
 	location.href = location.href.replace(/^https:/, 'http:')
-<? } ?>
+<?php  } ?>
 
 
 // 자바스크립트에서 사용하는 전역변수 선언
@@ -108,11 +110,11 @@ var g5_admin_url = "<?php echo G5_ADMIN_URL; ?>";
 <?php } ?>
 </script>
 
-<? if(defined('G5_IS_ADMIN')) { ?>
+<?php  if(defined('G5_IS_ADMIN')) { ?>
 <script src="<?php echo G5_JS_URL ?>/jquery-1.8.3.min.js"></script>
-<? } else { ?>
+<?php  } else { ?>
 <script src="<?php echo G5_JS_URL ?>/jquery-1.12.3.min.js"></script>
-<? } ?>
+<?php  } ?>
 
 <script src="<?php echo G5_JS_URL ?>/jquery.cookie.js"></script>
 <script src="<?php echo G5_JS_URL ?>/jquery.rwdImageMaps.js"></script>
@@ -128,13 +130,13 @@ if(!defined('G5_IS_ADMIN'))
 ?>
 
 <script>
-if(!parent || parent==this) $('html').addClass('single'); 
+if(!parent || parent==this) $('html').addClass('single');
 </script>
 
-<? if($config['cf_cursor']) { ?>
+<?php  if($config['cf_cursor']) { ?>
 <style>
 * {cursor: url(<?=$config['cf_cursor']?>) 0 0, auto;}
 </style>
-<? } ?>
+<?php  } ?>
 </head>
 <body>

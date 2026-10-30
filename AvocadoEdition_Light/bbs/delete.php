@@ -1,5 +1,6 @@
 <?php
 include_once('./_common.php');
+include_once G5_LIB_PATH.'/archive.lib.php';
 
 $delete_token = get_session('ss_delete_token');
 set_session('ss_delete_token', '');
@@ -81,7 +82,8 @@ while ($row = sql_fetch_array($result))
 		$sql2 = " select * from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '{$row['wr_id']}' ";
 		$result2 = sql_query($sql2);
 		while ($row2 = sql_fetch_array($result2)) {
-			@unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row2['bf_file']);
+			archive_delete_companions(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row2['bf_file']);
+            @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row2['bf_file']);
 			// 썸네일삭제
 			if(preg_match("/\.({$config['cf_image_extension']})$/i", $row2['bf_file'])) {
 				delete_board_thumbnail($bo_table, $row2['bf_file']);

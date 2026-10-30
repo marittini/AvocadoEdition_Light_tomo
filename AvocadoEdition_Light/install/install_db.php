@@ -74,7 +74,6 @@ unset($row);
 <?php
 // 테이블 생성 ------------------------------------
 $file = implode('', file('./gnuboard5.sql'));
-eval("\$file = \"$file\";");
 
 $file = preg_replace('/^--.*$/m', '', $file);
 $file = preg_replace('/`avo_([^`]+`)/', '`'.$table_prefix.'$1', $file);
@@ -150,7 +149,7 @@ $sql = " insert into `{$table_prefix}config`
                 cf_member_icon_width = '22',
                 cf_member_icon_height = '22',
                 cf_login_minutes = '10',
-                cf_image_extension = 'gif|jpg|jpeg|png',
+                cf_image_extension = 'gif|jpg|jpeg|png|webp',
                 cf_flash_extension = 'swf',
                 cf_movie_extension = 'asx|asf|wmv|wma|mpg|mpeg|mov|avi|mp3',
                 cf_formmail_is_member = '1',
@@ -350,41 +349,27 @@ fclose($f);
         <li>DB설정 파일 생성 완료 (<?php echo $file ?>)</li>
 
 <?php
-// data 디렉토리 및 하위 디렉토리에서는 .htaccess .htpasswd .php .phtml .html .htm .inc .cgi .pl 파일을 실행할수 없게함.
-$f = fopen($data_path.'/.htaccess', 'w');
-$str = <<<EOD
-<FilesMatch "\.(htaccess|htpasswd|[Pp][Hh][Pp]|[Pp]?[Hh][Tt][Mm][Ll]?|[Ii][Nn][Cc]|[Cc][Gg][Ii]|[Pp][Ll])">
-Order allow,deny
-Deny from all
-</FilesMatch>
-EOD;
-fwrite($f, $str);
-fclose($f);
+// Install the direct-access protection rules. Verify mod_rewrite on the target host.
+file_put_contents($data_path.'/.htaccess', file_get_contents(__DIR__.'/data-protection.htaccess'));
 //-------------------------------------------------------------------------------------------------
 
 
-// CSS 설정 파일 생성
-$css_data_path = $g5_path['path']."/css";
-$css_data_url = $g5_path['url']."/css";
-
+// Generate initial CSS without loading the admin authentication bootstrap.
+include $data_path.'/'.G5_DBCONFIG_FILE;
+$g5['connect_db'] = $dblink;
+$config = sql_fetch("select * from {$g5['config_table']}");
+include_once dirname(__DIR__).'/extend/community.config.php';
+define('ARCHIVE_CSS_RENDER', true);
+$css_data_path = $data_path.'/css';
 @mkdir($css_data_path, G5_DIR_PERMISSION);
-@chmod($css_data_path, G5_DIR_PERMISSION);
-
-$file = '../'.G5_CSS_DIR.'/_design.config.css';
-$file_path = $css_data_path.'/_design.config.css';
-@unlink($file_path);
-$f = @fopen($file, 'a');
-?>
-<li style="display:none;">
-<?
+$cf_add_fonts = '';
 ob_start();
-include("../adm/design_form_css.php");
-$css = ob_get_contents();
-ob_end_flush();
-fwrite($f,$css);
-fclose($f);
-@chmod($file, G5_FILE_PERMISSION);
-
+include dirname(__DIR__).'/adm/design_form_css.php';
+$initial_css = ob_get_clean();
+file_put_contents($css_data_path.'/_design.config.css', $initial_css);
+?>
+<li>디자인 파일 생성 완료</li>
+<?php
 ?>
 </li>
     </ol>

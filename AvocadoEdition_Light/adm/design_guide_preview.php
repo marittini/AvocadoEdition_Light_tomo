@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once('./_common.php');
 ?>
 <!doctype html>
@@ -31,7 +31,7 @@
 	<link media="all" type="text/css" rel="stylesheet" href="<?=G5_DATA_URL?>/css/_design.config.css?v=<?=$config['cf_css_version']?>" />
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script>
-	if(!parent || parent==this) $('html').addClass('single'); 
+	if(!parent || parent==this) $('html').addClass('single');
 	</script>
 </head>
 <body>

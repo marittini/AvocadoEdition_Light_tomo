@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('./_common.php');
 include_once('../../../head.sub.php');
 
@@ -18,20 +18,20 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_CSS_URL.'/style.emoticon.css">
 
 	<div id="emoticon_content">
 		<ul>
-		<? for($i=0; $row = sql_fetch_array($result); $i++) { ?>
+		<?php  for($i=0; $row = sql_fetch_array($result); $i++) { ?>
 			<li>
 				<em>
 					<img src="<?=G5_URL?><?=$row['me_img']?>" alt="" />
 				</em>
 				<span><?=$row['me_text']?></span>
 			</li>
-		<? }
-			if($i == 0) { 
+		<?php  }
+			if($i == 0) {
 		?>
 			<li class="no-data">
 				등록된 이모티콘이 없습니다.
 			</li>
-		<?
+		<?php
 			}
 		?>
 		</ul>
@@ -42,4 +42,4 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_CSS_URL.'/style.emoticon.css">
 
 
 
-<? include_once('../../../tail.sub.php'); ?>
+<?php  include_once('../../../tail.sub.php'); ?>

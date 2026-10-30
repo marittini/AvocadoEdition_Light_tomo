@@ -34,15 +34,15 @@ $(function(){
     if(font_resize_act != "") {
         font_resize("container", font_resize_act);
     }
-	
+
 	$('.gnb_1da').bind('click', function(){
 		var gnb_parent = $(this).closest('li');
 
-		if(gnb_parent.hasClass('on')) { 
-			
+		if(gnb_parent.hasClass('on')) {
+
 			$('#gnb .on').not('.check').removeClass('on').find('.gnb_2dul').stop().slideUp();
 			$('#gnb .check').parents('li').addClass('on').find('.gnb_2dul').stop().slideDown();
-		} else { 
+		} else {
 			gnb_parent.addClass('on').find('.gnb_2dul').stop().slideDown();
 			gnb_parent.siblings().removeClass('on').find('.gnb_2dul').stop().slideUp();
 		}
@@ -55,5 +55,6 @@ $(function(){
 </script>
 
 <?php
+echo '<script src="'.G5_ADMIN_URL.'/js/archive-admin.js?v=1"></script>';
 include_once(G5_PATH.'/tail.sub.php');
 ?>

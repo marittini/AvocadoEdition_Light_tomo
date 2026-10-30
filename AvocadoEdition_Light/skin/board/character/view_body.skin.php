@@ -4,7 +4,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 $body_cnt = sql_fetch("select count(*) as cnt from {$g5['character_body_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}'");
 $body_cnt = $body_cnt['cnt'];
 
-if($body_cnt > 0) { 
+if($body_cnt > 0) {
 ?>
 	<div class="chaBodyList">
 		<div class="control">
@@ -14,7 +14,7 @@ if($body_cnt > 0) {
 		<div class="slider">
 			<div class="swiper-container">
 				<ul class="swiper-wrapper">
-					<?
+					<?php
 						$body_list = sql_query("select * from {$g5['character_body_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' order by bd_id asc");
 						for($i=0; $bd = sql_fetch_array($body_list); $i++) {
 							if($i==0 && $write['wr_2'] != '') {
@@ -22,13 +22,13 @@ if($body_cnt > 0) {
 						<li class="swiper-slide">
 							<a href="#"; onclick="fn_viewer_chBody('', '<?=$write['wr_2']?>', this); return false;" class="theme-box"><img src="<?=$write['wr_2']?>" alt="" /></a>
 						</li>
-					<?
+					<?php
 							}
 					?>
 						<li class="swiper-slide">
 							<a href="#"; onclick="fn_viewer_chBody('<?=$bd['bd_id']?>', '<?=$bd['bd_url']?>', this); return false;" class="theme-box"><img src="<?=$bd['bd_url']?>" alt="" /></a>
 						</li>
-					<?
+					<?php
 						}
 					?>
 				</ul>
@@ -57,7 +57,7 @@ if($body_cnt > 0) {
 			});
 		}
 
-		<? if($update_href) { ?>
+		<?php  if($update_href) { ?>
 			var control_idx = "";
 			var originam_url = "<?=$write['wr_2']?>";
 
@@ -77,7 +77,7 @@ if($body_cnt > 0) {
 							type : 'POST',
 							processData: false,
 							contentType: false,
-							data : formData, 
+							data : formData,
 							success: function(data) {
 								// Toss
 								var response = data;
@@ -86,12 +86,12 @@ if($body_cnt > 0) {
 								$('#control_body_box').empty();
 							},
 							error: function(data, status, err) {},
-							complete: function() { 
+							complete: function() {
 								// Complete
 								$('.loading').removeClass('mask');
 							}
 						});
-					} 
+					}
 				}
 				if(type == 'set') {
 					if(confirm("해당 데이터를 기본 전신으로 설정하시겠습니까?")) {
@@ -102,12 +102,12 @@ if($body_cnt > 0) {
 							type : 'POST',
 							processData: false,
 							contentType: false,
-							data : formData, 
+							data : formData,
 							success: function(data) {
 								$('#control_body_box').empty();
 							},
 							error: function(data, status, err) {},
-							complete: function() { 
+							complete: function() {
 								// Complete
 								$('.loading').removeClass('mask');
 							}
@@ -116,12 +116,12 @@ if($body_cnt > 0) {
 				}
 
 			}
-		<? } ?>
+		<?php  } ?>
 
 		function fn_viewer_chBody(idx, img, obj) {
 			var control_html = '';
 
-			<? if($update_href) { ?>
+			<?php  if($update_href) { ?>
 				if(idx) {
 					// 추가된 전신 정보
 					var control_html = '<div class="body-control"><a href="javascript:fn_set_chBody(\'set\', \'<?=$bo_table?>\', \'<?=$wr_id?>\');" class="ui-btn">기본설정</a><a href="javascript:fn_set_chBody(\'del\', \'<?=$bo_table?>\', \'<?=$wr_id?>\');" class="ui-btn etc">삭제</a></div>';
@@ -130,7 +130,7 @@ if($body_cnt > 0) {
 				}
 				control_idx = idx;
 				$('#control_body_box').html(control_html);
-			<? } ?>
+			<?php  } ?>
 
 			if(img) {
 				$('.ch-body .img img').attr('src', img);
@@ -145,4 +145,4 @@ if($body_cnt > 0) {
 	<div id="control_body_box"></div>
 
 	<hr class='line' />
-<? } ?>
+<?php  } ?>

@@ -21,14 +21,14 @@ if($logo)		$logo_data .= "<img src='".$logo."' />";
 <div class="loginWrap">
 	<div class="login-inner">
 
-		<?
+		<?php
 		// 등록된 로고 파일이 있을 경우에만 출력 한다.
 		if($logo_data) { ?>
 			<div class="login-logo">
 				<?=$logo_data?>
 			</div>
 			<hr class="padding" />
-		<? } ?>
+		<?php  } ?>
 		<div class="login-form-box theme-box">
 			<div class="inner">
 				<form name="flogin" action="<?php echo $login_action_url ?>" onsubmit="return flogin_submit(this);" method="post">
@@ -53,4 +53,4 @@ function flogin_submit(f) {
 }
 </script>
 <!-- } 로그인 끝 -->
-<? } ?>
+<?php  } ?>

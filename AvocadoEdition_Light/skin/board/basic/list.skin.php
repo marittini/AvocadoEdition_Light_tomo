@@ -11,25 +11,25 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 <!-- 게시판 목록 시작 { -->
 <div id="bo_list">
-	
-	<? if($board['bo_content_head']) { ?>
+
+	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
 			<?=stripslashes($board['bo_content_head']);?>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<!-- 게시판 카테고리 시작 { -->
 	<?php if ($is_category) { ?>
 	<nav  class="board-category">
 		<ul>
 			<li><a href="./board.php?bo_table=<?=$bo_table?>" class="ui-btn <?=!$sca || $sca == ''? 'point' : 'etc'?>">ALL</a></li>
-			<? echo $category_list ?>
+			<?php  echo $category_list ?>
 		</ul>
 	</nav>
 	<?php } ?>
 	<!-- } 게시판 카테고리 끝 -->
 
-	
+
 	<form name="fboardlist" id="fboardlist" action="./board_list_update.php" onsubmit="return fboardlist_submit(this);" method="post">
 	<input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
 	<input type="hidden" name="sfl" value="<?php echo $sfl ?>">
@@ -63,7 +63,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 				</tr>
 				</thead>
 				<tbody>
-				<? for ($i=0; $i<count($list); $i++) { ?>
+				<?php  for ($i=0; $i<count($list); $i++) { ?>
 					<tr>
 						<td class="txt-center">
 							<?php
@@ -97,8 +97,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 						<td class="txt-center"><?php echo $list[$i]['datetime2'] ?></td>
 						<td class="txt-center"><?php echo $list[$i]['wr_hit'] ?></td>
 					</tr>
-				<? } ?>
-				<? if (count($list) == 0) { echo '<tr><td colspan="'.$colspan.'" class="empty_table">게시물이 없습니다.</td></tr>'; } ?>
+				<?php  } ?>
+				<?php  if (count($list) == 0) { echo '<tr><td colspan="'.$colspan.'" class="empty_table">게시물이 없습니다.</td></tr>'; } ?>
 				</tbody>
 			</table>
 		</div>
@@ -115,7 +115,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 	<?php } ?>
 	</form>
 
-		
+
 	<!-- 페이지 -->
 	<?php echo $write_pages;  ?>
 

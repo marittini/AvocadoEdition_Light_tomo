@@ -27,7 +27,7 @@ if ($is_comment_write) {
 
 	</form>
 </aside>
-<?
+<?php
 }
 ?>
 

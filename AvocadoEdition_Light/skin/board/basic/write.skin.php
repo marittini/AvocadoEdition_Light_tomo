@@ -7,12 +7,12 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 
 <section id="bo_w">
-	
-	<? if($board['bo_content_head']) { ?>
+
+	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
 			<?=stripslashes($board['bo_content_head']);?>
 		</div>
-	<? } ?>
+	<?php  } ?>
 
 	<!-- 게시물 작성/수정 시작 { -->
 	<form name="fwrite" id="fwrite" action="<?php echo $action_url ?>" onsubmit="return fwrite_submit(this);" method="post" enctype="multipart/form-data" autocomplete="off">

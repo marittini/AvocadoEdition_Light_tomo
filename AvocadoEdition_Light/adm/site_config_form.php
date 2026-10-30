@@ -303,7 +303,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 				외부경로&nbsp;&nbsp; <input type="text" name="cf_site_img" value="<?=$config['cf_site_img']?>" size="50"/>
 			</td>
 		</tr>
-		
+
 		<tr>
 			<th scope="row"><label for="site_back">배경음악</label></th>
 			<td colspan="3">
@@ -363,7 +363,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 				</select>
 			</td>
 		</tr>
-		
+
 		<tr>
 			<th scope="row"><label for="cf_filter">단어 필터링</label></th>
 			<td colspan="3">
@@ -383,7 +383,7 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 			<th scope="row" id="th310"><label for="cf_leave_day">회원탈퇴후 삭제일</label></th>
 			<td colspan="3"><input type="text" name="cf_leave_day" value="<?php echo $config['cf_leave_day'] ?>" id="cf_leave_day" class="frm_input" size="2"> 일 후 자동 삭제</td>
 		</tr>
-		
+
 		<tr>
 			<th scope="row"><label for="cf_prohibit_id">아이디,닉네임 금지단어</label></th>
 			<td colspan="3">
@@ -407,6 +407,6 @@ function fconfigform_submit(f)
 	return true;
 }
 </script>
-<?
+<?php
 include_once ('./admin.tail.php');
 ?>

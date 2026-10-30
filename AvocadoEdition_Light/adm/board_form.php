@@ -687,7 +687,7 @@ function fboardform_submit(f)
 		return false;
 	}
 
-	if (parseInt(f.bo_count_delete.value) < 1) {
+	if (f.bo_count_delete.type !== "hidden" && parseInt(f.bo_count_delete.value) < 1) {
 		alert("원글 삭제 불가 댓글수는 1 이상 입력하셔야 합니다.");
 		f.bo_count_delete.focus();
 		return false;

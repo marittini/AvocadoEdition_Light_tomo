@@ -27,7 +27,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
 			<th>작성일</th>
 			<td><?php echo $view['datetime']; ?></td>
 		</tr>
-		<? if($view['download_count'] > 0) { ?>
+		<?php  if($view['download_count'] > 0) { ?>
 		<tr>
 			<th>첨부파일</th>
 			<td>
@@ -46,7 +46,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
 				 ?>
 			</td>
 		</tr>
-		<? } ?>
+		<?php  } ?>
 		<tr>
 			<td colspan="2">
 				<?php

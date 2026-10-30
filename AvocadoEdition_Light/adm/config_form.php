@@ -239,14 +239,14 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
 			<th scope="row"><label for="cf_admin">최고관리자<strong class="sound_only">필수</strong></label></th>
 			<td colspan="3"><?php echo get_member_id_select('cf_admin', 10, $config['cf_admin'], 'required') ?></td>
 		</tr>
-		
+
 		<tr>
 			<th>관리자 아이콘</th>
 			<td>
 				<i class="admin-icon-box">
-				<? if(is_file(G5_DATA_PATH."/site/ico_admin")) { ?>
+				<?php  if(is_file(G5_DATA_PATH."/site/ico_admin")) { ?>
 					<img src="<?=G5_DATA_URL?>/site/ico_admin" alt="관리자 아이콘" />
-				<? } ?>
+				<?php  } ?>
 				</i>
 				<input type="file" name="admin_icon_file" value="" size="50">
 			</td>

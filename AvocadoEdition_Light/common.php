@@ -2,6 +2,8 @@
 /*******************************************************************************
 ** 공통 변수, 상수, 코드
 *******************************************************************************/
+ini_set('display_errors', '0'); // Keep server diagnostics out of private pages and JSON responses.
+ini_set('log_errors', '1');
 error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING );
 
 // 보안설정이나 프레임이 달라도 쿠키가 통하도록 설정
@@ -90,7 +92,7 @@ function sql_escape_string($str)
 // SQL Injection 등으로 부터 보호를 위해 sql_escape_string() 적용
 //------------------------------------------------------------------------------
 // magic_quotes_gpc 에 의한 backslashes 제거
-if (get_magic_quotes_gpc()) {
+if (false) { // Magic quotes were removed from PHP.
     $_POST    = array_map_deep('stripslashes',  $_POST);
     $_GET     = array_map_deep('stripslashes',  $_GET);
     $_COOKIE  = array_map_deep('stripslashes',  $_COOKIE);
@@ -188,7 +190,7 @@ if(!defined('G5_IS_ADMIN')) {
 	$cssconfig_file = G5_DATA_PATH.'/css/_design.config.css';
 	if (!file_exists($cssconfig_file)) {
 ?>
-	
+
 <!doctype html>
 	<html lang="ko">
 	<head>
@@ -207,7 +209,7 @@ if(!defined('G5_IS_ADMIN')) {
 			<p>아보카도 에디션 라이트 설치가 완료 되었습니다.</p>
 			<p>하지만, 아보카도 에디션의 디자인 설정이 완료되지 않았습니다.</p>
 			<p>사이트 관리 화면에서 디자인 설정을 완료하여 주시길 바랍니다. (최소 1번 이상 저장 필요)</p>
-			
+
 			<div class="inner_btn">
 				<a href="<?php echo G5_URL; ?>/adm/"><?php echo G5_VERSION ?> 관리자 바로가기</a>
 			</div>
@@ -219,7 +221,7 @@ if(!defined('G5_IS_ADMIN')) {
 
 	</body>
 </html>
-<? exit;
+<?php  exit;
 	}
 }
 
@@ -258,7 +260,8 @@ ini_set("session.cookie_domain", G5_COOKIE_DOMAIN);
 // 기본환경설정
 // 기본적으로 사용하는 필드만 얻은 후 상황에 따라 필드를 추가로 얻음
 $config = sql_fetch(" select * from {$g5['config_table']} ");
-$article = sql_fetch("select * from {$g5['article_default_table']}");
+if (!preg_match("/(^|[|])webp([|]|$)/i", $config["cf_image_extension"] ?? "")) $config["cf_image_extension"] = ($config["cf_image_extension"] ?? "gif|jpg|jpeg|png")."|webp";
+$article = !empty($g5["article_default_table"]) ? sql_fetch("select * from {$g5['article_default_table']}") : array();
 
 define('G5_HTTP_BBS_URL',  https_url(G5_BBS_DIR, false));
 define('G5_HTTPS_BBS_URL', https_url(G5_BBS_DIR, true));

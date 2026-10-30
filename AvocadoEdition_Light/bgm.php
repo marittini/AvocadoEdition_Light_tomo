@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('./_common.php');
 
 if($action == "play") {
@@ -11,4 +11,4 @@ if($action == "play") {
 </body>
 </html>
 
-<? } ?>
+<?php  } ?>

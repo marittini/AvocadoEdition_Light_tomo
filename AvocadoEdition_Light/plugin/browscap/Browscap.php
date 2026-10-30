@@ -1209,7 +1209,7 @@ class Browscap
         $content = preg_replace('/<[?%].*[?%]>/', '', $content);
 
         // replace opening and closing php and asp tags
-        return str_replace(array('<?', '<%', '?>', '%>'), '', $content);
+        return str_replace(array('<?php ', '<%', '?>', '%>'), '', $content);
     }
 
     /**

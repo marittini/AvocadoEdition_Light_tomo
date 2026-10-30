@@ -58,54 +58,60 @@ forms.forEach(form=>{
  if(buttons){const reset=document.createElement('button');reset.type='button';reset.textContent='변경 취소';reset.addEventListener('click',()=>{if(!dirtyForms.size || confirm('저장하지 않은 변경을 취소하고 마지막 저장값을 불러올까요?')){dirtyForms.clear();location.reload();}});buttons.append(reset);}
 });
 window.addEventListener('beforeunload',event=>{if(dirtyForms.size&&!submitting){event.preventDefault();event.returnValue='';}});
-const path=location.pathname;
-if(path.endsWith('site_config_form.php')){
- const info=document.createElement('p');info.className='archive-group-help';info.textContent='사이트 전체의 기본 설정입니다. 사이트 공개와 게시글·첨부파일의 열람 권한은 다릅니다. 기존 설정값과 모든 항목을 유지합니다.';forms[0]?.prepend(info);
- const form=forms[0];
- if(form){
-  const groups=[['공개·계정','cf_admin'],['사이트 정보','cf_title'],['장식·배경음악','cf_favicon'],['접속 제어','cf_possible_ip']];
-  const nav=document.createElement('nav');nav.className='archive-tools';nav.setAttribute('aria-label','환경설정 항목');
-  groups.forEach(([title,name],i)=>{const input=form.querySelector('[name="'+name+'"]');const row=input?.closest('tr');if(!row)return;const heading=document.createElement('tr');heading.id='archive-settings-'+i;const cell=document.createElement('th');cell.colSpan=4;cell.textContent=title;heading.append(cell);row.before(heading);const link=document.createElement('a');link.href='#'+heading.id;link.textContent=title;nav.append(link);});
-  form.prepend(nav);
- }
 
-}
+// Turn the legacy repeated anchor menus into one actual tab list per form.
+forms.forEach(form=>{
+ const anchors=[...form.querySelectorAll('.anchor')];if(!anchors.length)return;
+ const pairs=[...anchors[0].querySelectorAll('a[href^="#"]')].map(link=>({label:link.textContent,id:link.hash.slice(1)}));
+ form.querySelectorAll('section.tomo-settings[id]').forEach(panel=>pairs.push({label:panel.querySelector('h2')?.textContent||'추가 설정',id:panel.id}));
+ const tabs=pairs.map(item=>({...item,panel:document.getElementById(item.id)})).filter(item=>item.panel&&form.contains(item.panel)&&item.panel.style.display!=='none');
+ if(!tabs.length)return;
+ anchors.forEach(anchor=>anchor.remove());
+ const nav=document.createElement('div');nav.className='archive-tabs';nav.setAttribute('role','tablist');nav.setAttribute('aria-label','설정 항목');
+ const select=(item,focus=false)=>{
+  tabs.forEach(tab=>{const active=tab===item;tab.panel.hidden=!active;tab.button.setAttribute('aria-selected',String(active));tab.button.tabIndex=active?0:-1;});
+  if(focus)item.button.focus();
+ };
+ tabs.forEach((item,index)=>{
+  const button=document.createElement('button');button.type='button';button.id='tab-'+item.id;button.textContent=item.label;button.setAttribute('role','tab');button.setAttribute('aria-controls',item.id);item.button=button;
+  item.panel.setAttribute('role','tabpanel');item.panel.setAttribute('aria-labelledby',button.id);item.panel.tabIndex=0;
+  button.addEventListener('click',()=>{select(item);history.replaceState(null,'','#'+item.id);});
+  button.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight')next=(index+1)%tabs.length;if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;if(event.key==='Home')next=0;if(event.key==='End')next=tabs.length-1;if(next!==undefined){event.preventDefault();select(tabs[next],true);history.replaceState(null,'','#'+tabs[next].id);}});
+  item.panel.addEventListener('archive:show',()=>select(item));nav.append(button);
+ });
+ const panels=tabs.map(tab=>tab.panel);[...form.children].find(node=>panels.includes(node))?.before(nav);
+ select(tabs.find(tab=>tab.id===location.hash.slice(1))||tabs[0]);
+ window.addEventListener('hashchange',()=>{const tab=tabs.find(tab=>tab.id===location.hash.slice(1));if(tab)select(tab);});
+ form.addEventListener('invalid',event=>{const tab=tabs.find(tab=>tab.panel.contains(event.target));if(tab)select(tab);},true);
+});
+
+const path=location.pathname;
 if(path.endsWith('design_form.php')){
  const tools=document.createElement('div');tools.className='archive-tools';
  const label=document.createElement('label');label.textContent='설정 항목 찾기 ';const input=document.createElement('input');input.type='search';input.placeholder='예: 배경, 로드비, 폰트';input.setAttribute('aria-label','디자인 설정 항목 찾기');label.append(input);tools.append(label);
  const button=document.createElement('button');button.type='button';button.textContent='다음 항목';tools.append(button);forms[0]?.before(tools);
- let index=-1;button.addEventListener('click',()=>{document.querySelectorAll('.archive-search-hit').forEach(x=>x.classList.remove('archive-search-hit'));const q=input.value.trim();if(!q)return;const hits=[...document.querySelectorAll('form th, form h2')].filter(x=>x.textContent.includes(q));if(hits.length){index=(index+1)%hits.length;hits[index].classList.add('archive-search-hit');hits[index].scrollIntoView({block:'center'});}});input.addEventListener('input',()=>{index=-1;});
-}
-const kind=path.endsWith('design_form.php')?'design':path.endsWith('viewer_form.php')?'main':path.endsWith('menu_list.php')?'menu':null;
-if(kind && forms[0]){
- const form=forms[0],layout=document.createElement('div');layout.className='archive-layout';form.before(layout);layout.append(form);
- const panel=document.createElement('section');panel.className='archive-preview';panel.setAttribute('aria-label','저장 전 미리보기');
- panel.innerHTML='<h3>저장 전 미리보기</h3><p>공개 사이트에 반영하지 않습니다. 스크립트·외부 폰트·링크 동작은 제한됩니다.</p><button type="button" data-size="pc">PC 폭</button><button type="button" data-size="mobile">모바일 폭</button><button type="button" data-refresh>미리보기 갱신</button><p role="status" aria-live="polite">아직 미리보기를 갱신하지 않았습니다.</p><iframe sandbox="" referrerpolicy="no-referrer" title="저장 전 편집 미리보기"></iframe>';
- layout.append(panel);panel.id='archive-edit-preview';
- const jump=document.createElement('a');jump.href='#archive-edit-preview';jump.className='archive-preview-jump';jump.textContent='편집 미리보기로 이동';form.querySelector('.btn_confirm')?.append(jump);
- const state=panel.querySelector('[role=status]'), frame=panel.querySelector('iframe'), refresh=panel.querySelector('[data-refresh]');
- panel.querySelectorAll('[data-size]').forEach(button=>button.addEventListener('click',()=>{panel.dataset.width=button.dataset.size;}));
- form.addEventListener('input',()=>{state.textContent='변경사항이 미리보기에 반영되지 않았습니다.';});form.addEventListener('change',()=>{state.textContent='변경사항이 미리보기에 반영되지 않았습니다.';});
- refresh.addEventListener('click',async()=>{
-  refresh.disabled=true;state.textContent='미리보기를 갱신하고 있습니다.';
-  try{
-   if(kind==='main' && window.oEditors?.getById?.main_content) window.oEditors.getById.main_content.exec('UPDATE_CONTENTS_FIELD',[]);
-   const data=new FormData(form);data.set('action','preview');data.set('kind',kind);
-   // Checkbox array indices must match the form rows (unchecked controls are omitted by FormData).
-   if(kind==='menu') {data.delete('me_use[]');form.querySelectorAll('input[name="me_use[]"]').forEach((x,i)=>data.set('me_use['+i+']',x.checked?'1':'0'));}
-   const result=await request(data);frame.srcdoc=result.html;
-   state.textContent='미리보기 갱신 완료 · '+result.scope+' · 아직 저장되지 않음';
-  }catch(error){state.textContent=error.message+' 이전 결과가 표시될 수 있습니다.';}finally{refresh.disabled=false;}
- });
+ let index=-1;button.addEventListener('click',()=>{document.querySelectorAll('.archive-search-hit').forEach(x=>x.classList.remove('archive-search-hit'));const q=input.value.trim();if(!q)return;const hits=[...document.querySelectorAll('form th, form h2')].filter(x=>x.textContent.includes(q));if(hits.length){index=(index+1)%hits.length;hits[index].closest('[role=tabpanel]')?.dispatchEvent(new Event('archive:show'));hits[index].classList.add('archive-search-hit');hits[index].scrollIntoView({block:'center'});}});input.addEventListener('input',()=>{index=-1;});
 }
 const start=document.getElementById('disk-start');
 if(start){
- const status=document.getElementById('disk-status'), summary=document.getElementById('disk-summary'), rows=document.getElementById('disk-categories'),pause=document.getElementById('disk-pause'),resume=document.getElementById('disk-resume');
+ const status=document.getElementById('disk-status'),summary=document.getElementById('disk-summary'),rows=document.getElementById('disk-categories'),pause=document.getElementById('disk-pause'),resume=document.getElementById('disk-resume');
+ const quota=Number(document.querySelector('.archive-disk').dataset.quotaBytes);
  let paused=false,running=false;
- const bytes=n=>new Intl.NumberFormat('ko-KR',{maximumFractionDigits:2}).format(n/1048576)+' MiB';
- const render=scan=>{if(!scan)return;summary.replaceChildren();[['측정 범위 내 파일',bytes(scan.bytes)],['파일 수',String(scan.files)],['측정 시작',new Date(scan.started*1000).toLocaleString()],['측정 완료',scan.finished?new Date(scan.finished*1000).toLocaleString():'진행 중'],['범위 누락/건너뛴 링크',scan.errors+' / '+scan.skipped_links],['계정 전체 잔여량','미확인 · 호스팅 관리에서 대조하세요']].forEach(([label,value])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;summary.append(dt,dd);});rows.replaceChildren();Object.entries(scan.categories).forEach(([label,value])=>{const row=document.createElement('tr');[label,bytes(value)].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.append(cell);});rows.append(row);});status.textContent=scan.finished?(scan.errors?'부분 측정 완료 · 읽지 못한 범위가 있습니다.':'측정 완료 · 계정 전체 사용량이 아닐 수 있습니다.'):'측정 중 · 파일이 변경되는 시점에 따라 차이가 생길 수 있습니다.';};
- const run=async name=>{if(running)return;running=true;start.disabled=true;pause.hidden=false;resume.hidden=true;try{let result=await request(action(name));render(result.scan);while(result.scan&&!result.scan.finished&&!paused){await new Promise(r=>setTimeout(r,180));result=await request(action('disk_step'));render(result.scan);}if(paused){status.textContent='일시 정지됨 · 이어서 측정할 수 있습니다.';resume.hidden=false;}}catch(error){status.textContent=error.message;resume.hidden=false;}finally{running=false;start.disabled=false;pause.hidden=true;}};
+ const number=n=>new Intl.NumberFormat('ko-KR',{maximumFractionDigits:1}).format(n),bytes=n=>number(n/1000000)+' MB';
+ const render=scan=>{
+  if(!scan)return;
+  const known=Number.isFinite(scan.db_bytes),total=scan.bytes,percent=total/quota*100;
+  document.getElementById('disk-used').textContent=bytes(total);document.getElementById('disk-percent').textContent=number(percent)+'%';
+  const meter=document.getElementById('disk-meter');meter.setAttribute('aria-valuenow',String(Math.min(percent,100)));meter.setAttribute('aria-valuetext',bytes(total)+' / 500 MB'+(scan.finished?'':' · 측정 중'));meter.classList.toggle('is-warning',percent>=80);meter.classList.toggle('is-full',percent>=100);
+  document.getElementById('disk-fill').style.width=Math.min(percent,100)+'%';
+  document.getElementById('disk-remaining').textContent=(scan.finished?'측정 범위 기준 ':'측정 중 · ')+(total>quota?bytes(total-quota)+' 초과':bytes(quota-total)+' 여유')+(known?'':' · DB 크기 미확인');
+  document.getElementById('disk-file-bytes').textContent=bytes(scan.bytes);document.getElementById('disk-db-bytes').textContent=known?bytes(scan.db_bytes):'확인 불가';
+  summary.replaceChildren();[['파일 수',number(scan.files)+'개'],['측정 시작',new Date(scan.started*1000).toLocaleString()],['측정 완료',scan.finished?new Date(scan.finished*1000).toLocaleString():'진행 중'],['읽지 못한 항목',scan.errors+'개'],['제외한 링크',scan.skipped_links+'개']].forEach(([label,value])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;summary.append(dt,dd);});
+  rows.replaceChildren();Object.entries(scan.categories).sort((a,b)=>b[1]-a[1]).forEach(([label,value])=>{const row=document.createElement('tr');[label,bytes(value)].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.append(cell);});rows.append(row);});
+  status.textContent=scan.finished?(scan.errors?'일부 항목을 읽지 못했습니다. 표시된 값은 부분 측정값입니다.':'측정 완료 · 실제 계정 사용량은 닷홈 관리 화면에서 확인할 수 있습니다.'):'사용량 측정 중…';
+ };
+ const run=async name=>{if(running)return;running=true;start.disabled=true;pause.hidden=false;resume.hidden=true;try{let result=await request(action(name));render(result.scan);while(result.scan&&!result.scan.finished&&!paused){await new Promise(r=>setTimeout(r,180));result=await request(action('disk_step'));render(result.scan);}if(paused){status.textContent='일시 정지됨';resume.hidden=false;}}catch(error){status.textContent=error.message;resume.hidden=false;}finally{running=false;start.disabled=false;pause.hidden=true;}};
  start.addEventListener('click',()=>{paused=false;run('disk_start');});pause.addEventListener('click',()=>{paused=true;});resume.addEventListener('click',()=>{paused=false;run('disk_step');});
- request(action('disk_status')).then(result=>{render(result.scan);if(result.scan&&!result.scan.finished)resume.hidden=false;}).catch(error=>status.textContent=error.message);
+ request(action('disk_status')).then(result=>{if(!result.scan){run('disk_start');return;}render(result.scan);if(!result.scan.finished)resume.hidden=false;}).catch(error=>status.textContent=error.message);
 }
 })();

@@ -36,6 +36,9 @@ function archive_gif_is_animated(string $source): bool
 /** Preserve the uploaded original until WebP encoding has succeeded. Never resize implicitly. */
 function archive_webp(string $source, string $destination, ?int $quality = null): array
 {
+    if (!function_exists('imagewebp') || !function_exists('gd_info') || !(gd_info()['WebP Support'] ?? false)) {
+        throw new RuntimeException('서버가 WebP 변환을 지원하지 않습니다. 원본은 변경하지 않았습니다.');
+    }
     $quality = $quality ?? tomo_webp_quality();
     if ($quality !== IMG_WEBP_LOSSLESS) $quality = tomo_validate_quality($quality);
     $info = @getimagesize($source);

@@ -23,11 +23,11 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
 {
     $list[$i] = $row;
 
-    //$list[$i]['name'] = get_sideview($row['mb_id'], cut_str($row['wr_name'], 20, ''), $row['wr_email'], $row['wr_homepage']);
+    //$list[$i]['name'] = get_sideview($row['mb_id'], cut_str($row['wr_name'], 20, ''), $row['wr_email'], $row['wr_homepage'], $row['wr_ip'] ?? '');
 
     $tmp_name = get_text(cut_str($row['wr_name'], $config['cf_cut_name'])); // 설정된 자리수 만큼만 이름 출력
-    if ($board['bo_use_sideview'])
-        $list[$i]['name'] = get_sideview($row['mb_id'], $tmp_name, $row['wr_email'], $row['wr_homepage']);
+    if ($board['bo_use_sideview'] || $is_admin)
+        $list[$i]['name'] = get_sideview($row['mb_id'], $tmp_name, $row['wr_email'], $row['wr_homepage'], $row['wr_ip'] ?? '');
     else
         $list[$i]['name'] = '<span class="'.($row['mb_id']?'member':'guest').'">'.$tmp_name.'</span>';
 

@@ -451,6 +451,7 @@ if (!$group['gr_use_access'] && $board['bo_read_level'] < 2 && !$secret) {
 
 // 파일개수 체크
 $file_count   = 0;
+$_FILES['bf_file'] = isset($_FILES['bf_file']['name']) && is_array($_FILES['bf_file']['name']) ? $_FILES['bf_file'] : ['name'=>[], 'tmp_name'=>[], 'size'=>[], 'error'=>[]];
 $upload_count = count($_FILES['bf_file']['name']);
 
 for ($i=0; $i<$upload_count; $i++) {
@@ -481,9 +482,9 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
     $upload[$i]['source']   = '';
     $upload[$i]['filesize'] = 0;
     $upload[$i]['image']    = array();
-    $upload[$i]['image'][0] = '';
-    $upload[$i]['image'][1] = '';
-    $upload[$i]['image'][2] = '';
+    $upload[$i]['image'][0] = 0;
+    $upload[$i]['image'][1] = 0;
+    $upload[$i]['image'][2] = 0;
 
     // 삭제에 체크가 되어있다면 파일을 삭제합니다.
     if (isset($_POST['bf_file_del'][$i]) && $_POST['bf_file_del'][$i]) {
@@ -539,19 +540,7 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
         }
         //=================================================================
 
-        $upload[$i]['image'] = $timg;
-
-        // 4.00.11 - 글답변에서 파일 업로드시 원글의 파일이 삭제되는 오류를 수정
-        if ($w == 'u') {
-            // 존재하는 파일이 있다면 삭제합니다.
-            $row = sql_fetch(" select bf_file from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$i' ");
-            archive_delete_companions(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
-            @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
-            // 이미지파일이면 썸네일삭제
-            if(preg_match("/\.({$config['cf_image_extension']})$/i", $row['bf_file'])) {
-                delete_board_thumbnail($bo_table, $row['bf_file']);
-            }
-        }
+        $upload[$i]['image'] = $timg ?: [0, 0, 0];
 
         // 프로그램 원래 파일명
         $upload[$i]['source'] = $filename;
@@ -564,12 +553,18 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
         $shuffle = implode('', $chars_array);
 
         // 첨부파일 첨부시 첨부파일명에 공백이 포함되어 있으면 일부 PC에서 보이지 않거나 다운로드 되지 않는 현상이 있습니다. (길상여의 님 090925)
-		$upload[$i]['file'] = abs(ip2long($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle,0,8).'_'.replace_filename($filename);
+		$upload[$i]['file'] = bin2hex(random_bytes(16)).'_'.replace_filename($filename);
 
         $dest_file = G5_DATA_PATH.'/file/'.$bo_table.'/'.$upload[$i]['file'];
 
         // 업로드가 안된다면 에러메세지 출력하고 죽어버립니다.
-        $error_code = move_uploaded_file($tmp_file, $dest_file) or die($_FILES['bf_file']['error'][$i]);
+        if (!@move_uploaded_file($tmp_file, $dest_file)) {
+            error_log('Attachment move failed for board '.$bo_table);
+            $upload[$i]['file'] = '';
+            $upload[$i]['filesize'] = 0;
+            $file_upload_msg .= '첨부파일을 저장하지 못했습니다. 저장 공간과 폴더 쓰기 권한을 확인해 주세요.\n';
+            continue;
+        }
         include_once G5_LIB_PATH.'/archive.lib.php';
         try {
             $converted = archive_convert_saved_upload($dest_file);
@@ -579,11 +574,24 @@ for ($i=0; $i<count($_FILES['bf_file']['name']); $i++) {
                 $upload[$i]['filesize'] = filesize($dest_file);
                 $upload[$i]['image'] = getimagesize($dest_file);
             }
-        } catch (RuntimeException $e) {
+        } catch (Throwable $e) {
+            error_log('Attachment conversion: '.$e->getMessage());
             // Never discard the original when conversion is unavailable; surface the result.
-            $file_upload_msg .= '이미지 변환 실패: 원본으로 첨부했습니다. '.$e->getMessage().'\n';
+            $file_upload_msg .= '이미지 변환을 사용할 수 없어 원본으로 첨부했습니다.\n';
         }
 
+
+        // 4.00.11 - 글답변에서 파일 업로드시 원글의 파일이 삭제되는 오류를 수정
+        if ($w == 'u') {
+            // 존재하는 파일이 있다면 삭제합니다.
+            $row = sql_fetch(" select bf_file from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$i' ");
+            archive_delete_companions(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
+            @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row['bf_file']);
+            // 이미지파일이면 썸네일삭제
+            if(preg_match("/\.({$config['cf_image_extension']})$/i", $row['bf_file'])) {
+                delete_board_thumbnail($bo_table, $row['bf_file']);
+            }
+        }
 
         // 올라간 파일의 퍼미션을 변경합니다.
         chmod($dest_file, G5_FILE_PERMISSION);

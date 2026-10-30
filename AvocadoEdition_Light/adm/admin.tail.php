@@ -55,6 +55,6 @@ $(function(){
 </script>
 
 <?php
-echo '<script src="'.G5_ADMIN_URL.'/js/archive-admin.js?v=2"></script>';
+echo '<script src="'.G5_ADMIN_URL.'/js/archive-admin.js?v=3"></script>';
 include_once(G5_PATH.'/tail.sub.php');
 ?>

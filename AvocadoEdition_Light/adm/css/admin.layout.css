@@ -55,7 +55,6 @@ body {height:100%;}
 #gnb .gnb_2dli > a[data-text="환경설정"]:before {content:"\e994";}
 #gnb .gnb_2dli > a[data-text="메인 편집"]:before {content:"\e956";}
 #gnb .gnb_2dli > a[data-text="디자인 설정"]:before {content:"\e90c";}
-#gnb .gnb_2dli > a[data-text="DB관리"]:before {content:"\e964";}
 
 #gnb .gnb_2dli > a[data-text="회원관리"]:before {content:"\e923";}
 #gnb .gnb_2dli > a[data-text="접속자집계"]:before {content:"\e99c";}

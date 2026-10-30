@@ -13,6 +13,15 @@ $mb = get_member($cf_admin);
 if (!$mb['mb_id'])
     alert('최고관리자 회원아이디가 존재하지 않습니다.');
 check_admin_token();
+include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+try {
+    tomo_settings_upgrade();
+    $tomo_quality = isset($_POST['tomo_settings_present']) ? tomo_validate_quality($_POST['cf_tomo_webp_quality'] ?? null) : tomo_webp_quality();
+    $tomo_protection = isset($_POST['tomo_settings_present'])
+        ? ((!empty($_POST['tomo_protect_context']) ? 1 : 0) | (!empty($_POST['tomo_protect_drag']) ? 2 : 0) | (!empty($_POST['tomo_protect_copy']) ? 4 : 0))
+        : tomo_protection_mask();
+} catch (Throwable $e) { alert($e->getMessage()); }
+
 
 $site_style_path = G5_DATA_PATH."/site";
 $site_style_url = G5_DATA_URL."/site";
@@ -44,7 +53,7 @@ if ($_FILES['cf_cursor_file']['name']) {
 	$exp = explode(".", $_FILES['cf_cursor_file']['name']);
 	$exp = $exp[count($exp)-1];
 
-	$image_name = "site_favicon.".$exp;
+	$image_name = "site_cursor.".$exp;
 	upload_file($_FILES['cf_cursor_file']['tmp_name'], $image_name, $site_style_path);
 	$_POST['cf_cursor'] = $site_style_url."/".$image_name;
 }
@@ -52,7 +61,9 @@ if ($_FILES['cf_cursor_file']['name']) {
 
 
 $sql = " update {$g5['config_table']}
-			set cf_admin			= '{$_POST['cf_admin']}',
+			set cf_tomo_webp_quality = '{$tomo_quality}',
+                cf_tomo_protection = '{$tomo_protection}',
+                cf_admin			= '{$_POST['cf_admin']}',
 				cf_use_http			= '{$_POST['cf_use_http']}',
 				cf_open				= '{$_POST['cf_open']}',
 				cf_title			= '{$_POST['cf_title']}',
@@ -73,5 +84,11 @@ $sql = " update {$g5['config_table']}
 				cf_1				= '{$_POST['cf_1']}'";
 sql_query($sql);
 
-goto_url('./site_config_form.php', false);
+$tomo_fields = [];
+$tomo_files = [];
+foreach (['cf_site_img','cf_favicon','cf_cursor'] as $field) {
+    $tomo_fields[$field] = stripslashes((string)($_POST[$field] ?? ''));
+    if (!empty($_FILES[$field.'_file']['name']) && ($_FILES[$field.'_file']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) $tomo_files[] = $field.'_file';
+}
+tomo_settings_saved('./site_config_form.php', $tomo_fields, $tomo_files);
 ?>

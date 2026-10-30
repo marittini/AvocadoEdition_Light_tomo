@@ -38,7 +38,9 @@ try {
                 }
             }
         }
-        $cf_add_fonts = stripslashes((string)($_POST['cf_add_fonts'] ?? ''));
+        include_once G5_LIB_PATH.'/tomo_fonts.lib.php';
+        $tomo_render_fonts = isset($_POST['tomo_fonts_present']) ? tomo_post_fonts() : tomo_fonts();
+        $tomo_legacy_font_css = stripslashes((string)($_POST['cf_add_fonts'] ?? ''));
         ob_start(); include './design_form_css.php'; $css = ob_get_clean();
         // Reuse the existing guide's representative components, not private post contents.
         ob_start(); include './design_guide_preview.php'; $guide = ob_get_clean();

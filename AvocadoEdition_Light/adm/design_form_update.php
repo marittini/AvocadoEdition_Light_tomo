@@ -4,6 +4,31 @@ include_once('./_common.php');
 check_demo();
 if ($is_admin !== 'super') alert('최고관리자만 접근 가능합니다.');
 check_admin_token();
+include_once G5_LIB_PATH.'/tomo_settings.lib.php';
+include_once G5_LIB_PATH.'/tomo_fonts.lib.php';
+try {
+    tomo_settings_upgrade();
+    $tomo_fonts = isset($_POST['tomo_fonts_present']) ? tomo_post_fonts() : tomo_fonts();
+    $selected = [];
+    foreach (['default_font'=>3, 'menu_tooltip'=>9, 'intro'=>5] as $name=>$slot) {
+        $stored = sql_fetch("SELECT cs_etc_{$slot} FROM {$g5['css_table']} WHERE cs_name = '{$name}'");
+        $selected[$name] = (string)($stored['cs_etc_'.$slot] ?? '');
+    }
+    foreach (($_POST['cs_name'] ?? []) as $i=>$name) {
+        $slot = ['default_font'=>3, 'menu_tooltip'=>9, 'intro'=>5][$name] ?? null;
+        if ($slot !== null) $selected[$name] = stripslashes((string)($_POST['cs_etc_'.$slot][$i] ?? ''));
+    }
+    tomo_check_font_removal(tomo_fonts(), $tomo_fonts, $selected);
+} catch (Throwable $e) { alert($e->getMessage()); }
+
+
+$tomo_saved_fields = [];
+$tomo_uploaded_files = [];
+$tomo_ids_by_family = array_column($tomo_fonts, 'id', 'family');
+foreach (($_POST['tomo_fonts'] ?? []) as $index=>$font) {
+    $family = trim(stripslashes((string)($font['family'] ?? '')));
+    if (isset($tomo_ids_by_family[$family])) $tomo_saved_fields["tomo_fonts[{$index}][id]"] = $tomo_ids_by_family[$family];
+}
 
 $site_style_path = G5_DATA_PATH."/site";
 $site_style_url = G5_DATA_URL."/site";
@@ -47,6 +72,8 @@ for($i=0; $i < count($cs_name); $i++) {
 		$image_name = "design_".$cs_name[$i].".".$exp;
 		upload_file($_FILES['cs_value_file']['tmp_name'][$i], $image_name, $site_style_path);
 		$cs_value[$i] = $site_style_url."/".$image_name;
+        $tomo_saved_fields["cs_value[{$i}]"] = $cs_value[$i];
+        $tomo_uploaded_files[] = "cs_value_file[{$i}]";
 	}
 
 
@@ -116,15 +143,20 @@ if (isset($_POST['cf_add_fonts'])) {
 	$cf_add_fonts = preg_replace("#[\\\]+$#", "", $cf_add_fonts);
 }
 
-$cf_css_version = date('YmdHis');
+$tomo_fonts_json = sql_escape_string(json_encode($tomo_fonts, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+$cf_css_version = date('YmdHis').bin2hex(random_bytes(3));
 
 
 $sql = " update {$g5['config_table']}
 			set cf_add_fonts	= '{$cf_add_fonts}',
+                cf_tomo_fonts = '{$tomo_fonts_json}',
 				cf_css_version	= '{$cf_css_version}',
 				cf_add_script		= '{$_POST['cf_add_script']}'";
 sql_query($sql);
 
+
+$config['cf_tomo_fonts'] = json_encode($tomo_fonts, JSON_UNESCAPED_UNICODE);
+$tomo_legacy_font_css = stripslashes($cf_add_fonts);
 
 // CSS 설정 파일 생성
 $css_data_path = G5_DATA_PATH."/css";
@@ -150,5 +182,5 @@ try {
     alert('디자인 파일을 저장하지 못했습니다. 입력을 유지하고 서버 쓰기 권한을 확인해 주세요.');
 }
 
-goto_url('./design_form.php', false);
+tomo_settings_saved('./design_form.php', $tomo_saved_fields, $tomo_uploaded_files);
 ?>

@@ -1,7 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 
-@ini_set('memory_limit', '-1');
 
 // 게시글리스트 썸네일 생성
 function get_list_thumbnail($bo_table, $wr_id, $thumb_width, $thumb_height, $is_create=false, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3')
@@ -233,6 +232,14 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         }
     }
 
+    // Do not disable the site's memory limit for later upload/editor conversions.
+    // Refuse work that cannot safely hold the source, rotation/copy and destination.
+    $target_width = (float)($thumb_width ?: $size[0]);
+    $target_height = (float)($thumb_height ?: $size[1]);
+    $estimate = $size[0] * $size[1] * 10 + $target_width * $target_height * 8 + 16777216;
+    $memory_limit = ini_parse_quantity(ini_get('memory_limit'));
+    if ($memory_limit > 0 && memory_get_usage(true) + $estimate > $memory_limit) return '';
+
     // 원본파일의 GD 이미지 생성
     $src = null;
     $degree = 0;
@@ -436,7 +443,8 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         imagegif($dst, $thumb_file);
     } else if($size[2] == IMAGETYPE_WEBP) {
         imagesavealpha($dst, true);
-        imagewebp($dst, $thumb_file, IMG_WEBP_LOSSLESS);
+        require_once __DIR__.'/tomo_settings.lib.php';
+        imagewebp($dst, $thumb_file, tomo_webp_quality());
     } else if($size[2] == 3) {
         if(!defined('G5_THUMB_PNG_COMPRESS'))
             $png_compress = 5;

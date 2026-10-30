@@ -1,0 +1,4 @@
+html.tomo-no-copy body,html.tomo-no-copy body * {-webkit-user-select:none;user-select:none}
+html.tomo-no-copy input,html.tomo-no-copy textarea,html.tomo-no-copy select,html.tomo-no-copy [contenteditable]:not([contenteditable=false]),html.tomo-no-copy [contenteditable]:not([contenteditable=false]) *,html.tomo-no-copy [data-tomo-allow-copy],html.tomo-no-copy [data-tomo-allow-copy] * {-webkit-user-select:text;user-select:text}
+html.tomo-no-image-drag img {-webkit-user-drag:none}
+html.tomo-no-image-drag [data-tomo-allow-copy] img {-webkit-user-drag:auto}

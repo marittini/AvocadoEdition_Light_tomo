@@ -145,7 +145,7 @@ if(!parent || parent==this) $('html').addClass('single');
     $tomo_mask = tomo_protection_mask();
     if ($tomo_mask) { ?>
 <link rel="stylesheet" href="<?=G5_CSS_URL?>/tomo-protection.css?v=1">
-<script defer src="<?=G5_JS_URL?>/tomo-protection.js?v=1" data-tomo-protection="<?=$tomo_mask?>"></script>
+<script defer src="<?=G5_JS_URL?>/tomo-protection.js?v=2" data-tomo-protection="<?=$tomo_mask?>"></script>
 <?php } } ?>
 <script defer src="<?php echo G5_JS_URL ?>/tomo-rich-content.js?v=1"></script>
 </head>

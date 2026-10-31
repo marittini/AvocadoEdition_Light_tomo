@@ -5,9 +5,7 @@
   if (!open || !reader || !comic) return;
   const images = [...reader.querySelectorAll(".px-images img")],
     pic = comic.querySelector(".px-comic-image");
-  const range = comic.querySelector("[data-comic-range]"),
-    progress = comic.querySelector("[data-comic-progress]"),
-    grid = comic.querySelector(".px-comic-grid");
+  const progress = comic.querySelector("[data-comic-progress]");
   let index = 0,
     previous = null,
     paged = false,
@@ -19,29 +17,10 @@
     pic.src = images[index].src;
     pic.alt = index + 1 + "쪽";
     progress.textContent = index + 1 + " / " + images.length;
-    range.value = index + 1;
     comic.querySelector("[data-comic=prev]").disabled = index === 0;
     comic.querySelector("[data-comic=next]").disabled =
       index === images.length - 1;
   }
-  images.forEach((img, i) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.setAttribute("aria-label", i + 1 + "쪽");
-    const thumb = document.createElement("img");
-    thumb.src = img.src;
-    thumb.alt = "";
-    thumb.loading = "lazy";
-    const label = document.createElement("span");
-    label.textContent = String(i + 1);
-    b.append(thumb, label);
-    b.addEventListener("click", () => {
-      index = i;
-      render();
-      grid.hidden = true;
-    });
-    grid.append(b);
-  });
   // Reuse the theme box's color while making the reading layer opaque.
   function solidBackground(layer) {
     const c = getComputedStyle(layer).backgroundColor.match(/[\d.]+/g);
@@ -59,9 +38,17 @@
   }
   open.addEventListener("click", () => {
     previous = document.activeElement;
-    reader.hidden = false;
-    solidBackground(reader);
-    reader.querySelector("[data-action=close]").focus();
+    if (reader.dataset.kind === "manga" && images.length) {
+      comic.hidden = false;
+      solidBackground(comic);
+      index = 0;
+      render();
+      comic.querySelector("[data-comic=close]").focus();
+    } else {
+      reader.hidden = false;
+      solidBackground(reader);
+      reader.querySelector("[data-action=close]").focus();
+    }
     document.documentElement.classList.add("px-reading");
   });
   reader.querySelector("[data-action=close]").addEventListener("click", () => {
@@ -69,22 +56,12 @@
     document.documentElement.classList.remove("px-reading");
     previous?.focus();
   });
-  images.forEach((img, i) =>
-    img.parentElement.addEventListener("click", () => {
-      index = i;
-      comic.hidden = false;
-      solidBackground(comic);
-      reader.hidden = true;
-      render();
-      comic.querySelector("[data-comic=close]").focus();
-    }),
-  );
   comic.addEventListener("click", (e) => {
     const a = e.target.closest("[data-comic]")?.dataset.comic;
     if (a === "close") {
       comic.hidden = true;
-      reader.hidden = false;
-      images[index]?.parentElement.focus();
+      document.documentElement.classList.remove("px-reading");
+      previous?.focus();
     }
     if (a === "next") {
       index++;
@@ -94,11 +71,6 @@
       index--;
       render();
     }
-    if (a === "grid") grid.hidden = !grid.hidden;
-  });
-  range.addEventListener("input", () => {
-    index = Number(range.value) - 1;
-    render();
   });
   let x = null;
   comic.addEventListener(

@@ -1,0 +1,525 @@
+/* 웹폰트 */
+@import url('https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css');
+@font-face {
+    font-family: 'GabiaCheongyeon';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/GabiaCheongyeon.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Somi';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_10@1.0/Somi.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'KOHIBaeumOTF';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/KOHIBaeumOTF.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'EliceDigitalBaeum_Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_220508@1.0/EliceDigitalBaeum_Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'twayair';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twayair.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+/* 전역 설정 */
+:root {
+  --effect-text: #000;
+  --effect-text2: #fff;
+  --effect-point: #A0A0A0;
+  --effect-point2: #B40404;
+  --effect-point3: #ffdd93;
+}
+
+/* 폰트 설정 */
+.textggu--title3,
+.textggu--title4,
+.textggu--sub2,
+.textggu--sub4,
+.textggu--sub6,
+.textggu--sub7 {
+  font-family: 'twayair';
+}
+
+.textggu--title1,
+.textggu--title6,
+.textggu--sub3 {
+  font-family: 'KOHIBaeumOTF';
+}
+.textggu--title6:after {
+  font-family:'somi';
+}
+.textggu--title2,
+.textggu--title5 {
+  font-family: 'galmuri9';
+}
+.textggu--title7 {
+  font-family: GabiaCheongyeon;
+}
+.textggu--sub1 {
+  font-family:'EliceDigitalBaeum_Regular';
+}
+.textggu--sub5,
+.textggu--etc4 {
+  font-family: 'galmuri11';
+}
+.textggu--etc6 {
+  font-family: 'dotum';
+}
+
+/* _manager.css.php에 편입시키면 위의 코드를
+--effect-point: <?=$css['color_point'][0]?>; 로 수정하여
+아보카도 관리자 설정의 포인트 색상을 자동 불러오기 할 수 있습니다 */
+
+/* 서식들 */
+.textggu--title1 {
+  display: inline-block;
+    font-size: 40px;
+    line-height: 1em;
+    margin-top: 0.2em;
+  text-fill-color: transparent;
+    -webkit-text-fill-color: transparent;
+  text-stroke-width: 1px;
+    -webkit-text-stroke-width: 1px;
+  text-stroke-color: var(--effect-text);
+    -webkit-text-stroke-color: var(--effect-text);
+    text-shadow: 2px 2px var(--effect-point);
+}
+
+.textggu--title2 {
+      font-size: 38px;
+    line-height: 38px;
+    color: var(--effect-text2);
+    text-shadow: -1px 0px 0px var(--effect-point), 1px 0px 0px var(--effect-point),0px 1px 0px var(--effect-point), 0px -1px 0px var(--effect-point), 0px 0px 4px rgba(0,0,0,0.7);
+  font-weight:bold;
+}
+.textggu--title3 {
+  background-image: url(https://images.unsplash.com/photo-1621799754526-a0d52c49fad5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80) !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 35px;
+    line-height: 35px;
+  animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+    animation-name: background--flow;
+    background-size: 200%;
+  filter: drop-shadow(0px 0px 3px rgba(0,0,0,.3));
+}
+@keyframes background--flow {
+  0% {
+    background-position-y: 0%;
+}
+100% {
+    background-position-y: 100%;
+}
+}
+.textggu--title4 {
+    color: white;
+    font-size: 35px;
+    line-height: 35px;
+    background-size: 100%;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,.3));
+    animation: neon-text infinite 5s;
+}
+@keyframes neon-text {
+  0% {
+    color: white;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,.3));
+  }
+  50% {
+    color: white;
+    filter: drop-shadow(0px 0px 10px rgba(255,255,255,.6));
+  }
+  69% {
+    color: white;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,.4));
+  }
+  70% {
+    color: rgba(230, 230, 230);
+    filter: drop-shadow(0px 0px 0px rgba(255,255,255,.6));
+  }
+  75% {
+    color: rgba(230, 230, 230);
+    filter: drop-shadow(0px 0px 0px rgba(255,255,255,.6));
+  }
+  80% {
+    color: white;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,.6));
+  }
+  81% {
+    color: rgba(230, 230, 230);
+    filter: drop-shadow(0px 0px 0px rgba(255,255,255,.6));
+  }
+  100% {
+    color: white;
+    filter: drop-shadow(0px 0px 3px rgba(255,255,255,.3));
+  }
+}
+.textggu--title5 {
+  font-weight:bold;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+  padding: 7px 16px;
+  background: var(--effect-text2);
+  border: 1px solid var(--effect-text);
+  position:relative;
+  display: inline-block;
+  filter:drop-shadow(8px 5px 0px var(--effect-text));
+  margin: 16px 10px 19px 0px;
+  transition-duration: .5s;
+}
+.textggu--title5:hover {
+  translate: 6px 3px;
+  filter:drop-shadow(2px 2px 0px var(--effect-text));
+}
+.textggu--title5:before {
+  
+  content: '- X';
+  font-size: 12px;
+  width: calc(100% + 2px);
+  height: 15px;
+  line-height:9px;
+  color: var(--effect-text);
+  text-align:right;
+  padding: 2px;
+  box-sizing:border-box;
+  background: var(--effect-text2);
+  border: 1px solid var(--effect-text);
+  position: absolute;
+  top: -15px;
+  left: -1px;
+  transition-duration: .5s;
+}
+.textggu--title5:hover:before {
+  background: var(--effect-text);
+  color: var(--effect-text2);
+}
+.textggu--title5:after {
+  content:'';
+  position:absolute;
+  background: url(https://cdn.pixabay.com/photo/2012/04/01/12/38/cursor-23229_960_720.png) 100%; 
+    width: 16px;
+    height: 30px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    right: -10px;
+    top: 29px;
+}
+.textggu--title6 {
+  display: inline-block;
+  position:relative;
+  color: #000;
+  font-size: 40px;
+  line-height: 1em;
+  margin-top: 0.2em;
+  letter-spacing:-3px;
+  margin-bottom: 0.2em;
+}
+.textggu--title6:after {
+  content:attr(data-text);
+  font-size: 25px;
+  color: var(--effect-point2);
+  position:absolute;
+  left:0;
+  width: max-content;
+  bottom: -10px;
+}
+.textggu--title7 {
+  font-size: 24px;
+  line-height:24px;
+  height:24px;
+  display:inline-block;
+  color:var(--effect-point3);
+  background: var(--effect-point);
+  translate: 15px 0px;
+  margin: 3px 44px 3px 8px;
+  padding: 7px 20px;
+  border-top: 2px solid var(--effect-point3);
+  border-bottom: 2px solid var(--effect-point3);
+  position:relative;
+  filter: drop-shadow(3px 0px 0px var(--effect-point))
+    drop-shadow(0px 3px 0px var(--effect-point))
+     drop-shadow(-3px 0px 0px var(--effect-point))
+     drop-shadow(0px -3px 0px var(--effect-point));
+  letter-spacing:-5px;
+}
+.textggu--title7:before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-right: 0px solid var(--effect-point);
+  border-bottom: 19px solid var(--effect-point);
+  border-left: 20px solid transparent;
+  border-top: 19px solid var(--effect-point);
+  filter: drop-shadow(0px 2px 0px var(--effect-point3))
+    drop-shadow(0px -2px 0px var(--effect-point3));
+}
+.textggu--title7:after {
+  z-index:1;
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-right: 20px solid transparent;
+  border-bottom: 19px solid var(--effect-point);
+  border-left: 0px solid (--effect-point);
+  border-top: 19px solid var(--effect-point);
+  filter: drop-shadow(0px 2px 0px var(--effect-point3))
+    drop-shadow(0px -2px 0px var(--effect-point3));
+}
+.textggu--sub1 {
+  display:inline-block;
+	position:relative;
+	font-weight:bold;
+	font-size:16px;
+	line-height:100%;
+	overflow:hidden;
+	margin: 3px 0px -4px 0px;
+	padding: 0px 10px 0px 0px;
+}
+.textggu--sub1:before {
+	display:inline-block;
+	content:'';
+	background: var(--effect-point);
+	width: 10px;
+	height: 20px;
+	vertical-align:middle;
+	margin:0px 3px 0px 0px;
+  translate:0px -2px;
+}
+
+.textggu--sub2 {
+  position: relative;
+  background-color: var(--effect-point);
+  padding: 5px;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: bold;
+  display: inline-block;
+	margin: 1px 8px;
+}
+.textggu--sub2::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-right: 7px solid var(--effect-point);
+  border-bottom: 25px solid transparent;
+}
+.textggu--sub2::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 7px solid var(--effect-point);
+  border-top: 25px solid transparent;
+}
+.textggu--sub3 {
+  display: inline-block;
+  padding: 8px 8px 3px 8px;
+  margin: 2px;
+  font-size: 16px;
+  position: relative;
+}
+.textggu--sub3::before,
+.textggu--sub3::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transition: 0.35s;
+  background: transparent;
+  z-index: 1;
+}
+.textggu--sub3::before {
+  top: 0;
+  left: 0;
+  border-left: 4px solid var(--effect-point);
+  border-top: 4px solid var(--effect-point);
+}
+.textggu--sub3::after {
+  bottom: 0;
+  right: 0;
+  border-right: 4px solid var(--effect-point);
+  border-bottom: 4px solid var(--effect-point);
+}
+.textggu--sub4 {
+  display: inline-block;
+  padding: 8px 8px 3px 8px;
+  margin: 2px;
+  font-size: 16px;
+  position: relative;
+}
+.textggu--sub4::before,
+.textggu--sub4::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transition: 0.35s;
+  background: transparent;
+  z-index: 1;
+}
+.textggu--sub4::before {
+  top: 2px;
+  left: -2px;
+  border-left: 6px double var(--effect-point);
+  border-top: 6px double var(--effect-point);
+}
+.textggu--sub4::after {
+  bottom: -3px;
+  right: -3px;
+  border-right: 6px double var(--effect-point);
+  border-bottom: 6px double var(--effect-point);
+}
+.textggu--sub5 {
+  display: inline-block;
+  padding: 8px 8px 3px 8px;
+  margin: 2px;
+  font-size: 16px;
+  line-height: 16px;
+  position: relative;
+  background: linear-gradient(to right,var(--effect-point), transparent);
+  background-size: 90% 40%;
+  background-repeat: no-repeat;
+  background-position: 50% 70%;
+  font-weight:bold;
+}
+.textggu--sub6--circle {
+  display: inline-flex;
+  justify-content: center;
+  font-size:15px;
+  padding:10px;
+  width:15px;
+  height:15px;
+  background: var(--effect-point);
+  position:relative;
+  border-radius:100%;
+  margin:3px 0px 3px -6px;
+}
+.textggu--sub7--text {
+  rotate:-45deg;
+}
+.textggu--sub7--square {
+  display: inline-flex;
+  justify-content: center;
+  font-size:15px;
+  padding:5px;
+  width:15px;
+  height:15px;
+  background: var(--effect-point);
+  position:relative;
+  rotate:45deg;
+  margin:10px 0px 10px 2px;
+}
+.textggu--etc1 {
+  border-bottom: 3px double #ef535366;
+  margin-bottom: -3px;
+  display: inline-block;
+  height: 16px;
+}
+.textggu--etc2 {
+  background: linear-gradient(45deg, #ffd64973, #ffe14e57);
+  border-left: 3px solid #fbdf5e;
+  border-right: 3px solid #fbdf5e70;
+  text-shadow: 0px 0px 1px var(--shadow);
+}
+.textggu--etc3 {
+  font-size: 15px;
+  display: inline-block;
+    padding: 5px 7px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    color: var(--effect-point);
+    background: var(--effect-text2);
+    font-weight: bold;
+    transition-duration: .2s;
+}
+.textggu--etc3:hover {
+  translate: 0px -3px;
+  box-shadow:0px 3px 0px rgba(0,0,0,.3);
+}
+.textggu--etc4 {
+  font-weight: bold;
+    display: inline-block;
+    padding: 1px 7px;
+    margin-bottom: 5px;
+    line-height: 18px;
+    border-radius: 5px;
+    background: var(--effect-text2);
+    color: var(--effect-point);
+    border: 1px solid var(--effect-point);
+    transition-duration: 0.2s;
+    box-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+}
+.textggu--etc4:hover {
+  background: var(--effect-point);
+    color: var(--effect-text2);
+    border: 1px solid var(--effect-text2);
+    box-shadow: 1px 1px 0px transparent;
+    transform: translateX(1px) translateY(1px);
+}
+.textggu--etc5 {
+  color: white;
+    background: linear-gradient(to right, var(--effect-point), rgba(0,0,0,0.3));
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+}
+.textggu--etc5:hover {
+      background-image: url(https://images.unsplash.com/photo-1621799754526-a0d52c49fad5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80) !important;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+    animation-name: background--flow;
+    background-size: 200%;
+    transform: translate(1px,1px);
+    box-shadow: none;
+}
+.textggu--etc6 {
+  font-size: 11px;
+  text-shadow: -1px -1px 1px var(--effect-text2), 1px -1px 1px var(--effect-text2), -1px 1px 1px var(--effect-text2), 1px 1px 1px var(--effect-text2);
+}
+
+/* 텍스트 서식 */
+a.blur-txt /*텍스트 블러*/
+{filter:blur(5px);color:CurrentColor;cursor: pointer;}
+
+a.none-blur /*블러 해제*/
+{filter:blur(0px);font-family: inherit;}
+
+span.italictext /*기울임*/
+{font-style: italic;font-family: inherit;}
+
+span.txt-box 
+{
+color: var(--lt-color-default); /*박스 안 색깔*/
+background-color: var(--lt-color-point); /*박스 색깔*/
+padding: 0px 2px;
+}

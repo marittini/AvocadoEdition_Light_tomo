@@ -10,7 +10,7 @@ if (!is_string($relative) || !in_array($kind, ['file','editor'], true) || str_co
 $base = realpath(G5_DATA_PATH.'/'.$kind);
 $file = realpath(G5_DATA_PATH.'/'.$kind.'/'.$relative);
 if (!$base || !$file || !str_starts_with($file, $base.'/') || !is_file($file)) { http_response_code(404); exit; }
-$can_read = static function ($b, $post) use ($g5, $member, $is_admin) {
+$can_read = static function ($b, $post) use ($g5, $member, $is_admin, $config) {
     if (!$b || !$post) return false;
     if ($is_admin === 'super') return true;
     if ((int)($member['mb_level'] ?? 1) < (int)$b['bo_read_level']) return false;
@@ -20,8 +20,24 @@ $can_read = static function ($b, $post) use ($g5, $member, $is_admin) {
         $grant = sql_fetch("select gm_id from {$g5['group_member_table']} where gr_id='".sql_real_escape_string($b['gr_id'])."' and mb_id='".sql_real_escape_string($member['mb_id'] ?? '')."'", false);
         if (!$grant) return false;
     }
-    if (str_contains($post['wr_option'] ?? '', 'secret') || !empty($post['wr_secret'])) {
-        if (!$admin && (empty($member['mb_id']) || $post['mb_id'] !== $member['mb_id']) && !get_session('ss_secret_'.$b['bo_table'].'_'.$post['wr_num'])) return false;
+    if (!empty($config['cf_cert_use']) && !$admin && !empty($b['bo_use_cert'])) {
+        $cert = $b['bo_use_cert'];
+        if (empty($member['mb_id']) || ($cert === 'cert' && empty($member['mb_certify'])) || ($cert === 'adult' && empty($member['mb_adult'])) || ($cert === 'hp-cert' && ($member['mb_certify'] ?? '') !== 'hp') || ($cert === 'hp-adult' && (empty($member['mb_adult']) || ($member['mb_certify'] ?? '') !== 'hp'))) return false;
+    }
+    $ott = ($b['bo_skin'] ?? '') === 'custom_skin/ottreview' || ($b['bo_mobile_skin'] ?? '') === 'custom_skin/ottreview';
+    $privacy = static function ($item) use ($ott, $admin, $member, $b) {
+        $owner = !empty($member['mb_id']) && $item['mb_id'] === $member['mb_id'];
+        if ($admin || $owner) return true;
+        $unlocked = (bool)get_session('ss_secret_'.$b['bo_table'].'_'.$item['wr_num']);
+        if ($ott && !empty($item['wr_protect'])) return $unlocked;
+        if (str_contains($item['wr_option'] ?? '', 'secret')) return $unlocked;
+        if ($ott && !empty($item['wr_secret'])) return !empty($member['mb_id']);
+        return empty($item['wr_secret']) || $unlocked;
+    };
+    if (!$privacy($post)) return false;
+    if ($ott && !empty($post['wr_is_comment'])) {
+        $parent = sql_fetch("select * from {$g5['write_prefix']}{$b['bo_table']} where wr_id=".(int)$post['wr_parent'], false);
+        if (!$parent || !$privacy($parent)) return false;
     }
     return true;
 };

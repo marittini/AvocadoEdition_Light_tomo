@@ -178,3 +178,6 @@
 .ucho-menu>li:hover>.tooltips,.ucho-menu>li:focus-within>.tooltips { display:block; opacity:1; visibility:visible; z-index:9999; }
 .ucho-menu .has-sub.is-dismissed .sub-menu { display:none!important; }
 @media(prefers-reduced-motion:reduce){.ucho-menu *{animation:none!important;transition:none!important}}
+/* BGM: keep the player frame invisible and show only the on/off icon, like the basic skin. */
+.ucho-menu .bgm-btn #site_bgm_box { position:absolute; width:0; height:0; overflow:hidden; }
+.ucho-menu .bgm-btn #site_bgm_box iframe { width:0; height:0; border:0; }

@@ -2,8 +2,9 @@
 if (!defined('_GNUBOARD_')) exit;
 include_once __DIR__.'/menu.lib.php';
 (static function () use ($g5, $menu_skin_url, $is_member, $is_admin) {
-    global $is_add_register;
-add_stylesheet('<link rel="stylesheet" href="'.$menu_skin_url.'/css/style.L.css?v=2">', 1);
+    // $config is needed for the BGM playlist (cf_bgm); the closure does not see globals otherwise.
+    global $is_add_register, $config;
+add_stylesheet('<link rel="stylesheet" href="'.$menu_skin_url.'/css/style.L.css?v=3">', 1);
 add_javascript('<script defer src="'.$menu_skin_url.'/menu.js?v=1"></script>', 1);
 ?>
 
@@ -98,6 +99,22 @@ add_javascript('<script defer src="'.$menu_skin_url.'/menu.js?v=1"></script>', 1
                 </a>
             </li>
         <?php } ?>
+    <?php } ?>
+
+    <?php if (defined('_INDEX_') && !empty($config['cf_bgm'])) { // Same BGM control as the basic menu skin. ?>
+        <li class="bgm-btn">
+            <div id="site_bgm_box">
+                <iframe src="./bgm.php?action=play" name="bgm_frame" id="bgm_frame" title="BGM" allow="autoplay" border="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
+            </div>
+            <a href="<?=G5_URL?>/bgm.php?action=play" target="bgm_frame" onclick="return fn_control_bgm('play')" class="control-bgm-play" style="display:none;">
+                <span class="icons"><span><i class="material-icons">music_off</i></span></span>
+                <span class="tooltips">BGM 켜기</span>
+            </a>
+            <a href="<?=G5_URL?>/bgm.php" target="bgm_frame" onclick="return fn_control_bgm('stop')" class="control-bgm-stop">
+                <span class="icons"><span><i class="material-icons">music_note</i></span></span>
+                <span class="tooltips">BGM 끄기</span>
+            </a>
+        </li>
     <?php } ?>
 </ul>
 <?php })(); ?>

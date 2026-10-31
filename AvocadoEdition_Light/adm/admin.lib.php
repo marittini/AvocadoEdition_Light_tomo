@@ -26,6 +26,15 @@ function get_skin_select($skin_gubun, $id, $name, $selected='', $event='')
     }
 
     $skins = array_merge($skins, get_skin_dir($skin_gubun));
+    // Board skins inside this user-managed folder are selectable as nested paths.
+    if ($skin_gubun === 'board') {
+        $nested = G5_SKIN_PATH.'/board/custom_skin';
+        foreach (get_skin_dir('board/custom_skin') ?: [] as $subdir) {
+            if (preg_match('/^[a-zA-Z0-9_-]+$/D', $subdir) && is_file($nested.'/'.$subdir.'/list.skin.php'))
+                $skins[] = 'custom_skin/'.$subdir;
+        }
+        $skins = array_values(array_filter($skins, static fn($skin) => $skin !== 'custom_skin' || is_file($nested.'/list.skin.php')));
+    }
 
     $str = "<select id=\"$id\" name=\"$name\" $event>\n";
     for ($i=0; $i<count($skins); $i++) {

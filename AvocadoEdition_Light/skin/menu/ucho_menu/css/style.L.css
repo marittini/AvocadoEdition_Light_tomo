@@ -40,8 +40,7 @@
         text-shadow: none;
     }
 
-    .ucho-menu .sub-menu,
-    .ucho-menu .tooltips {
+    .ucho-menu .sub-menu {
         display: none; 
         position: absolute;
         top: 100%;      
@@ -67,8 +66,7 @@
         white-space: nowrap !important;
     }
 
-    .ucho-menu .sub-menu::after,
-    .ucho-menu .tooltips::after {
+    .ucho-menu .sub-menu::after {
         content: '';
         position: absolute;
         top: -6px; 
@@ -82,8 +80,7 @@
         z-index: 1;
     }
 
-    .ucho-menu .sub-menu::before,
-    .ucho-menu .tooltips::before {
+    .ucho-menu .sub-menu::before {
         content: '';
         position: absolute;
         top: -7px;
@@ -97,8 +94,7 @@
         z-index: 0;
     }
 
-    .ucho-menu > li:hover .sub-menu::before,
-    .ucho-menu > li:hover .tooltips::before {
+    .ucho-menu > li:hover .sub-menu::before {
         top: -20px; 
         border: none; 
         width: 100%;  
@@ -139,9 +135,6 @@
         transition: all 0.2s;
     }
 
-    .ucho-menu .tooltips {
-        padding: 4px 12px !important; 
-    }
 
     .ucho-menu .sub-menu li a:hover {
         background: transparent;
@@ -162,7 +155,19 @@
         padding: 0 !important;
     }
 
+    /* Tooltips (icon labels, BGM ON/OFF) take their font, color, size, background
+       and radius from the design settings, as in the basic skin. Only the place is
+       fixed here: centered under the icon, like the sub-menus. The ID selector
+       outranks the design settings' left/right placement for side menus. */
     .ucho-menu .tooltips { display: none; }
+    #header .gnbWrap.ucho-menu .tooltips,
+    #header .gnbWrap.ucho-menu a:hover .tooltips {
+        top: 100%; bottom: auto; left: 50%; right: auto;
+        transform: translateX(-50%); -webkit-transform: translateX(-50%);
+        margin: 12px 0 0;
+    }
+    .ucho-menu > li:hover .tooltips,
+    .ucho-menu > li:focus-within .tooltips { display: block; opacity: 1; visibility: visible; z-index: 9999; }
 }
 
 

@@ -1,0 +1,433 @@
+.px-board,
+.px-detail {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.px-categories {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 14px 0;
+  border-bottom: 1px solid currentColor;
+}
+.px-categories a {
+  padding: 7px 0;
+}
+.px-categories a[aria-current] {
+  font-weight: bold;
+  border-bottom: 2px solid currentColor;
+}
+.px-tags {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.px-tags a,
+.px-tags button {
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.px-tags [aria-current] {
+  font-weight: bold;
+}
+.px-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px 14px;
+}
+.px-item {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.px-thumb {
+  display: block;
+  position: relative;
+  aspect-ratio: 1;
+  background: rgba(128, 128, 128, 0.12);
+  overflow: hidden;
+}
+.px-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.px-count {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 12px;
+  padding: 1px 5px;
+}
+.px-placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+.px-pages {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 25px;
+}
+.px-pages [aria-current] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.px-empty {
+  text-align: center;
+  padding: 40px;
+}
+.px-detail .px-cover {
+  position: relative;
+  display: block;
+  margin: 24px auto;
+  max-width: min(100%, 520px);
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+}
+.px-cover img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.px-cover > span:not(.px-count) {
+  display: grid;
+  place-items: center;
+  width: 240px;
+  max-width: 100%;
+  height: 160px;
+  background: rgba(128, 128, 128, 0.12);
+}
+.px-detail h1 {
+  font-size: 1.25em;
+}
+.px-detail .px-tags {
+  justify-content: flex-start;
+}
+.px-note {
+  white-space: normal;
+  line-height: 1.7;
+  margin: 20px 0;
+}
+.px-write-fields {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 24px;
+}
+.px-write-fields input,
+.px-write-fields textarea,
+.px-write-fields select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.px-write-fields .px-tags {
+  justify-content: flex-start;
+}
+.px-file-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+.px-file-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.px-file-list img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+.px-file-list span {
+  flex: 1;
+  min-width: 110px;
+  overflow-wrap: anywhere;
+}
+.px-file-list button,
+.px-reader button,
+.px-comic button {
+  cursor: pointer;
+  font: inherit;
+}
+.px-reader.theme-box,
+.px-comic.theme-box {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  padding: 0;
+}
+.px-reader[hidden],
+.px-comic[hidden],
+.px-reader-options[hidden],
+.px-comic-grid[hidden],
+.px-reader footer[hidden] {
+  display: none;
+}
+.px-reading {
+  overflow: hidden;
+}
+.px-reader header,
+.px-comic header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 16px;
+  border-bottom: 1px solid #aaa;
+  background: inherit;
+}
+.px-reader header span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.px-reader button,
+.px-comic button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 10px;
+}
+.px-reader-scroll {
+  height: calc(100% - 52px);
+  overflow: auto;
+}
+.px-images {
+  max-width: 900px;
+  margin: auto;
+}
+.px-images button {
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+.px-images img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+.px-content,
+.px-novel {
+  max-width: 750px;
+  margin: auto;
+  padding: 24px;
+  line-height: 1.9;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+.px-novel.px-paged {
+  height: calc(100dvh - 110px);
+  overflow: hidden;
+  column-width: calc(min(750px, 100vw) - 48px);
+  column-gap: 48px;
+  column-fill: auto;
+}
+.px-reader footer,
+.px-comic footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: inherit;
+}
+.px-reader-options {
+  position: absolute;
+  right: 10px;
+  top: 52px;
+  z-index: 2;
+  background: inherit;
+  border: 1px solid #aaa;
+  padding: 12px;
+}
+.px-reader-options label {
+  display: block;
+}
+.px-comic {
+  text-align: center;
+}
+.px-comic-image {
+  max-width: 100%;
+  max-height: calc(100dvh - 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.px-comic-prev,
+.px-comic-next {
+  position: absolute;
+  top: 45%;
+  font-size: 2em !important;
+}
+.px-comic-prev {
+  left: 8px;
+}
+.px-comic-next {
+  right: 8px;
+}
+.px-comic footer input {
+  width: 100%;
+}
+.px-comic-grid {
+  position: absolute;
+  right: 0;
+  top: 52px;
+  max-height: 60%;
+  overflow: auto;
+  background: inherit;
+  border: 1px solid #aaa;
+}
+.px-comic-grid button {
+  min-width: 44px;
+  min-height: 44px;
+}
+@media (max-width: 700px) {
+  .px-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 10px;
+  }
+  .px-categories {
+    gap: 16px;
+  }
+  .px-file-list button {
+    min-height: 40px;
+  }
+  .px-reader header button,
+  .px-comic header button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .px-novel {
+    padding: 18px;
+  }
+  .px-novel.px-paged {
+    column-width: calc(100vw - 36px);
+    column-gap: 36px;
+  }
+}
+
+#pixiv-content-row[hidden] {
+  display: none !important;
+}
+/* Rounded controls follow the site's colors without changing image proportions. */
+.px-tags a,
+.px-tags button {
+  border-radius: 999px;
+}
+.px-file-list button,
+.px-reader button,
+.px-comic button {
+  border-radius: 8px;
+}
+.px-novel-preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.px-comic-grid {
+  max-width: min(80vw, 480px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(60px, 1fr));
+  gap: 6px;
+  padding: 8px;
+}
+.px-comic-grid img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+}
+.px-comic-grid span {
+  display: block;
+}
+.px-reader button:focus-visible,
+.px-comic button:focus-visible,
+.px-tags a:focus-visible,
+.px-file-list button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.px-reader.theme-box,
+.px-comic.theme-box {
+  transition: none !important;
+  opacity: 1 !important;
+  background-image: none !important;
+}
+
+.px-picker {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.px-picker:focus-within {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.px-file-picker {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+#pixiv-tags {
+  border-radius: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+@media (max-width: 700px) {
+  .px-file-list li {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) repeat(3, auto);
+    gap: 5px;
+  }
+  .px-file-list img {
+    width: 52px;
+    height: 52px;
+  }
+  .px-file-list span {
+    min-width: 0;
+    font-size: 12px;
+  }
+  .px-file-list button {
+    padding: 0 6px;
+    min-height: 40px;
+    font-size: 12px;
+  }
+}
+
+.px-write-fields #wr_subject {
+  width: 100%;
+  box-sizing: border-box;
+}

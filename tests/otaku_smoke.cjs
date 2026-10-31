@@ -90,6 +90,7 @@ const { chromium } = require("playwright"),
   await addRow(p.locator(".otaku-rel-edit").nth(0).locator("[data-list]"), ["한여름 · 민도윤", null, "친구", "편지를 주고받는다."]);
   await addRow(p.locator(".otaku-rel-edit").nth(1).locator("[data-list]"), ["직접 입력", "서지후", "라이벌", ""]);
   await p.locator("[data-tab=timeline]").click();
+  await addRow(p.locator("[data-panel=timeline] [data-list]"), ["초등학교 6학년", "첫 이사", "", "강이안"]);
   await addRow(p.locator("[data-panel=timeline] [data-list]"), ["2021.03.02", "전학", "도서실부터 찾았다.", "윤서하"]);
   await addRow(p.locator("[data-panel=timeline] [data-list]"), ["2021.06.03", "빌린 책", "", "두 사람"]);
   const main = (await save()).searchParams.get("wr_id");
@@ -108,6 +109,7 @@ const { chromium } = require("playwright"),
   assert.equal(await v0.locator(".otaku-rels img").count(), 1, "이어진 글 사진");
   await v0.locator("[data-tab=timeline]").click();
   assert.match(await v0.locator(".otaku-tl").innerText(), /빌린 책\s*윤서하 · 강이안/, "두 사람의 일");
+  assert.equal(await v0.locator(".otaku-tl-date").first().textContent(), "초등학교 6학년", "연표 '언제'는 글로도 쓸 수 있음");
 
   // 4. 위조 요청은 막힌다
   const forged = await p.request.post(base + "/bbs/write_update.php", {

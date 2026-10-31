@@ -72,7 +72,7 @@ $spec_intro = ['t' => ['소제목', 'text', '성격'], 'b' => ['내용', 'textar
 $spec_rel = ['to' => ['이 게시판의 글', 'entry', ''], 'name' => ['이름', 'text', '목록에 없으면 이름'], 'kind' => ['관계', 'text', '친구'], 'text' => ['한 줄 설명', 'text', '예전 학교 친구. 편지를 주고받는다.']];
 $who = ['all' => '두 사람'];
 foreach ($otaku['people'] as $i => $p) $who[(string)$i] = $p['name'] !== '' ? $p['name'] : '인물 '.($i + 1);
-$spec_tl = ['d' => ['날짜', 'text', '2021.04.12'], 't' => ['일', 'text', '첫 만남'], 'b' => ['내용', 'textarea', '먼저 말을 건 건 이안이었다.']];
+$spec_tl = ['d' => ['언제', 'text', '초등학교 6학년'], 't' => ['일', 'text', '첫 만남'], 'b' => ['내용', 'textarea', '먼저 말을 건 건 이안이었다.']];
 $spec_tl['who'] = ['누구의 일', $who, ''];
 $otaku_width = (int)($board['bo_table_width'] ?? 0);
 ?>

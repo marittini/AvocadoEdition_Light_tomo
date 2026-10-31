@@ -37,4 +37,4 @@ TEST_URL=http://127.0.0.1:8080 TEST_USER=admin TEST_PASSWORD=... TEST_IMAGE=/pat
 ```
 
 It covers pair creation with all five image slots, row reorder and removal, relation links, the timeline, a forged-request rejection,
-AU copy, photo fallback, AU switching, the AU URL redirect, the list cards (no AU count) and column count, and the AU delete cleanup.
+a text timeline entry ("초등학교 6학년"), AU copy, photo fallback, AU switching, the AU URL redirect, the list cards (no AU count) and column count, and the AU delete cleanup.

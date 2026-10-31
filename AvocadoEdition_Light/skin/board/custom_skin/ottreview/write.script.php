@@ -57,6 +57,7 @@ $(function() {
 });
 function fwrite_submit(f)
 {
+    <?php echo get_editor_js('wr_content', $is_dhtml_editor); ?>
     if (!ottPrepareFiles(f)) return false;
 
     var subject = "";

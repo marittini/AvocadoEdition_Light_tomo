@@ -50,8 +50,14 @@ if ($board['bo_use_category']) {
 }
 
 $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
+include_once G5_EDITOR_LIB;
+$ott_existing_editor = !empty($is_dhtml_editor) && isset($editor_html);
+$is_dhtml_editor = !empty($config['cf_editor']) && $is_member && (int)$member['mb_level'] >= (int)$board['bo_html_level'];
+$ott_editor_source = $write['wr_content'];
+if ($is_dhtml_editor && strpos($write['wr_option'] ?? '', 'html') === false) $ott_editor_source = nl2br(htmlspecialchars($ott_editor_source, ENT_QUOTES, 'UTF-8'));
+if (!$ott_existing_editor) $editor_html = editor_html('wr_content', get_text($ott_editor_source, 0), $is_dhtml_editor);
 ?>
-<script type="text/javascript" src="<?=$board_skin_url;?>/js/paste.js"></script>
+
 
 <?php //=print_r2($file['count']);?>
 <section id="bo_w" <?php if($board['bo_table_width']>0){?>style="max-width:<?=$board['bo_table_width']?><?=$board['bo_table_width']>100 ? "px":"%"?>;margin:0 auto;"<?php }?>>
@@ -213,22 +219,13 @@ $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
 			<label class="ott_w_label">내용</label>
 			<div class="ott_w_content_tools" aria-label="내용 작성 도구">
 				<label id="upload-btn" class="ott_w_upload_btn" title="이미지 추가"><i class="fa-regular fa-image"></i> 이미지 추가</label>
-				<button type="button" class="ott_w_tool_btn ott_w_content_tool_btn" onclick="toggleWritePanel('txtggu')" title="텍스트 꾸미기"><i class="fa-solid fa-code"></i> 텍꾸</button>
-				<button type="button" class="ott_w_tool_btn ott_w_content_tool_btn" onclick="toggleWritePanel('emoticon')" title="이모티콘"><i class="fa-regular fa-face-smile"></i> 이모티콘</button>
-			</div>
-		</div>
-
-		<div id="write_tool_panel" class="write_tool_panel" style="display:none;">
-			<div class="write_tool_panel_head">
-				<strong id="write_tool_title">도구</strong>
-				<button type="button" class="write_tool_close" onclick="closeWritePanel()">×</button>
-			</div>
-			<iframe id="write_tool_iframe" src="" frameborder="0"></iframe>
-		</div>
+            </div>
+        </div>
 
 		<div id="dropzone" class="ott_w_dropzone">
 			<div class="wr_content">
-				<textarea id="wr_content" name="wr_content" style="width:100%" rows="14" oninput="ottAutoResize(this)" placeholder="감상을 자유롭게 적어보세요. 유튜브 링크는 자동 재생되고, X(트위터) 게시물 링크는 자동으로 인용돼요."><?=htmlspecialchars((string)$write['wr_content'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')?></textarea>
+<?php if ($is_dhtml_editor) { ?><input type="hidden" name="html" value="html1"><?php } ?>
+<?=$editor_html?>
 			</div>
 			<div id="preview"></div>
 
@@ -236,8 +233,8 @@ $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
 		</div>
 		<div class="ott_w_hint_group">
 			<span class="frm_info"><i class="fa-solid fa-circle-exclamation"></i> 이미지: 복사+붙여넣기 / 드래그 앤 드롭 가능. [파일1], [파일2] 로 위치 지정 가능.</span>
-			<span class="frm_info"><i class="fa-solid fa-circle-exclamation"></i> 토글[토글제목] 줄바꿈 [토글내용] 으로 토글 영역 작성 가능.</span>
-			<span class="frm_info"><i class="fa-solid fa-circle-play"></i> 유튜브 링크를 붙여넣으면 게시글 상세에서 자동 재생됩니다.</span>
+			
+			<span class="frm_info">본문 이미지와 서식은 에디터 도구에서 입력할 수 있습니다.</span>
 		</div>
 	</div>
 
@@ -309,12 +306,6 @@ $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
         paint(sel.value);
     }
 
-    // 긴 글 작성 시 내용 입력칸 자동 확장
-    var contentTextarea = document.getElementById('wr_content');
-    if (contentTextarea) {
-        ottAutoResize(contentTextarea);
-    }
-
     // 썸네일 실시간 미리보기
     var thumbInput = document.getElementById('wr_10');
     var thumbPrev = document.getElementById('ott_thumb_preview');
@@ -345,56 +336,6 @@ $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
     }
 })();
 
-function ottAutoResize(textarea) {
-    if (!textarea) return;
-
-    var minimumHeight = window.matchMedia('(max-width: 640px)').matches ? 260 : 320;
-    textarea.style.height = 'auto';
-    textarea.style.height = Math.max(textarea.scrollHeight, minimumHeight) + 'px';
-}
-
-// 기존 텍꾸 패널에서 호출하는 함수명도 같은 자동 확장 기능으로 연결
-function autoResize(textarea) {
-    ottAutoResize(textarea);
-}
-
-function toggleWritePanel(type) {
-    var panel = document.getElementById('write_tool_panel');
-    var iframe = document.getElementById('write_tool_iframe');
-    var title = document.getElementById('write_tool_title');
-
-    var url = '';
-    var label = '';
-
- if (type === 'txtggu') {
-    url = '<?=$board_skin_url?>/txtggu/index.php';
-    label = 'TXT TOOL';
-} else if (type === 'emoticon') {
-    url = '<?=$board_skin_url?>/emoticon_list.php';
-    label = 'EMOTICON';
-}
-
-    if (panel.style.display !== 'none' && iframe.dataset.type === type) {
-        panel.style.display = 'none';
-        iframe.src = '';
-        iframe.dataset.type = '';
-        return;
-    }
-
-    iframe.src = url;
-    iframe.dataset.type = type;
-    title.textContent = label;
-    panel.style.display = 'block';
-}
-
-function closeWritePanel() {
-    var panel = document.getElementById('write_tool_panel');
-    var iframe = document.getElementById('write_tool_iframe');
-
-    panel.style.display = 'none';
-    iframe.src = '';
-    iframe.dataset.type = '';
-}
 </script>
 
 <?php include_once($board_skin_path.'/write.script.php'); ?>

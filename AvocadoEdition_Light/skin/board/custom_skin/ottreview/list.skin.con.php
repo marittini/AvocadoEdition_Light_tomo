@@ -20,7 +20,8 @@ for ($ii=0; $ii<4; $ii++) {
 $file_count = count($ott_attachments) + count($ott_external);
 
 // 내용 콘텐츠 [파일*] 및 [이미지*] 변환
-$list_content = htmlspecialchars((string)$list[$i]['wr_content'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$ott_rich_content = strpos($list[$i]['wr_option'] ?? '', 'html') !== false;
+$list_content = $ott_rich_content ? conv_content($list[$i]['wr_content'], 1) : htmlspecialchars((string)$list[$i]['wr_content'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
 $file_pattern = '/\[파일\d+\]/';
 $img_pattern = '/\[이미지\d+\]/';
@@ -48,6 +49,7 @@ if (preg_match($img_pattern, $list[$i]['wr_content'])) {
 
 // 게시글 상세(원문)를 볼 때만 유튜브 자동재생 (목록/타래 미리보기/답글에서는 자동재생 안 함)
 $_ott_autoplay_yt = ($is_view && !$list[$i]['wr_is_comment']);
+if (!$ott_rich_content) {
 $list_content = convertYouTubeLinks($list_content, $_ott_autoplay_yt);
 $list_content = convertXLinks($list_content);
 $list_content = url_auto_link2($list_content);
@@ -59,6 +61,8 @@ $toggle_replacement = '<details><summary>$1</summary>$2</details>';
 $list_content= preg_replace($toggle_pattern, $toggle_replacement, $list_content);
 
 
+
+}
 
 // 좋아요 관련
 $good_href = $board_skin_url.'/good.php?bo_table='.$bo_table.'&amp;wr_id='.$list[$i]['wr_id'].'&amp;good=good';
@@ -79,7 +83,7 @@ $good_sql = sql_fetch("SELECT count(*) AS cnt FROM {$g5['board_good_table']} WHE
     </div>
 <?php } ?>
 <?php  if($list_content) { ?>
-    <div class="thread_content"><?=nl2br($list_content); ?></div>
+    <div class="thread_content"><?=$ott_rich_content ? $list_content : nl2br($list_content); ?></div>
 <?php  } ?>
 <?php  if($_like_use == 'y') {?>
 <div class="wr_good<?=($good_sql['cnt']>0) ? ' is_good' : '';?>">

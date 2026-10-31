@@ -104,24 +104,6 @@ if (!$list[$i]['wr_is_comment']) {
 
         <h1 class="ott_hero_title"><?=htmlspecialchars($list[$i]['wr_subject'], ENT_QUOTES, 'UTF-8'); ?></h1>
 
-        <?php  if (!$list[$i]['is_notice']) { ?>
-        <div class="ott_hero_meta">
-            <span class="name">
-                <?php 
-                $icon_row = sql_fetch(" select mb_7 from {$g5['member_table']} where mb_id = '{$list[$i]['mb_id']}' ");
-                if ($icon_row['mb_7']) {
-                ?>
-                    <img src="<?=ott_safe_image_url($icon_row['mb_7'])?>" alt="" class="writer_icon">
-                <?php  } ?>
-                <?=htmlspecialchars($list[$i]['wr_name'], ENT_QUOTES, 'UTF-8'); ?>
-                <?php  if ($list[$i]['wr_protect'] || $list[$i]['wr_secret']) { ?>
-                    <i class="fa-solid fa-lock"></i>
-                <?php  } ?>
-            </span>
-            <span class="dot">·</span>
-            <span class="date"><?=date('Y-m-d H:i', strtotime($list[$i]['wr_datetime'])) ?></span>
-        </div>
-        <?php  } ?>
     </div>
     <div class="ott_hero_scroll_cue"><i class="fa-solid fa-chevron-down"></i></div>
 </div>
@@ -148,27 +130,13 @@ if (!$list[$i]['wr_is_comment']) {
 
 <?php  if (!$list[$i]['is_notice']) { ?>
 <div class="thread_info">
-    <span class="name">
-        <?php 
-        $icon_row = sql_fetch(" select mb_7 from {$g5['member_table']} where mb_id = '{$list[$i]['mb_id']}' ");
-        if ($icon_row['mb_7']) {
-        ?>
-            <img src="<?=ott_safe_image_url($icon_row['mb_7'])?>" alt="" class="writer_icon">
-        <?php  } ?>
-        <?=htmlspecialchars($list[$i]['wr_name'], ENT_QUOTES, 'UTF-8'); ?>
-        <?php  if ($list[$i]['wr_protect'] || $list[$i]['wr_secret']) { ?>
-            <i class="fa-solid fa-lock"></i>
-        <?php  } ?>
-    </span>
     <?php  if ($list[$i]['wr_is_comment'] && $write_href && ($update_href || $delete_href)) { ?>
     <span class="thread_admin thread_admin_inline">
         <?php  if ($update_href) { ?><a href="<?php  echo $update_href ?>" title="수정"><i class="fa-solid fa-pen-to-square"></i><span>수정</span></a><?php  } ?>
         <?php  if ($delete_href) { ?><a href="<?php  echo $delete_href ?>" title="삭제" onclick="del(this.href); return false;"><i class="fa-solid fa-trash"></i><span>삭제</span></a><?php  } ?>
     </span>
     <?php  } ?>
-    <span class="date">
-        <?=date('Y-m-d H:i', strtotime($list[$i]['wr_datetime'])) ?>
-    </span>
+
 </div>
 <?php  } ?>
 

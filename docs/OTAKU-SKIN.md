@@ -8,7 +8,7 @@ An AU is stored as a reply to the original, and the view page switches between �
 | File | Role |
 | --- | --- |
 | `otaku.lib.php` | Shared helpers: the skin table `{prefix}otaku_data` (created lazily), load/save/cleanup, the attachment-slot map `OTAKU_SLOTS`, and the point colour CSS variable |
-| `list.skin.php` | Original posts only, shown as thumbnail cards (3 columns on PC, 1 on mobile), with the mini characters standing on the point-colour line and the AU count |
+| `list.skin.php` | Original posts only, shown as thumbnail cards (3 columns on PC, 1 on mobile), with the mini characters standing on the point-colour line |
 | `view.skin.php` / `view.js` | 원본 + readable AUs, tabs per version, AU switch keeps the current tab and updates the URL; an AU URL redirects to its original with `&au=` |
 | `write.skin.php` / `write.js` | Tabbed editor, row add/preset/move/remove, auto-growing text areas, image previews |
 | `write_update.head.skin.php` | Session token check, input cleaning and limits, relation links limited to public originals on the same board, subject from the pair name, plain-text search content |
@@ -37,4 +37,4 @@ TEST_URL=http://127.0.0.1:8080 TEST_USER=admin TEST_PASSWORD=... TEST_IMAGE=/pat
 ```
 
 It covers pair creation with all five image slots, row reorder and removal, relation links, the timeline, a forged-request rejection,
-AU copy, photo fallback, AU switching, the AU URL redirect, the list cards and column count, and the AU delete cleanup.
+AU copy, photo fallback, AU switching, the AU URL redirect, the list cards (no AU count) and column count, and the AU delete cleanup.

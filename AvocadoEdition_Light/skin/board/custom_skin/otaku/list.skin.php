@@ -3,15 +3,14 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once __DIR__.'/otaku.lib.php';
 otaku_assets($board_skin_url);
 
-// 원본 글(페어)만 카드로. AU(답글)는 개수만 센다.
+// 원본 글(페어)만 카드로. AU(답글)는 목록에 나오지 않는다.
 $otaku_where = "wr_is_comment = 0 AND wr_reply = ''";
 $otaku_total = (int)(sql_fetch("SELECT COUNT(*) AS n FROM `{$write_table}` WHERE {$otaku_where}")['n'] ?? 0);
 $otaku_rows = max(1, (int)(G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page_rows']) ?: 12);
 $otaku_pages = max(1, (int)ceil($otaku_total / $otaku_rows));
 $otaku_page = min($otaku_pages, max(1, (int)($_GET['page'] ?? 1)));
-$res = sql_query("SELECT w.wr_id, w.wr_num, w.wr_subject, w.wr_option, w.mb_id,
-        (SELECT COUNT(*) FROM `{$write_table}` a WHERE a.wr_num = w.wr_num AND a.wr_reply <> '' AND a.wr_is_comment = 0) AS au
-    FROM `{$write_table}` w WHERE {$otaku_where} ORDER BY w.wr_num, w.wr_reply LIMIT ".(($otaku_page - 1) * $otaku_rows).", {$otaku_rows}");
+$res = sql_query("SELECT wr_id, wr_num, wr_subject, wr_option, mb_id
+    FROM `{$write_table}` WHERE {$otaku_where} ORDER BY wr_num, wr_reply LIMIT ".(($otaku_page - 1) * $otaku_rows).", {$otaku_rows}");
 $otaku_cards = [];
 while ($row = sql_fetch_array($res)) {
 	$open = otaku_can_read($row);
@@ -44,8 +43,7 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 				</span>
 				<span class="otaku-card-text">
 					<b><?php if (!$c['open'] || strpos($row['wr_option'], 'secret') !== false) { ?><i class="material-icons" aria-hidden="true">lock</i><?php } ?><?=otaku_e($title)?></b>
-					<?php $sub = array_filter([$c['open'] && $c['data']['title'] !== '' ? otaku_e(implode(' · ', array_column($c['data']['people'], 'name'))) : '', (int)$row['au'] ? 'AU '.(int)$row['au'] : '']); ?>
-					<small><?=implode('<span class="otaku-card-sep" aria-hidden="true"> · </span>', $sub)?></small>
+					<small><?=$c['open'] && $c['data']['title'] !== '' ? otaku_e(implode(' · ', array_column($c['data']['people'], 'name'))) : ''?></small>
 				</span>
 			</a>
 		</li>

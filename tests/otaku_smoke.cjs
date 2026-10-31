@@ -139,12 +139,13 @@ const { chromium } = require("playwright"),
   assert.equal(new URL(p.url()).searchParams.get("wr_id"), main);
   assert.equal(new URL(p.url()).searchParams.get("au"), au);
 
-  // 6. 목록: 원본만 카드로, 썸네일·미니·AU 수
+  // 6. 목록: 원본만 카드로, 썸네일·미니 (AU 수는 표시하지 않음)
   await p.goto(board);
   assert.equal(await p.locator(".otaku-card").count(), 2, "AU는 카드로 나오지 않음");
   const card = p.locator(`.otaku-card[href*='wr_id=${main}']`);
   assert.equal(await card.locator(".otaku-card-minis img").count(), 2, "미니 캐릭터 2명");
-  assert.match(await card.innerText(), /GEAS[\s\S]*윤서하 · 강이안[\s\S]*AU 1/);
+  assert.match(await card.innerText(), /GEAS[\s\S]*윤서하 · 강이안/);
+  assert.doesNotMatch(await card.innerText(), /AU/, "AU 수 표시 안 함");
   assert.equal(await p.locator(`.otaku-card[href*='wr_id=${friend}'] .otaku-card-pics img`).count(), 1, "썸네일 없으면 인물 사진");
   await p.setViewportSize({ width: 390, height: 800 });
   const cols = await p.evaluate(() => getComputedStyle(document.querySelector(".otaku-cards")).gridTemplateColumns.split(" ").length);

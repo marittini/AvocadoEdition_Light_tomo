@@ -572,3 +572,190 @@
 .px-comic .px-comic-image { top:calc(50% + 26px); max-width:none; max-height:none; transition:none!important; }
 .px-comic .px-comic-prev,.px-comic .px-comic-next { top:calc(50% + 26px); transform:translateY(-50%); }
 .px-reader .px-images img { width:100%; }
+
+/* =================================================================
+   Series, work cards and viewer (pixiv-style, Charcoal-inspired)
+   Colors come from the site's design settings: currentColor,
+   .ui-btn / .ui-btn.point and .theme-box. Only neutral tints are
+   derived here, so every theme keeps its own palette.
+   ================================================================= */
+.px-board, .px-detail, .px-series-edit {
+  --px-radius: 8px;
+  --px-surface: rgba(128, 128, 128, 0.1);
+  --px-line: rgba(128, 128, 128, 0.28);
+}
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+  .px-board, .px-detail, .px-series-edit {
+    --px-surface: color-mix(in srgb, currentColor 7%, transparent);
+    --px-line: color-mix(in srgb, currentColor 18%, transparent);
+  }
+}
+.px-back { display: inline-block; margin-bottom: 4px; font-size: 13px; }
+
+/* Work cards: thumbnail, title, meta — as on pixiv. */
+.px-grid { gap: 24px 16px; }
+.px-item { display: flex; flex-direction: column; gap: 4px; }
+.px-item .px-thumb { border-radius: var(--px-radius); color: inherit; text-decoration: none; }
+.px-item .px-thumb img { transition: opacity .15s; }
+.px-item .px-thumb:hover img { opacity: .85; }
+.px-item-title {
+  display: block; margin-top: 4px; font-weight: 700; font-size: 14px; line-height: 1.45;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: inherit; text-decoration: none;
+}
+a.px-item-title:hover { text-decoration: underline; }
+.px-item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 12px; min-width: 0; }
+.px-item-meta time, .px-item-meta .px-upload-date { margin: 0; opacity: .65; font-size: 12px; display: inline; }
+.px-series-chip {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 100%; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 700; text-decoration: none;
+}
+.px-series-chip::before { content: ''; flex: 0 0 auto; width: 12px; height: 10px; border: 1.5px solid currentColor; border-radius: 2px; box-shadow: 2px -2px 0 -0.5px currentColor; margin-right: 2px; }
+.px-kind { font-size: 12px; font-weight: 700; opacity: .7; }
+.px-kind-badge, .px-count-series {
+  position: absolute; left: 8px; top: 8px; right: auto; bottom: auto; padding: 2px 7px; border-radius: 4px;
+  background: rgba(0, 0, 0, .55); color: #fff; font-size: 11px; font-weight: 700; line-height: 1.5;
+}
+.px-count-series { left: auto; right: 8px; top: auto; bottom: 8px; font-size: 12px; }
+.px-count-series::before { content: none; }
+.px-lock { margin-right: 4px; font-size: .9em; }
+.px-pages a { min-width: 32px; height: 32px; display: inline-grid; place-items: center; border-radius: 999px; text-decoration: none; }
+.px-pages a[aria-current] { background: var(--px-surface); text-decoration: none; }
+
+/* Series page header */
+.px-series-head { display: grid; grid-template-columns: minmax(180px, 280px) minmax(0, 1fr); gap: 32px; align-items: start; margin: 20px 0 36px; }
+.px-series-cover { aspect-ratio: 1; border-radius: var(--px-radius); overflow: hidden; background: var(--px-surface); }
+.px-series-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.px-series-info h1 { margin: 4px 0 8px; font-size: 24px; line-height: 1.35; overflow-wrap: anywhere; }
+.px-series-stats { margin: 0 0 12px; font-size: 13px; }
+.px-series-stats time { opacity: .65; }
+.px-series-info .px-note { margin: 12px 0; }
+.px-series-info .px-tags { justify-content: flex-start; margin: 12px 0; }
+.px-series-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.px-series-actions .ui-btn { border-radius: 999px; padding: 0 18px; }
+
+/* Episode list */
+.px-episodes-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--px-line); padding-bottom: 10px; }
+.px-episodes-bar h2 { margin: 0; font-size: 16px; }
+.px-sort { display: flex; gap: 4px; font-size: 13px; }
+.px-sort a { padding: 4px 10px; border-radius: 999px; text-decoration: none; opacity: .7; }
+.px-sort a[aria-current] { opacity: 1; font-weight: 700; background: var(--px-surface); }
+.px-episode-list { list-style: none; margin: 0; padding: 0; }
+.px-episode-list li { border-bottom: 1px solid var(--px-line); }
+.px-episode { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 4px; color: inherit; text-decoration: none; }
+.px-episode:hover { background: var(--px-surface); }
+.px-episode:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+.px-episode-thumb { position: relative; display: block; aspect-ratio: 1; border-radius: var(--px-radius); overflow: hidden; background: var(--px-surface); }
+.px-episode-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.px-episode-thumb .px-placeholder { font-size: 12px; opacity: .7; }
+.px-episode-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.px-episode-no { font-size: 12px; font-weight: 700; opacity: .7; }
+.px-episode-name { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-episode-note { font-size: 13px; opacity: .8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-episode-body time { font-size: 12px; opacity: .6; }
+
+/* Series editor */
+.px-series-edit { padding: 24px; border-radius: 16px; margin-top: 12px; }
+.px-series-edit h2 { margin: 0 0 16px; font-size: 18px; }
+.px-series-edit h3 { margin: 24px 0 4px; font-size: 15px; }
+.px-series-edit .px-write-fields { grid-template-columns: 100px minmax(0, 1fr); gap: 12px 16px; align-items: center; }
+.px-series-edit .px-write-fields label, .px-field-label { font-weight: 600; }
+.px-series-edit input[type=text], .px-series-edit .frm_input, .px-series-edit textarea { width: 100%; border-radius: 8px; padding: 8px 10px; box-sizing: border-box; }
+.px-help { font-size: 12px; opacity: .75; margin: 0 0 8px; }
+.px-episode-sort { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.px-episode-sort li { display: grid; grid-template-columns: 20px 40px minmax(0, 1fr) auto auto auto; gap: 6px; align-items: center; padding: 8px 10px; border: 1px solid var(--px-line); border-radius: var(--px-radius); cursor: grab; }
+.px-episode-sort li.is-dragging { opacity: .45; }
+.px-episode-sort .px-episode-name { font-size: 14px; }
+.px-episode-sort button { min-width: 36px; }
+.px-danger { margin-left: auto; }
+
+/* Detail: stage, series breadcrumb and series navigation */
+.px-stage { border-radius: var(--px-radius); background: var(--px-surface); padding: 0; overflow: hidden; }
+.px-detail .px-stage .px-cover { border-radius: 0; }
+.px-view-all { display: block; margin: 12px auto 0; padding: 8px 22px; border: 1px solid var(--px-line); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.px-view-all span { font-weight: 400; opacity: .7; margin-left: 4px; }
+.px-view-all:hover { background: var(--px-surface); }
+.px-view-all:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.px-series-crumb { margin-bottom: 6px; font-size: 13px; }
+.px-series-crumb .px-kind { font-size: 11px; }
+.px-series-crumb b { margin-left: 2px; }
+.px-series-nav { margin: 20px 0; padding: 14px; border-radius: 12px; border: 1px solid var(--px-line); }
+.px-series-nav-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; font-size: 13px; min-width: 0; }
+.px-series-nav-head > a:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; }
+.px-series-nav-head > span { opacity: .65; flex: 0 0 auto; }
+.px-series-all { margin-left: auto; flex: 0 0 auto; font-size: 12px; text-decoration: none; }
+.px-series-nav-items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.px-series-step { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 6px; border-radius: var(--px-radius); color: inherit; text-decoration: none; background: var(--px-surface); }
+.px-series-step.is-next { flex-direction: row-reverse; text-align: right; }
+a.px-series-step:hover { outline: 1px solid var(--px-line); }
+.px-series-step.is-empty { justify-content: center; opacity: .55; min-height: 52px; }
+.px-series-step-thumb { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 6px; overflow: hidden; background: var(--px-line); }
+.px-series-step-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.px-series-step-text { display: flex; flex-direction: column; min-width: 0; font-size: 13px; line-height: 1.4; }
+.px-series-step-text small { font-size: 11px; opacity: .7; font-weight: 700; }
+.px-series-step-text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-detail-info .btn_confirm { margin: 16px 0; }
+
+/* Write form: series select */
+.px-series-field { display: flex; flex-wrap: wrap; gap: 8px; }
+.px-series-field select { flex: 0 1 280px; min-width: 0; }
+.px-series-field input { flex: 1 1 200px; min-width: 0; border-radius: 8px; padding: 8px 10px; box-sizing: border-box; }
+.px-series-field input[hidden] { display: none; }
+.px-write .px-write-fields small { font-size: 12px; opacity: .75; }
+
+/* Viewer: header / stage / footer as a column */
+.px-comic.theme-box:not([hidden]) { display: flex; flex-direction: column; }
+.px-comic header, .px-reader header { flex: 0 0 52px; box-sizing: border-box; }
+.px-comic-stage { position: relative; flex: 1 1 auto; min-height: 0; display: grid; place-items: center; }
+.px-comic .px-comic-image { position: static; transform: none; max-width: calc(100% - 112px); max-height: 100%; cursor: pointer; }
+.px-comic .px-comic-image[hidden] { display: none; }
+.px-comic .px-comic-prev, .px-comic .px-comic-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,.55); border: 0; }
+.px-comic footer { position: static; flex: 0 0 56px; display: grid; grid-template-columns: auto minmax(0, 1fr) 64px; gap: 12px; align-items: center; padding: 0 16px; box-sizing: border-box; border-top: 1px solid var(--px-line, rgba(128,128,128,.3)); }
+.px-comic footer [data-comic-progress] { text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; }
+.px-comic footer button, .px-reader footer button { border: 1px solid rgba(128,128,128,.4); border-radius: 999px; padding: 6px 14px; }
+.px-comic footer button:disabled, .px-reader footer button:disabled { opacity: .35; }
+.px-comic-grid { top: auto; bottom: 56px; left: 0; right: 0; max-width: none; max-height: 45%; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); border: 0; border-top: 1px solid rgba(128,128,128,.3); z-index: 4; }
+.px-comic-grid button { padding: 0; position: relative; border-radius: 6px; overflow: hidden; }
+.px-comic-grid button span { position: absolute; left: 4px; bottom: 4px; padding: 0 5px; border-radius: 4px; background: rgba(0,0,0,.6); color: #fff; font-size: 11px; }
+.px-comic-grid button[aria-current] { outline: 3px solid currentColor; outline-offset: -3px; }
+.px-comic-end { position: absolute; inset: 0; display: grid; place-items: center; z-index: 2; }
+.px-comic-end[hidden] { display: none; }
+
+/* Vertical reader: page buttons and novel options */
+.px-reader .px-images { display: flex; flex-direction: column; gap: 8px; padding: 8px 0; }
+.px-reader .px-page { display: block; width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: zoom-in; }
+.px-reader .px-page img { display: block; width: auto; max-width: 100%; height: auto; margin: 0 auto; }
+.px-reader.is-paged .px-reader-scroll { overflow: hidden; height: calc(100% - 52px - 56px); }
+.px-reader footer { height: 56px; box-sizing: border-box; border-top: 1px solid rgba(128,128,128,.3); }
+.px-reader footer [data-progress] { font-variant-numeric: tabular-nums; font-size: 13px; }
+.px-novel.px-paged { height: 100%; }
+.px-reader-options { display: grid; gap: 10px; min-width: 220px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.px-segment { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(128,128,128,.4); border-radius: 999px; overflow: hidden; }
+.px-reader .px-segment button { border-radius: 0; padding: 6px 10px; font-size: 13px; }
+.px-segment [aria-pressed=true] { font-weight: 700; background: rgba(128,128,128,.22); }
+
+/* End card shared by both viewers */
+.px-end { margin: 32px auto; padding: 28px 20px; max-width: 520px; text-align: center; border-top: 1px solid rgba(128,128,128,.3); }
+.px-comic-end .px-end { border: 0; }
+.px-end[hidden] { display: none; }
+.px-end-title { margin: 0 0 16px; font-weight: 700; }
+.px-end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.px-end-actions .ui-btn { border-radius: 999px; padding: 0 18px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-reader.is-paged .px-novel ~ .px-end { position: absolute; left: 0; right: 0; bottom: 56px; margin: 0 auto; background: inherit; }
+
+@media (max-width: 700px) {
+  .px-grid { gap: 20px 10px; }
+  .px-item-title { font-size: 13px; }
+  .px-series-head { grid-template-columns: 1fr; gap: 16px; margin: 12px 0 24px; }
+  .px-series-cover { width: 160px; margin: 0 auto; }
+  .px-series-info h1 { font-size: 20px; }
+  .px-episode { grid-template-columns: 80px minmax(0, 1fr); gap: 12px; padding: 12px 0; }
+  .px-series-edit { padding: 16px; }
+  .px-series-edit .px-write-fields { grid-template-columns: 1fr; }
+  .px-episode-sort li { grid-template-columns: 16px 32px minmax(0, 1fr) auto auto auto; padding: 6px; }
+  .px-series-nav-items { grid-template-columns: 1fr; }
+  .px-series-step.is-next { flex-direction: row; text-align: left; }
+  .px-comic .px-comic-image { max-width: calc(100% - 16px); }
+  .px-comic .px-comic-prev, .px-comic .px-comic-next { opacity: .7; }
+  .px-comic footer { gap: 8px; padding: 0 10px; }
+}
+.px-item .px-placeholder .px-novel-preview { padding-top: 34px; }

@@ -759,3 +759,13 @@ a.px-series-step:hover { outline: 1px solid var(--px-line); }
   .px-comic footer { gap: 8px; padding: 0 10px; }
 }
 .px-item .px-placeholder .px-novel-preview { padding-top: 34px; }
+/* The design settings give a.ui-btn a fixed height and line-height; with the
+   skin's vertical padding that pushed labels down. Size by padding instead
+   and center the label, so any theme height/line-height setting stays aligned. */
+.px-categories a.ui-btn,
+.px-tags a.ui-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: auto; line-height: 1.3; box-sizing: border-box;
+}
+.px-categories a.ui-btn { min-height: 32px; padding: 5px 14px; }
+.px-tags a.ui-btn { min-height: 24px; padding: 3px 9px; }

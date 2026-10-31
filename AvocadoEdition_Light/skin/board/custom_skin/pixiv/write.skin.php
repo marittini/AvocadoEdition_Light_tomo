@@ -11,11 +11,12 @@ if ($w === 'u') {
             alert('이 글에는 이미지가 아닌 첨부파일이 있어 이 스킨에서 수정할 수 없습니다.');
     }
 }
+$px_cover = pixiv_cover_file($px_existing,$write['wr_3'] ?? '');
 $px_tags = pixiv_tags($write['wr_2'] ?? '');
 $px_note = pixiv_note($write ?? []);
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=2">', 0);
 ?>
 
 
@@ -164,10 +165,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 		<?php if($is_file){ ?>
 		<tr><th scope="row"><label for="pixiv-files">이미지</label></th><td>
 		<label class="ui-btn px-picker">이미지 선택<input id="pixiv-files" class="px-file-picker" type="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple></label>
-		<p>여러 장을 선택한 뒤 순서를 바꾸세요. 첨부 최대 <?=intval($file_count)?>장.</p>
-		<ol id="pixiv-file-list" class="px-file-list"></ol><div id="pixiv-file-inputs"></div><input type="hidden" name="pixiv_order" id="pixiv-order">
+		<p>이미지를 끌어 순서를 바꾸거나 버튼으로 이동하세요. 대표 이미지를 선택할 수 있습니다. 첨부 최대 <?=intval($file_count)?>장.</p>
+		<ol id="pixiv-file-list" class="px-file-list"></ol><div id="pixiv-file-inputs"></div><input type="hidden" name="pixiv_order" id="pixiv-order"><input type="hidden" name="pixiv_cover" id="pixiv-cover" value="<?=isset($px_cover['index'])?(int)$px_cover['index']:''?>">
 		<script type="application/json" id="pixiv-existing"><?=json_encode(array_map(static fn($f)=>['id'=>$f['index'],'url'=>html_entity_decode($f['url']),'name'=>stripslashes($f['source'])],$px_existing),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?></script>
-		<script src="<?=$board_skin_url?>/write.js?v=1" defer></script>
+		<script src="<?=$board_skin_url?>/write.js?v=2" defer></script>
 		</td></tr><?php } ?>
 
 		<?php if ($is_guest) { //자동등록방지  ?>

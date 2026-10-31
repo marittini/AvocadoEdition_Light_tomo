@@ -60,11 +60,20 @@ const { chromium } = require("playwright"),
     },
   ]);
   assert.equal(await p.locator("#pixiv-file-list li").count(), 2);
+  await p.setViewportSize({ width: 1280, height: 900 });
   await p
     .locator("#pixiv-file-list li")
     .nth(1)
-    .getByRole("button", { name: "앞으로" })
-    .click();
+    .locator(".px-drag-handle")
+    .dragTo(p.locator("#pixiv-file-list li").first());
+  assert(
+    (await p.locator("#pixiv-file-list li").first().innerText()).includes(
+      "second.png",
+    ),
+    "mouse drag changes order",
+  );
+  await p.getByRole("radio", { name: "first.png 대표 이미지로 선택" }).check();
+  await p.setViewportSize({ width: 390, height: 844 });
   await p.locator("#btn_submit").click();
   await p.waitForURL(/wr_id=1/);
   console.log("SAVED", p.url());
@@ -94,6 +103,18 @@ const { chromium } = require("playwright"),
     .nth(1)
     .getAttribute("src");
   assert.notEqual(oldFirst, oldSecond);
+  const selectedPath = new URL(oldSecond, base).searchParams
+    .get("archive_path")
+    .split("/")
+    .pop();
+  const coverPath = new URL(
+    await p.locator(".px-cover img").getAttribute("src"),
+    base,
+  ).searchParams.get("archive_path");
+  assert(
+    coverPath.includes(selectedPath.replace(/\.[^.]+$/, "")),
+    "cover matches selected second image",
+  );
   await p.locator(".px-images button").first().click();
   assert.equal(
     await p.locator("#px-comic").evaluate((e) => getComputedStyle(e).position),
@@ -112,6 +133,14 @@ const { chromium } = require("playwright"),
       "&px_type=manga&tag[]=판타지&tag[]=일상",
   );
   assert.equal(await p.locator(".px-item").count(), 1);
+  const listCover = new URL(
+    await p.locator(".px-item img").first().getAttribute("src"),
+    base,
+  ).searchParams.get("archive_path");
+  assert(
+    listCover.includes(selectedPath.replace(/\.[^.]+$/, "")),
+    "list uses the selected cover too",
+  );
   await p.goto(
     base + "/bbs/board.php?bo_table=" + id + "&tag[]=판타지&tag[]=없는태그",
   );
@@ -191,6 +220,12 @@ const { chromium } = require("playwright"),
   assert((await bad.text()).includes("이미지 파일만 첨부"));
   await p.goto(base + "/bbs/write.php?w=u&bo_table=" + id + "&wr_id=1");
   assert.equal(await p.locator("#pixiv-file-list li").count(), 2);
+  assert(
+    await p
+      .getByRole("radio", { name: /first.*대표 이미지로 선택/ })
+      .isChecked(),
+    "saved cover restored",
+  );
   await p
     .locator("#pixiv-file-list li")
     .first()
@@ -215,13 +250,17 @@ const { chromium } = require("playwright"),
     .first()
     .getByRole("button", { name: "삭제" })
     .click();
-  await p
-    .locator("#pixiv-files")
-    .setInputFiles({
-      name: "third.png",
-      mimeType: "image/png",
-      buffer: fs.readFileSync(process.env.TEST_IMAGE),
-    });
+  assert(
+    await p
+      .getByRole("radio", { name: /second.*대표 이미지로 선택/ })
+      .isChecked(),
+    "deleted cover falls back to remaining image",
+  );
+  await p.locator("#pixiv-files").setInputFiles({
+    name: "third.png",
+    mimeType: "image/png",
+    buffer: fs.readFileSync(process.env.TEST_IMAGE),
+  });
   await p.locator("#btn_submit").click();
   await p.waitForURL(/wr_id=1/);
   await p.locator("#px-open").click();

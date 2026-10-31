@@ -2,15 +2,16 @@
 if (!defined('_GNUBOARD_')) exit;
 include_once __DIR__.'/pixiv.lib.php';
 include_once G5_LIB_PATH.'/thumbnail.lib.php';
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=1">',0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=2">',0);
 $images=pixiv_files($bo_table,(int)$wr_id,$write['wr_3']??'');
+$cover=pixiv_cover_file($images,$write['wr_3']??'');
 $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['wr_1']??'')==='pixiv:novel';
 ?>
 <noscript><p>작품을 읽으려면 자바스크립트를 활성화해 주세요.</p></noscript>
 <article id="bo_v" class="px-detail">
 <?php if(!empty($board['bo_content_head'])){?><div class="board-notice-box"><?=stripslashes($board['bo_content_head'])?></div><?php } ?>
 <a href="<?=$list_href?>">← 목록</a>
-<button type="button" class="px-cover" id="px-open" aria-label="작품 보기"><?php if($images){?><img src="<?=pixiv_cover_url($bo_table,$images[0])?>" alt="작품 표지"><?php } else { ?><span><?=$isNovel?'소설 읽기':'작품 보기'?></span><?php } ?><?php if(count($images)>1){?><span class="px-count"><?=count($images)?></span><?php } ?></button>
+<button type="button" class="px-cover" id="px-open" aria-label="작품 보기"><?php if($images){?><img src="<?=pixiv_cover_url($bo_table,$cover)?>" alt="작품 표지"><?php } else { ?><span><?=$isNovel?'소설 읽기':'작품 보기'?></span><?php } ?><?php if(count($images)>1){?><span class="px-count"><?=count($images)?></span><?php } ?></button>
 <h1><?=pixiv_escape($view['wr_subject'])?></h1>
 <div class="px-tags"><?php foreach($tags as $tag){?><a href="<?=G5_BBS_URL?>/board.php?bo_table=<?=rawurlencode($bo_table)?>&amp;tag[]=<?=rawurlencode($tag)?>">#<?=pixiv_escape($tag)?></a><?php } ?></div>
 <?php if($note!==''){?><div class="px-note"><?=nl2br(pixiv_escape($note))?></div><?php } ?>

@@ -28,7 +28,9 @@ $note = stripslashes($note);
 if (strlen($note)>1600 || !preg_match('//u',$note)) alert('설명은 한글 기준 약 500자 이내로 입력해 주세요.');
 $wr_1=sql_real_escape_string('pixiv:'.$type);
 $wr_2=sql_real_escape_string($encoded);
-$wr_3=sql_real_escape_string($order);
+// The cover slot is checked after the final attachment set is known.
+$cover=$_POST['pixiv_cover'] ?? '';
+if (!is_string($cover) || ($cover !== '' && !ctype_digit($cover))) alert('대표 이미지를 확인해 주세요.');
 $parts=array_fill(4,7,'');$i=4;
 foreach (preg_split('//u',$note,-1,PREG_SPLIT_NO_EMPTY) as $ch) {
     if (strlen($parts[$i].$ch)>240) $i++;
@@ -60,3 +62,8 @@ foreach (($upload['name'] ?? []) as $key=>$filename) {
 }
 if (count($slots)>(int)$board['bo_upload_count']) alert('게시판의 첨부 가능 개수를 초과했습니다.');
 if ($type!=='novel' && !$slots) alert('이미지를 1장 이상 첨부해 주세요.');
+
+if ($cover !== '' && !isset($slots[(int)$cover])) alert('선택한 대표 이미지를 확인해 주세요.');
+$storedOrder = $order.($cover !== '' ? ';c:'.(int)$cover : '');
+if (strlen($storedOrder)>250) alert('이미지 순서가 너무 깁니다.');
+$wr_3=sql_real_escape_string($storedOrder);

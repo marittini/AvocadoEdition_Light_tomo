@@ -18,7 +18,7 @@ function pixiv_note($write) {
 function pixiv_files($board_id, $post_id, $order) {
     $files = get_file($board_id, $post_id);
     $keys = [];
-    foreach (explode(',', (string)$order) as $id) if (ctype_digit($id)) $keys[] = (int)$id;
+    foreach (explode(',', explode(';', (string)$order, 2)[0]) as $id) if (ctype_digit($id)) $keys[] = (int)$id;
     foreach ($files as $key => $item) if (is_int($key) && !in_array($key,$keys,true)) $keys[]=$key;
     $out=[];
     foreach (array_unique($keys) as $key) {
@@ -38,4 +38,12 @@ function pixiv_cover_url($board_id, $entry) {
     $path=G5_DATA_PATH.'/file/'.$board_id;
     $thumb=thumbnail($filename,$path,$path,320,320,false,true);
     return $thumb ? G5_BBS_URL.'/archive_file.php?archive_kind=file&amp;archive_path='.rawurlencode($board_id.'/'.$thumb) : $entry['url'];
+}
+
+/** Missing/deleted cover falls back to the first readable image. */
+function pixiv_cover_file(array $files, $order): ?array {
+    if (preg_match('/(?:^|;)c:(\d+)(?:;|$)/', (string)$order, $match)) {
+        foreach ($files as $entry) if ($entry['index'] === (int)$match[1]) return $entry;
+    }
+    return $files[0] ?? null;
 }

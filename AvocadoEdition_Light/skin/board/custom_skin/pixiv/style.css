@@ -431,3 +431,79 @@
   width: 100%;
   box-sizing: border-box;
 }
+/* Mouse dragging and independent cover selection remain usable alongside touch buttons. */
+.px-file-list li {
+  display: grid;
+  grid-template-columns: 18px 52px minmax(0, 1fr) repeat(3, auto);
+  align-items: center;
+  gap: 5px;
+  cursor: grab;
+  border-radius: 8px;
+}
+.px-file-list li.is-dragging {
+  opacity: 0.45;
+}
+.px-file-list li.is-drop-target {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.px-file-list li > img {
+  width: 52px;
+  height: 52px;
+}
+.px-file-list li > button {
+  grid-row: 1;
+}
+.px-file-list .px-drag-handle {
+  min-width: 0;
+  text-align: center;
+  cursor: grab;
+}
+.px-file-list .px-cover-choice {
+  grid-column: 3 / -1;
+  grid-row: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.px-file-list .px-cover-choice input {
+  margin: 0;
+}
+.px-file-list li > span:not(.px-drag-handle) {
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  .px-file-list li {
+    grid-template-columns: 18px 52px minmax(0, 1fr) repeat(3, auto);
+  }
+}
+.px-file-list li > .px-drag-handle {
+  grid-column: 1;
+  grid-row: 1;
+}
+.px-file-list li > img {
+  grid-column: 2;
+  grid-row: 1;
+}
+.px-file-list li > span:not(.px-drag-handle) {
+  grid-column: 3;
+  grid-row: 1;
+}
+.px-file-list li > button:nth-of-type(1) {
+  grid-column: 4;
+  grid-row: 1;
+}
+.px-file-list li > button:nth-of-type(2) {
+  grid-column: 5;
+  grid-row: 1;
+}
+.px-file-list li > button:nth-of-type(3) {
+  grid-column: 6;
+  grid-row: 1;
+}
+.px-file-list li > .px-cover-choice {
+  grid-column: 3 / 7;
+  grid-row: 2;
+}

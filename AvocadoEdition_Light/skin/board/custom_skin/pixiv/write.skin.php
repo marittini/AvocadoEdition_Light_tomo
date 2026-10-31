@@ -14,6 +14,14 @@ if ($w === 'u') {
 $px_cover = pixiv_cover_file($px_existing,$write['wr_3'] ?? '');
 $px_tags = pixiv_tags($write['wr_2'] ?? '');
 $px_note = pixiv_note($write ?? []);
+// Series are owned by members; guests' works stay out of series.
+$px_series_owner = (string)($w === 'u' ? ($write['mb_id'] ?? '') : ($member['mb_id'] ?? ''));
+$px_series_options = $px_series_owner !== '' ? pixiv_series_options($bo_table, $px_series_owner) : [];
+$px_series_current = $w === 'u' ? pixiv_series_of_work($bo_table, (int)$wr_id) : null;
+if (!$px_series_current && $w === '' && isset($_GET['px_series']) && ctype_digit((string)$_GET['px_series'])) {
+    // "Add a new episode" link on the series page preselects the series.
+    foreach ($px_series_options as $px_s) if ((int)$px_s['ps_id'] === (int)$_GET['px_series']) $px_series_current = $px_s;
+}
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.pixiv_asset_url($board_skin_url, 'style.css').'">', 0);
@@ -84,6 +92,18 @@ add_stylesheet('<link rel="stylesheet" href="'.pixiv_asset_url($board_skin_url, 
 		<label for="pixiv-tags">장르 태그</label><input id="pixiv-tags" name="pixiv_tags" class="frm_input" value="<?=pixiv_escape(implode(', ', $px_tags))?>" placeholder="예: 판타지, 일상" autocomplete="off"><small>쉼표로 구분합니다. 기존 태그를 선택할 수도 있습니다.</small>
 		<div id="pixiv-tag-suggestions" class="px-tags"><?php $px_res=sql_query("SELECT wr_2 FROM `{$write_table}` WHERE wr_is_comment=0 AND wr_1 IN ('pixiv:illustration','pixiv:manga','pixiv:novel') AND wr_option NOT LIKE '%secret%' AND wr_2<>'' ORDER BY wr_num"); $px_seen=[]; while($px_row=sql_fetch_array($px_res)) foreach(pixiv_tags($px_row['wr_2']) as $px_tag) if(!isset($px_seen[$px_tag])){ $px_seen[$px_tag]=true; ?><button type="button" data-suggest="<?=pixiv_escape($px_tag)?>">#<?=pixiv_escape($px_tag)?></button><?php } ?></div>
 		<label for="pixiv-note">설명</label><textarea id="pixiv-note" name="pixiv_note" rows="3" maxlength="500"><?=pixiv_escape($px_note)?></textarea>
+		<?php if ($px_series_owner !== '') { ?>
+		<label for="pixiv-series">시리즈</label>
+		<div class="px-series-field">
+			<select id="pixiv-series" name="pixiv_series">
+				<option value="">시리즈에 넣지 않음</option>
+				<?php foreach ($px_series_options as $px_s) { ?><option value="<?=(int)$px_s['ps_id']?>" data-kind="<?=pixiv_escape($px_s['ps_kind'])?>" <?=$px_series_current && (int)$px_series_current['ps_id']===(int)$px_s['ps_id']?'selected':''?>><?=pixiv_escape($px_s['ps_title'])?> · <?=$px_s['ps_kind']==='novel'?'소설':'만화'?></option><?php } ?>
+				<option value="new">+ 새 시리즈 만들기</option>
+			</select>
+			<input type="text" id="pixiv-series-title" name="pixiv_series_title" class="frm_input" maxlength="60" placeholder="새 시리즈 제목" hidden>
+		</div>
+		<small>시리즈에 넣은 작품은 마지막 화로 추가됩니다. 순서와 설명은 시리즈 페이지의 ‘시리즈 편집’에서 바꿉니다.</small>
+		<?php } ?>
 	</div>
 	<table class="theme-form">
 		<colgroup>
@@ -190,6 +210,26 @@ add_stylesheet('<link rel="stylesheet" href="'.pixiv_asset_url($board_skin_url, 
 	</form>
 
 	<script>
+	(function () {
+		// Comic series accept illustrations and manga; novel series accept novels.
+		var type = document.getElementById("pixiv-type"), series = document.getElementById("pixiv-series"), title = document.getElementById("pixiv-series-title");
+		if (!type || !series) return;
+		var picked = series.options[series.selectedIndex];
+		if (picked && picked.dataset.kind === "novel" && type.value !== "novel") type.value = "novel";
+		function sync() {
+			var kind = type.value === "novel" ? "novel" : "comic";
+			Array.prototype.forEach.call(series.options, function (o) {
+				if (!o.dataset.kind) return;
+				o.disabled = o.dataset.kind !== kind;
+				if (o.disabled && o.selected) series.value = "";
+			});
+			title.hidden = series.value !== "new";
+			title.required = series.value === "new";
+		}
+		type.addEventListener("change", sync);
+		series.addEventListener("change", function () { sync(); if (series.value === "new") title.focus(); });
+		sync();
+	})();
 	<?php if($write_min || $write_max) { ?>
 	// 글자수 제한
 	var char_min = parseInt(<?php echo $write_min; ?>); // 최소

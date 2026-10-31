@@ -67,3 +67,25 @@ if ($cover !== '' && !isset($slots[(int)$cover])) alert('선택한 대표 이미
 $storedOrder = $order.($cover !== '' ? ';c:'.(int)$cover : '');
 if (strlen($storedOrder)>250) alert('이미지 순서가 너무 깁니다.');
 $wr_3=sql_real_escape_string($storedOrder);
+
+// Series: validated here so a bad choice stops before the engine saves the post.
+// The membership itself is written in write_update.tail.skin.php once wr_id is known.
+$pixiv_series_plan = null;
+$px_series = $_POST['pixiv_series'] ?? '';
+if (!is_string($px_series) || ($px_series !== '' && $px_series !== 'new' && !ctype_digit($px_series))) alert('시리즈를 확인해 주세요.');
+if ($px_series !== '') {
+    if (!pixiv_series_tables()) alert('시리즈 테이블을 만들 수 없습니다. DB 권한을 확인해 주세요.');
+    $px_owner = $w === 'u' ? (string)($wr['mb_id'] ?? '') : (string)($member['mb_id'] ?? '');
+    if ($px_owner === '') alert('시리즈는 회원이 작성한 작품에만 사용할 수 있습니다.');
+    $px_kind = pixiv_series_kind($type);
+    if ($px_series === 'new') {
+        $px_title = trim(stripslashes((string)($_POST['pixiv_series_title'] ?? '')));
+        if ($px_title === '' || mb_strlen($px_title) > 60 || !preg_match('//u', $px_title)) alert('새 시리즈 제목을 60자 이내로 입력해 주세요.');
+        $pixiv_series_plan = ['new'=>true, 'title'=>$px_title, 'owner'=>$px_owner, 'kind'=>$px_kind];
+    } else {
+        $px_target = pixiv_series_get($bo_table, (int)$px_series);
+        if (!$px_target || (!$is_admin && $px_target['mb_id'] !== $px_owner)) alert('선택한 시리즈에 작품을 추가할 수 없습니다.');
+        if ($px_target['ps_kind'] !== $px_kind) alert(pixiv_series_kind_label($px_target['ps_kind']).'에는 '.($px_kind === 'novel' ? '소설을' : '일러스트·만화를').' 넣을 수 없습니다.');
+        $pixiv_series_plan = ['new'=>false, 'id'=>(int)$px_target['ps_id']];
+    }
+}

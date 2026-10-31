@@ -76,7 +76,7 @@ $bbscat_width = (int)($board['bo_table_width'] ?? 0);
 		<?php } ?>
 		<div class="bo_v_com">
 			<?php if ($update_href) { ?><a href="<?=$update_href?>" class="ui-btn" title="수정" aria-label="수정">M</a><?php } ?>
-			<?php if ($delete_href) { ?><a href="<?=$delete_href?>" class="ui-btn admin" title="삭제" aria-label="삭제" onclick="del(this.href); return false;">X</a><?php } ?>
+			<?php if ($delete_href) { ?><a href="<?=$delete_href?>" class="ui-btn etc" title="삭제" aria-label="삭제" onclick="del(this.href); return false;">X</a><?php } ?>
 			<a href="<?=$list_href?>" class="ui-btn">목록</a>
 		</div>
 	</div>

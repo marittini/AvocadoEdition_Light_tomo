@@ -74,8 +74,9 @@
 }
 .bbscat .mark .material-icons { vertical-align: 0; }
 
-.bbscat .bo_fx { position: relative; padding: 20px 10px; }
-.bbscat .bo_fx .chk_all { position: absolute; left: 10px; top: 20px; margin: 0; }
+.bbscat .bo_fx { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; padding: 20px 10px; }
+.bbscat .bo_fx .chk_all { display: flex; align-items: center; margin: 0 auto 0 2px; }
+.bbscat .bo_fx .chk_all input { margin: 0; }
 
 /* ---------- 글쓰기 ---------- */
 .bbscat .board-write { padding: 10px; }
@@ -137,16 +138,15 @@
 
 /* ---------- 모바일 ---------- */
 @media all and (max-width: 640px) {
-	.bbscat-rows li > a { flex-wrap: wrap; row-gap: 8px; padding: 10px 15px; }
-	.bbscat-rows .td_chk + a { padding-left: 10px; }
-	/* 모바일은 날짜가 아래 줄로 내려가므로 체크박스를 제목 줄 가운데에 맞춘다. */
-	.bbscat-rows .td_chk { align-self: flex-start; margin-top: 10px; height: 26.6px; }
-	.bbscat-rows .subject { flex: 1 1 100%; min-height: 26.6px; }
-	.bbscat-rows .subject .title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-	.bbscat-rows .info { width: 100%; justify-content: flex-end; }
-	.bbscat .genre { margin-right: 6px; }
-	.bbscat .bo_fx { padding: 20px 10px !important; }
-	.bbscat .bo_fx .chk_all { position: static; display: inline-block; margin-right: 6px; }
+	/* 모바일도 PC처럼 한 줄: 체크박스·표시·말머리·제목(말줄임)·날짜 */
+	.bbscat-rows li { min-height: 0; padding: 3px 0; margin-bottom: 4px; }
+	.bbscat-rows li > a { gap: 8px; padding: 0 12px; min-height: 34px; font-size: 13px; }
+	.bbscat-rows .td_chk { padding-left: 10px; }
+	.bbscat-rows .td_chk + a { padding-left: 8px; }
+	.bbscat-rows .info { width: auto; }
+	.bbscat .mark { margin-right: 4px; padding: 0 4px; }
+	.bbscat .genre { margin-right: 6px; padding: 0 6px; height: 1.75em; }
+	.bbscat .bo_fx { padding: 16px 10px !important; }
 	.bbscat .board-write > dl > dt { position: static; width: auto; text-align: left; line-height: 1.6; }
 	.bbscat .board-write > dl > dd { padding-left: 0; }
 	.bbscat .board-viewer .contents { padding: 40px 5px; }

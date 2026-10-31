@@ -81,8 +81,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/txtggu/textggu.
         foreach ($list[$i]['file'] as $_slot => $_entry) {
             if (is_int($_slot) && !empty($_entry['file'])) { $_file_src = ott_file_url($_entry, $bo_table); break; }
         }
+        if (preg_match('/^ottcover:(\d+)$/', $list[$i]['wr_9'] ?? '', $_cover_match) && !empty($list[$i]['file'][(int)$_cover_match[1]]['file'])) $_file_src = ott_file_url($list[$i]['file'][(int)$_cover_match[1]], $bo_table);
         $_img_src = $list[$i]['wr_2'] ? $list[$i]['wr_2'] : $_file_src;
         $_img_src = $list[$i]['wr_10'] ? $list[$i]['wr_10'] : $_img_src;
+        if (!empty($_cover_match) && !empty($list[$i]['file'][(int)$_cover_match[1]]['file'])) $_img_src = $_file_src;
         if (!$_ott_visible) $_img_src = '';
         $_img_src = ott_safe_image_url(html_entity_decode($_img_src, ENT_QUOTES, 'UTF-8'));
 

@@ -1,5 +1,5 @@
 <?php
-include_once './_common.php';
+include_once __DIR__.'/_common.php';
 include_once __DIR__.'/ott.lib.php';
 if (empty($board['bo_table']) || empty($write['wr_id']) || !empty($write['wr_is_comment']) || empty($write['wr_protect'])) alert('보호글이 없습니다.');
 if ((int)($member['mb_level'] ?? 1) < (int)$board['bo_read_level']) alert('글을 읽을 권한이 없습니다.');

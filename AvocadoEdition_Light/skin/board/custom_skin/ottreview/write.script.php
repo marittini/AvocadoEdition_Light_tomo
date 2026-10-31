@@ -5,6 +5,7 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 var prefiles = <?=json_encode($prefiles ?? [], JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;
 var imageFiles = prefiles.map(x => ({ existing:true, idx:Number(x.idx), name:x.name, url:x.url }));
 var removedFiles = [];
+var ottCover = imageFiles.find(x => 'ottcover:'+x.idx === document.getElementById('ott-cover-slot').value) || null;
 var maxImages = Math.min(4, <?=max(0,(int)($board['bo_upload_count'] ?? 0))?>);
 function ottRenderFiles() {
     const preview = document.getElementById('preview');
@@ -15,7 +16,8 @@ function ottRenderFiles() {
         const image=document.createElement('img'); image.src=entry.url; image.className='preview-img'; image.alt=entry.name || '첨부 이미지';
         const remove=document.createElement('button'); remove.type='button'; remove.className='remove-btn'; remove.textContent='X'; remove.setAttribute('aria-label','첨부 이미지 제거');
         remove.addEventListener('click', () => { if (!confirm('이미지 첨부를 제거하시겠습니까? 저장 전에는 서버 파일이 삭제되지 않습니다.')) return; const [item]=imageFiles.splice(index,1); if(item.existing) removedFiles.push(item.idx); else URL.revokeObjectURL(item.url); ottRenderFiles(); });
-        box.append(image,remove);preview.append(box);
+        const choose=document.createElement('button'); choose.type='button'; choose.className='ui-btn'; choose.textContent=ottCover===entry?'대표 이미지':'썸네일로 지정'; choose.addEventListener('click',()=>{ottCover=entry;ottRenderFiles();});
+        box.append(image,remove,choose);preview.append(box);
     });
 }
 function ottAddFiles(files) {
@@ -30,6 +32,9 @@ function ottPrepareFiles(form) {
     form.querySelectorAll('[data-ott-generated]').forEach(x=>x.remove());
     let next=Math.max(-1,...prefiles.map(x=>Number(x.idx)))+1;
     imageFiles.filter(x=>!x.existing).forEach(x=>x.slot=next++);
+    const coverInput=document.getElementById('ott-cover-slot');
+    if(ottCover && imageFiles.includes(ottCover)) coverInput.value='ottcover:'+(ottCover.existing?ottCover.idx:ottCover.slot);
+    else if(coverInput.value.startsWith('ottcover:')) coverInput.value='';
     if (next>100) { alert('첨부 가능한 파일 번호를 초과했습니다.'); return false; }
     for(let i=0;i<next;i++) {
         const input=document.createElement('input');input.type='file';input.name='bf_file[]';input.hidden=true;input.dataset.ottGenerated='1';

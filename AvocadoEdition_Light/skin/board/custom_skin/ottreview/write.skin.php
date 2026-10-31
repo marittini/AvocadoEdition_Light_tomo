@@ -1,5 +1,5 @@
 <?php
-include_once('./_common.php');
+include_once __DIR__.'/_common.php';
 if (empty($_SESSION['ott_write_token'])) $_SESSION['ott_write_token'] = bin2hex(random_bytes(32));
 $ott_column = sql_fetch("SHOW COLUMNS FROM `{$write_table}` LIKE 'wr_protect'", false);
 if (empty($ott_column['Field']) && $is_admin === 'super') {
@@ -24,7 +24,7 @@ $is_secret = $is_secret ?? (int)($board['bo_use_secret'] ?? 0);
 $subject = $subject ?? '';
 $pa_ca_name = $pa_ca_name ?? '';
 $sec = $sec_select = $mem_select = $pro_select = '';
-foreach (['wr_num','ca_name','wr_secret','wr_protect','wr_1','wr_2','wr_3','wr_4','wr_5','wr_6','wr_10','wr_content','wr_parent'] as $key) $write[$key] = $write[$key] ?? '';
+foreach (['wr_num','ca_name','wr_secret','wr_protect','wr_1','wr_2','wr_3','wr_4','wr_5','wr_6','wr_9','wr_10','wr_content','wr_parent'] as $key) $write[$key] = $write[$key] ?? '';
 if ($w === 'u' && !empty($wr_id)) {
     $existing = get_file($bo_table, (int)$wr_id);
     foreach ($existing as $idx => $entry) {
@@ -36,7 +36,7 @@ if ($w === 'u' && !empty($wr_id)) {
 $wr_num = $write['wr_num'];
 
 if ($is_comment && $w != 'u') {
-    $write = array_fill_keys(['wr_num','ca_name','wr_secret','wr_protect','wr_1','wr_2','wr_3','wr_4','wr_5','wr_6','wr_10','wr_content','wr_parent'], '');
+    $write = array_fill_keys(['wr_num','ca_name','wr_secret','wr_protect','wr_1','wr_2','wr_3','wr_4','wr_5','wr_6','wr_9','wr_10','wr_content','wr_parent'], '');
 }
 
 $is_category = false;
@@ -58,6 +58,7 @@ $pa_ca_name = $write['ca_name'] ? $write['ca_name'] : $pa_ca_name;
 	<!-- 게시물 작성/수정 시작 { -->
 	<form name="fwrite" id="fwrite" action="<?php echo $action_url ?>" onsubmit="return fwrite_submit(this);" method="post" enctype="multipart/form-data" autocomplete="off">
 	<input type="hidden" name="uid" value="<?php echo get_uniqid(); ?>">
+    <input type="hidden" name="wr_9" id="ott-cover-slot" value="<?=htmlspecialchars((string)($write['wr_9'] ?? ''), ENT_QUOTES, 'UTF-8')?>">
     <input type="hidden" name="ott_write_token" value="<?=htmlspecialchars($_SESSION['ott_write_token'], ENT_QUOTES, 'UTF-8')?>">
 	<input type="hidden" name="w" value="<?php echo $w ?>">
 	<input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">

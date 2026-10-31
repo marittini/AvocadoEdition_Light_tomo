@@ -7,6 +7,7 @@ if (empty($_SESSION['ott_action_token'])) $_SESSION['ott_action_token'] = bin2he
     <div class="thread_img_wrap"></div>
 </div>
 <script>
+$(function(){ $('.thread_img_full').appendTo(document.body); });
 /* X(구 트위터) 공식 widgets.js 로더
  * 최초 화면과 AJAX로 추가된 보호글/댓글 영역을 모두 다시 렌더링합니다.
  */

@@ -1,5 +1,5 @@
 <?php 
-include_once('./_common.php');
+include_once __DIR__.'/_common.php';
 include_once('../../../head.sub.php');
 
 // 이모티콘 목록 불러오기

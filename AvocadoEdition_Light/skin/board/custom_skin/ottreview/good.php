@@ -1,5 +1,5 @@
 <?php
-include_once './_common.php';
+include_once __DIR__.'/_common.php';
 header('Content-Type: text/plain; charset=utf-8');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$is_member) exit('로그인 후 가능합니다.');
 $token = $_POST['ott_token'] ?? '';

@@ -16,11 +16,11 @@ $px_tags = pixiv_tags($write['wr_2'] ?? '');
 $px_note = pixiv_note($write ?? []);
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=3">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=4">', 0);
 ?>
 
 
-<section id="bo_w">
+<section id="bo_w" class="px-write theme-box">
 
 	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">

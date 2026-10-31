@@ -22,13 +22,13 @@ $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['
 </div></div>
 </article>
 <div class="px-reader theme-box" id="px-reader" hidden role="dialog" aria-modal="true" aria-label="작품 읽기" data-kind="<?=$isManga?'manga':($isNovel?'novel':'illustration')?>">
-<header><button type="button" data-action="close">✕ 닫기</button><span><?=pixiv_escape($view['wr_subject'])?></span><?php if($isNovel){?><button type="button" data-action="settings" aria-expanded="false">Aa</button><?php } else { ?><span></span><?php } ?></header>
+<header><?php if($isNovel){?><button type="button" data-action="settings" aria-expanded="false">Aa</button><?php } else { ?><span aria-hidden="true"></span><?php } ?><span><?=pixiv_escape($view['wr_subject'])?></span><button type="button" data-action="close">✕ 닫기</button></header>
 <?php if($isNovel){?><div class="px-reader-options" hidden><label>글자 크기 <input type="range" min="14" max="28" value="18" data-font></label><label>줄 간격 <input type="range" min="14" max="26" value="19" data-line></label></div><?php } ?>
 <div class="px-reader-scroll"><?php if($isNovel){?><div class="px-novel" id="bo_v_con"><?=get_view_thumbnail($view['content'])?></div><?php } else { ?><div class="px-images"><?php foreach($images as $i=>$img){?><img src="<?=$img['url']?>" alt="<?=($i+1)?>쪽" loading="lazy"><?php } ?></div><?php if(trim(strip_tags($view['content']))!==''){?><div class="px-content" id="bo_v_con"><?=get_view_thumbnail($view['content'])?></div><?php } } ?></div>
 <footer hidden><button type="button" data-action="prev">이전</button><span data-progress></span><button type="button" data-action="next">다음</button></footer>
 </div>
 <div class="px-comic theme-box" id="px-comic" hidden role="dialog" aria-modal="true" aria-label="만화 보기">
-<header><button type="button" data-comic="close">✕ 닫기</button><span><?=pixiv_escape($view['wr_subject'])?></span><span aria-hidden="true"></span></header>
+<header><span aria-hidden="true"></span><span><?=pixiv_escape($view['wr_subject'])?></span><button type="button" data-comic="close">✕ 닫기</button></header>
 <button type="button" class="px-comic-prev" data-comic="prev" aria-label="이전 페이지">‹</button><img class="px-comic-image" alt=""><button type="button" class="px-comic-next" data-comic="next" aria-label="다음 페이지">›</button>
 </div>
 <script src="<?=$board_skin_url?>/viewer.js?v=4" defer></script>

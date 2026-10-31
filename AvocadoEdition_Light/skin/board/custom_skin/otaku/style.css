@@ -87,9 +87,8 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 .otaku-tl p { margin: 2px 0 0; font-size: 13px; line-height: 1.7; opacity: .75; }
 
 /* ---------- 아래 버튼 ---------- */
-.otaku-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.otaku-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .otaku-actions > div, .otaku-version-tools { display: flex; flex-wrap: wrap; gap: 6px; }
-.otaku-actions.is-end { justify-content: flex-end; }
 
 /* ---------- 목록: 썸네일 카드 ---------- */
 .otaku-list { max-width: 1100px; }
@@ -162,7 +161,6 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 .otaku-guest { display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 0 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--otaku-line); }
 .otaku-options { display: flex; gap: 16px; margin-top: 18px; font-size: 13px; }
 .otaku-options:empty { display: none; }
-.otaku-write .otaku-actions { justify-content: flex-end; }
 
 /* ---------- 좁은 화면 ---------- */
 @media (max-width: 900px) {

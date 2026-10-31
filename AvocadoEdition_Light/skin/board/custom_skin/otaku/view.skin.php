@@ -191,10 +191,6 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 
 	<div class="otaku-actions">
 		<div>
-			<?php if ($prev_href) { ?><a href="<?=$prev_href?>" class="ui-btn">이전글</a><?php } ?>
-			<?php if ($next_href) { ?><a href="<?=$next_href?>" class="ui-btn">다음글</a><?php } ?>
-		</div>
-		<div>
 			<?php foreach ($otaku_versions as $v) { [$edit, $del] = $v['links']; if (!$edit && !$del) continue; ?>
 			<span class="otaku-version-tools" data-version-tools="<?=$v['id']?>"<?=$v['id'] === $otaku_current ? '' : ' hidden'?>>
 				<?php if ($edit) { ?><a href="<?=$edit?>" class="ui-btn"><?=$v['id'] ? 'AU 수정' : '수정'?></a><?php } ?>

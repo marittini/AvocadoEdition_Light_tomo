@@ -59,7 +59,7 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 	<?php if ($otaku_pages > 1) echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $otaku_page, $otaku_pages, otaku_url($bo_table).'&amp;page='); ?>
 
 	<?php if (($write_href && $otaku_cards) || $admin_href) { ?>
-	<div class="otaku-actions is-end">
+	<div class="otaku-actions">
 		<?php if ($admin_href) { ?><a href="<?=$admin_href?>" class="ui-btn etc" target="_blank">관리자</a><?php } ?>
 		<?php if ($write_href && $otaku_cards) { ?><a href="<?=$write_href?>" class="ui-btn point">새 페어</a><?php } ?>
 	</div>

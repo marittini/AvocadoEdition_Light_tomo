@@ -1,5 +1,7 @@
 @charset "utf-8";
 /* Keep the generated theme authoritative; adapt only content and form layout. */
+/* User content may carry inline pixel heights from an editor: scale proportionally. */
+#main_body img, #bo_v_con img, #bo_v_img img {max-width:100%;height:auto!important}
 @media (max-width:1024px) {
   /* Match the original navigation breakpoint, including tablet widths. */
   #body {height:auto;min-height:90vh}
@@ -12,8 +14,6 @@
   #body>.fix-layout {display:block;max-width:100%;width:100%;min-width:0}
   #body>.fix-layout>.mid-layout {display:block;min-width:0;width:auto;padding:64px 12px 24px!important}
   #main_body,#bo_list,#bo_w,#bo_v,.character-board-wrap,.ui-mmb-list {min-width:0;max-width:100%;box-sizing:border-box}
-  /* Do not resize cropped character thumbnails, stamps, or decorative images. */
-  #bo_v_img img,#bo_v_con img {max-width:100%;height:auto}
   #main_body iframe,#bo_v_con iframe,#main_body video,#bo_v_con video {max-width:100%;box-sizing:border-box}
   #bo_w input:not([type=checkbox]):not([type=radio]):not([type=hidden]),#bo_w textarea,#bo_w select,
   #bo_v input[type=text],#bo_v textarea {max-width:100%;box-sizing:border-box;font-size:16px}

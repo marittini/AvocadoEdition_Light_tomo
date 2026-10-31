@@ -3,7 +3,7 @@ if (!defined('_GNUBOARD_')) exit;
 // Keep the work detail separate even when the board enables a list below posts.
 if (!empty($wr_id)) return;
 include_once __DIR__.'/pixiv.lib.php';
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=4">',0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=5">',0);
 $types=['illustration'=>'일러스트','manga'=>'만화','novel'=>'소설'];
 $type=$_GET['px_type'] ?? ''; if(!is_string($type)||!isset($types[$type])) $type='';
 $raw=$_GET['tag'] ?? []; if (!is_array($raw)) $raw=[$raw];
@@ -31,8 +31,8 @@ $available=[];while($tr=sql_fetch_array($tagRows))foreach(pixiv_tags($tr['wr_2']
 ?>
 <div class="px-board">
 <?php if (!empty($board['bo_content_head'])) { ?><div class="board-notice-box"><?=stripslashes($board['bo_content_head'])?></div><?php } ?>
-<nav class="px-categories" aria-label="작품 분류"><a href="<?=$build('',$tags)?>" <?=!$type?'aria-current="page"':''?>>전체</a><?php foreach($types as $id=>$label){?><a href="<?=$build($id,$tags)?>" <?=$type===$id?'aria-current="page"':''?>><?=$label?></a><?php } ?></nav>
-<?php if($available || $tags){?><nav class="px-tags" aria-label="장르 태그"><?php foreach(array_unique(array_merge($tags,array_keys($available))) as $tag){$active=in_array($tag,$tags,true);$next=$active?array_values(array_diff($tags,[$tag])):array_merge($tags,[$tag]);?><a href="<?=$build($type,$next)?>" <?=$active?'aria-current="true"':''?>>#<?=pixiv_escape($tag)?><?=$active?' ×':''?></a><?php } ?></nav><?php } ?>
+<nav class="px-categories" aria-label="작품 분류"><a class="ui-btn<?=!$type?' point':''?>" href="<?=$build('',$tags)?>" <?=!$type?'aria-current="page"':''?>>전체</a><?php foreach($types as $id=>$label){?><a class="ui-btn<?=$type===$id?' point':''?>" href="<?=$build($id,$tags)?>" <?=$type===$id?'aria-current="page"':''?>><?=$label?></a><?php } ?></nav>
+<?php if($available || $tags){?><nav class="px-tags" aria-label="장르 태그"><?php foreach(array_unique(array_merge($tags,array_keys($available))) as $tag){$active=in_array($tag,$tags,true);$next=$active?array_values(array_diff($tags,[$tag])):array_merge($tags,[$tag]);?><a class="ui-btn<?=$active?' point':''?>" href="<?=$build($type,$next)?>" <?=$active?'aria-current="true"':''?>>#<?=pixiv_escape($tag)?><?=$active?' ×':''?></a><?php } ?></nav><?php } ?>
 <div class="px-grid">
 <?php while($row=sql_fetch_array($result)){ $secret=str_contains($row['wr_option'],'secret'); $files=$secret?[]:pixiv_files($bo_table,(int)$row['wr_id'],$row['wr_3']); $cover=pixiv_cover_file($files,$row['wr_3']); $href=$base.'&amp;wr_id='.(int)$row['wr_id']; ?>
 <a class="px-item" href="<?=$href?>"><span class="px-thumb"><?php if($files){?><img src="<?=pixiv_cover_url($bo_table,$cover)?>" alt="" loading="lazy"><?php if(count($files)>1){?><span class="px-count"><?=count($files)?>장</span><?php }} else { ?><span class="px-placeholder"><?php if(!$secret && $row['wr_1']==='pixiv:novel'){?><span class="px-novel-preview"><?=pixiv_escape(cut_str(trim(strip_tags($row['wr_content'])),120,'…'))?></span><?php }else{?><?=$secret?'비밀글':'이미지 없음'?><?php } ?></span><?php } ?></span></a>

@@ -13,8 +13,5 @@ $gb_width = (int)($board['bo_table_width'] ?? 0);
 		<?php if ($is_guest) { ?><div class="gb-captcha" id="gb-captcha"><?=$captcha_html?></div><?php } ?>
 	</section>
 	<div class="gb-bottom"><span></span><a href="<?=gb_url($bo_table, ['page' => (int)$page])?>" class="ui-btn small">목록</a></div>
-	<?php if ($gb_emo = gb_emoticons()) { ?>
-	<div class="gb-emo-panel" id="gb-emo" hidden><ul><?php foreach ($gb_emo as $code => $url) { ?><li><button type="button" data-gb-emo="<?=gb_e($code)?>" title="<?=gb_e($code)?>"><img src="<?=gb_e($url)?>" alt="<?=gb_e($code)?>" loading="lazy"></button></li><?php } ?></ul></div>
-	<?php } ?>
 </div>
 <?=gb_js($board_skin_url)?>

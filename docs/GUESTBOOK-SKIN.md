@@ -1,7 +1,7 @@
 # 방명록 (`custom_skin/guestbook`)
 
 Rewrite of the Avocado Light guestbook skin `new_memo_l1` (by 사도세자, based on 늘's new_memo) for PHP 8.4 / Light TOMO,
-restyled to the calm look used by the other custom skins.
+restyled to the calm, slim look used by the other custom skins.
 Source: https://www.postype.com/@sasasasado/post/14331108
 
 ## What it does
@@ -13,9 +13,8 @@ Everything happens on the list page: write, read, edit, delete, comment.
 - **Secret posts**: follow the board's secret setting. Admins and the member who wrote it can read it. A guest post opens after the
   core password check.
 - **Guests**: name, password and captcha. Editing or deleting goes through the core password page.
-- **Emoticons**: uses the site emoticon table (managed from the mmb skin). An "이모티콘" picker inserts the code at the cursor.
-- **Text**: content is stored as plain text. On display it gets URL auto-links, `#hashtag` (searches the board, no board-type
-  setting needed) and `[[text]]` (point colour) highlighting.
+- **Text**: content is stored and shown as plain text. On display it only gets URL auto-links and `#hashtag` links (searches the
+  board, no board-type setting needed). Emoticons and text decoration (`[[ ]]` etc.) from the original are intentionally dropped.
 
 ## Changes from the original
 
@@ -34,9 +33,9 @@ Everything happens on the list page: write, read, edit, delete, comment.
 
 | File | Role |
 | --- | --- |
-| `guestbook.lib.php` | Helpers: formatting, emoticons, secret check, token, the shared post/comment form, return-to-entry redirect |
-| `list.skin.php` | The page: compose box, entries, comments, search, the shared captcha and emoticon panel |
-| `guestbook.js` | Toggles, inline edit, emoticon insert, moving captcha/emoticon panel, `#gb-ID-c` open-on-load |
+| `guestbook.lib.php` | Helpers: formatting, secret check, token, the shared post/comment form, return-to-entry redirect |
+| `list.skin.php` | The page: compose box, entries, comments, search, the shared captcha |
+| `guestbook.js` | Toggles, inline edit, moving the captcha, `#gb-ID-c` open-on-load |
 | `write.skin.php` | Standalone form (guest edit after the password check, or a direct `write.php` visit) |
 | `view.skin.php` | Redirects a single-post URL to that entry on the list |
 | `write_update.head.skin.php` | Token, required content, subject from the first line, plain text only |
@@ -46,7 +45,7 @@ Everything happens on the list page: write, read, edit, delete, comment.
 ## Design
 
 No colours or fonts are set. Paper = `.theme-box`, inputs = `.frm_input`, buttons = `.ui-btn` / `.point` / `.etc`.
-Notice label, hashtags and `[[text]]` use the point colour. Hairlines are `currentColor` mixed to 16%. Korean breaks by word.
+Notice label and hashtags use the point colour. Hairlines are `currentColor` mixed to 16%. Korean breaks by word.
 
 ## Test
 

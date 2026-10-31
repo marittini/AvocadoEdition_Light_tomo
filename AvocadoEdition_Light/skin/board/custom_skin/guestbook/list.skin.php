@@ -140,15 +140,8 @@ $gb_date = static fn(string $dt): string => date('y.m.d H:i', strtotime($dt));
 		<?php if ($admin_href) { ?><a href="<?=$admin_href?>" class="ui-btn small etc" target="_blank">관리자</a><?php } ?>
 	</div>
 
-	<?php // 자동등록방지(비회원)와 이모티콘 목록은 한 벌만 두고, 쓰고 있는 폼 아래로 옮겨 쓴다.
+	<?php // 자동등록방지(비회원)는 한 벌만 두고, 쓰고 있는 폼 아래로 옮겨 쓴다.
 	if ($is_guest && ($write_href || $gb_can_comment)) { ?><div class="gb-captcha" id="gb-captcha"><?=captcha_html()?></div><?php } ?>
-	<?php if ($gb_emo = gb_emoticons()) { ?>
-	<div class="gb-emo-panel" id="gb-emo" hidden>
-		<ul>
-			<?php foreach ($gb_emo as $code => $url) { ?><li><button type="button" data-gb-emo="<?=gb_e($code)?>" title="<?=gb_e($code)?>"><img src="<?=gb_e($url)?>" alt="<?=gb_e($code)?>" loading="lazy"></button></li><?php } ?>
-		</ul>
-	</div>
-	<?php } ?>
 </div>
 <?=gb_js($board_skin_url)?>
 <!-- } 방명록 -->

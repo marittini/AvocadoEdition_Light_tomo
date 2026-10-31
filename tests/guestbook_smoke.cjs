@@ -1,4 +1,4 @@
-// 방명록(custom_skin/guestbook): 목록에서 쓰기 · 공지 · 이모티콘 · #해시태그 · [[강조]] · 자동 링크(수정해도 늘지 않음),
+// 방명록(custom_skin/guestbook): 목록에서 쓰기 · 공지 · #해시태그 · 자동 링크(수정해도 늘지 않음, 꾸미기 없음),
 // 회원 수정 · 댓글(펼친 채로 돌아옴, 몇 쪽인지 계산) · 댓글 수정 · 삭제, 비밀글(비회원 비밀번호 확인), 위조 요청 거부.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_MEMBER(일반 회원, 같은 비밀번호), TEST_SQL(예: "mysql -uroot g5").
 //      TEST_SESSION_DIR(선택): PHP 세션 폴더. 있으면 비회원 글(자동등록방지 숫자를 세션에서 읽음)까지 확인한다.
@@ -62,13 +62,6 @@ const { chromium } = require("playwright"),
         await f.locator("[name=wr_name]").fill(opts.guest);
         await f.locator("[name=wr_password]").fill("pw1234");
       }
-      if (opts.emo) {
-        await f.locator("[data-gb-emo-open]").click();
-        const pick = p.locator("#gb-emo [data-gb-emo]").first();
-        opts.code = await pick.getAttribute("data-gb-emo");
-        await pick.click();
-        assert.ok((await f.locator("textarea").inputValue()).includes(opts.code), "이모티콘 넣기");
-      }
       if (opts.secret) await f.locator("[name=secret]").check();
       if (opts.notice) await f.locator("[name=notice]").check();
       await f.locator("[type=submit]").click();
@@ -78,23 +71,21 @@ const { chromium } = require("playwright"),
       return m[1];
     }
 
-    // 1. 관리자: 공지 + 이모티콘 + 해시태그, 그리고 쪽을 넘길 만큼 글 두 개
-    const hasEmo = Number(sql(`SELECT COUNT(*) FROM ${prefix}emoticon WHERE me_text<>'' AND me_img<>'';`).split("\n")[1]) > 0;
-    const emoOpt = { notice: true, emo: hasEmo };
+    // 1. 관리자: 공지 + 해시태그, 그리고 쪽을 넘길 만큼 글 두 개
     const old = await write(admin, "첫 글입니다.");
     await write(admin, "두 번째 글");
-    const notice = await write(admin, "반가워요 #환영 인사 ", emoOpt);
+    const notice = await write(admin, "반가워요 #환영 인사", { notice: true });
     const n = admin.locator(`#gb-${notice}`).first();
     assert.equal((await n.locator(".gb-no").textContent()).trim(), "공지");
-    if (hasEmo) assert.equal(await n.locator("img.gb-emo").count(), 1, "이모티콘 이미지");
+    assert.equal(await admin.locator("[data-gb-emo-open], #gb-emo").count(), 0, "이모티콘 없음");
     assert.equal(await n.locator("a.gb-tag").textContent(), "#환영", "해시태그 링크");
 
-    // 2. 회원: 글(주소 · [[강조]]) → 수정해도 링크가 늘지 않음
+    // 2. 회원: 글(주소, [[ ]]는 꾸미지 않고 글자 그대로) → 수정해도 링크가 늘지 않음
     const member = await open(process.env.TEST_MEMBER);
     const mine = await write(member, "안녕하세요 https://example.com/a [[소중한]] 방명록");
     const e = member.locator(`#gb-${mine}`);
     assert.equal(await e.locator(".gb-body a[href='https://example.com/a']").count(), 1, "주소 자동 링크");
-    assert.equal(await e.locator(".gb-call").textContent(), "소중한");
+    assert.match(await e.locator(".gb-body").innerText(), /\[\[소중한\]\]/, "텍스트 꾸미기 없음");
     assert.equal(await member.locator(`#gb-${notice} [data-gb-edit]`).count(), 0, "남의 글은 수정 버튼 없음");
     await e.locator(".gb-foot [data-gb-edit]").click();
     const ed = e.locator("[data-gb-editor] textarea");

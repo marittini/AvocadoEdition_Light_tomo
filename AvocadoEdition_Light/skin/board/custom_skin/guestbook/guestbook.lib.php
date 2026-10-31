@@ -6,11 +6,9 @@ if (!defined('_GNUBOARD_')) exit;
  *
  * 원본: new_memo (늘 님) → 방명록 스킨 (사도세자 님, 아보카도 라이트). PHP 8.4·라이트 TOMO에 맞게 다시 작성.
  * 목록 화면 한 장에서 쓰기 · 읽기 · 댓글 · 수정을 모두 한다. 저장·삭제·권한 확인은 그누보드 기본 처리(bbs/)를 그대로 쓴다.
- * 본문은 일반 텍스트(HTML 없음). 주소 자동 링크, #해시태그(검색), [[강조]], 이모티콘 코드만 바꿔 보여 준다.
+ * 본문은 일반 텍스트(HTML 없음). 주소 자동 링크와 #해시태그(검색)만 바꿔 보여 준다.
  * 색·글꼴은 지정하지 않는다. 디자인 설정(기본 박스·입력폼·버튼·포인트 색·기본 글꼴)을 그대로 따른다.
  */
-
-if (empty($g5['emoticon_table'])) $g5['emoticon_table'] = G5_TABLE_PREFIX.'emoticon';
 
 function gb_e($value): string
 {
@@ -23,20 +21,6 @@ function gb_url(string $bo_table, array $query = [], string $hash = ''): string
     return G5_BBS_URL.'/board.php?'.http_build_query(['bo_table' => $bo_table] + $query, '', '&amp;').($hash !== '' ? '#'.$hash : '');
 }
 
-/** 디자인 설정 > 이모티콘(mmb 스킨의 이모티콘 관리와 같은 표): [코드 => 이미지 주소], 긴 코드부터. */
-function gb_emoticons(): array
-{
-    global $g5;
-    static $list = null;
-    if ($list !== null) return $list;
-    $list = [];
-    if (!sql_query("DESC `{$g5['emoticon_table']}`", false)) return $list;
-    $res = sql_query("SELECT me_text, me_img FROM `{$g5['emoticon_table']}` WHERE me_text <> '' AND me_img <> ''", false);
-    while ($res && ($row = sql_fetch_array($res))) $list[(string)$row['me_text']] = G5_URL.$row['me_img'];
-    uksort($list, static fn($a, $b) => mb_strlen($b) <=> mb_strlen($a));
-    return $list;
-}
-
 /**
  * 저장된 일반 텍스트 → 화면용 HTML.
  * 원문은 손대지 않고 보여 줄 때만 바꾸므로, 수정할 때 링크가 겹겹이 늘어나는 문제가 생기지 않는다.
@@ -44,20 +28,12 @@ function gb_emoticons(): array
 function gb_format(string $raw, string $bo_table): string
 {
     $html = conv_content($raw, 0); // 이스케이프 + 줄바꿈 + 주소 자동 링크
-    $emo = gb_emoticons();
     $parts = preg_split('/(<a\b[^>]*>.*?<\/a>|<[^>]+>)/is', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
     foreach ($parts as $i => $part) {
         if ($i % 2) continue; // 태그와 링크 안쪽은 그대로
         $part = preg_replace_callback('/(^|[\s(;])#([0-9A-Za-z가-힣_]{1,40})/u', static function ($m) use ($bo_table) {
             return $m[1].'<a href="'.gb_url($bo_table, ['sfl' => 'wr_content', 'stx' => '#'.$m[2]]).'" class="gb-tag">#'.$m[2].'</a>';
         }, $part);
-        $part = preg_replace('/\[\[(.{1,80}?)\]\]/u', '<span class="gb-call">$1</span>', $part);
-        foreach ($emo as $code => $url) {
-            $safe = gb_e($code);
-            if ($safe !== '' && strpos($part, $safe) !== false) {
-                $part = str_replace($safe, '<img src="'.gb_e($url).'" alt="'.$safe.'" class="gb-emo" loading="lazy">', $part);
-            }
-        }
         $parts[$i] = $part;
     }
     return implode('', $parts);
@@ -157,7 +133,7 @@ function gb_form(array $o): string
     }
     $label = $kind === 'post' ? '방명록 내용' : '댓글 내용';
     $h .= '<label class="sound_only" for="'.gb_e(($o['id'] ?? 'gb').'-text').'">'.$label.'</label>'
-        .'<textarea name="wr_content" id="'.gb_e(($o['id'] ?? 'gb').'-text').'" class="frm_input gb-text" rows="'.($kind === 'post' && $is_new ? 4 : 2).'" required data-gb-grow'
+        .'<textarea name="wr_content" id="'.gb_e(($o['id'] ?? 'gb').'-text').'" class="frm_input gb-text" rows="'.($kind === 'post' && $is_new ? 3 : 1).'" required data-gb-grow'
         .' placeholder="'.($kind === 'post' ? '남기실 말을 적어 주세요.' : '댓글').'">'.gb_e($o['content'] ?? '').'</textarea>';
 
     $h .= '<div class="gb-form-bar"><div class="gb-form-opts">';
@@ -172,7 +148,6 @@ function gb_form(array $o): string
         if ($is_admin) $h .= '<label class="gb-check"><input type="checkbox" name="notice" value="1"'.(!empty($o['notice']) ? ' checked' : '').'> 공지</label>';
     }
     $h .= '</div><div class="gb-form-btns">';
-    if (gb_emoticons()) $h .= '<button type="button" class="ui-btn small etc gb-emo-btn" data-gb-emo-open aria-expanded="false"><i class="material-icons" aria-hidden="true">mood</i> 이모티콘</button>';
     if (!empty($o['cancel'])) $h .= '<button type="button" class="ui-btn small" data-gb-cancel>취소</button>';
     $h .= '<button type="submit" class="ui-btn small point">'.($is_new ? '남기기' : '저장').'</button>';
     $h .= '</div></div><div class="gb-slot" data-gb-slot></div></form>';

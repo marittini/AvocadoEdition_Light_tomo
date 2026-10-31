@@ -11,6 +11,36 @@
     paged = false,
     novelPage = 0,
     novelPages = 1;
+  // index.php owns a second menu outside the board iframe.
+  // Preserve individual properties so closing never overwrites other theme state.
+  let hiddenMenus = [];
+  function hideSiteMenus() {
+    if (hiddenMenus.length) return;
+    let frame = window;
+    for (;;) {
+      try {
+        frame.document.querySelectorAll('#header, #mo_header, .control-mobile-menu').forEach(menu => {
+          hiddenMenus.push({ menu, display: menu.style.getPropertyValue('display'), priority: menu.style.getPropertyPriority('display'), inert: menu.inert, aria: menu.getAttribute('aria-hidden') });
+          menu.style.setProperty('display', 'none', 'important');
+          menu.inert = true;
+          menu.setAttribute('aria-hidden', 'true');
+        });
+        if (frame.parent === frame) break;
+        frame = frame.parent;
+      } catch (_) { break; } // Browsers prohibit accessing a different-origin parent.
+    }
+  }
+  function restoreSiteMenus() {
+    hiddenMenus.forEach(({menu, display, priority, inert, aria}) => {
+      if (display) menu.style.setProperty('display', display, priority);
+      else menu.style.removeProperty('display');
+      menu.inert = inert;
+      if (aria === null) menu.removeAttribute('aria-hidden');
+      else menu.setAttribute('aria-hidden', aria);
+    });
+    hiddenMenus = [];
+  }
+  window.addEventListener('pagehide', restoreSiteMenus);
   function fitImageLayer(layer, image) {
     if (!image.naturalWidth || layer.hidden) return;
     const availableWidth = Math.max(120, Math.min(960, window.innerWidth - 24) - 96);
@@ -53,6 +83,7 @@
   }
   open.addEventListener("click", () => {
     previous = document.activeElement;
+    hideSiteMenus();
     if (reader.dataset.kind === "manga" && images.length) {
       comic.hidden = false;
       solidBackground(comic);
@@ -70,6 +101,7 @@
   reader.querySelector("[data-action=close]").addEventListener("click", () => {
     reader.hidden = true;
     document.documentElement.classList.remove("px-reading");
+    restoreSiteMenus();
     previous?.focus();
   });
   comic.addEventListener("click", (e) => {
@@ -77,6 +109,7 @@
     if (a === "close") {
       comic.hidden = true;
       document.documentElement.classList.remove("px-reading");
+      restoreSiteMenus();
       previous?.focus();
     }
     if (a === "next") {

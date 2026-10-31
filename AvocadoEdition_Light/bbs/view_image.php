@@ -31,7 +31,7 @@ if(is_file($filepath)) {
     else
         $fileurl = G5_DATA_URL.'/file/'.$bo_table.'/'.$filename;
 
-    $img = '<img src="'.$fileurl.'" alt="" width="'.$width.'" height="'.$height.'" class="draggable" style="position:relative;top:0;left:0;cursor:move;">';
+    $img = '<img src="'.$fileurl.'" alt="" width="'.$width.'" height="'.$height.'" class="draggable" style="position:relative;top:0;left:0;cursor:move;max-width:100%;height:auto;">';
 } else {
     alert_close('파일이 존재하지 않습니다.');
 }

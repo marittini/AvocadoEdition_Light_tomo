@@ -3,7 +3,7 @@ if (!defined('_GNUBOARD_')) exit;
 // Keep the work detail separate even when the board enables a list below posts.
 if (!empty($wr_id)) return;
 include_once __DIR__.'/pixiv.lib.php';
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=5">',0);
+add_stylesheet('<link rel="stylesheet" href="'.pixiv_asset_url($board_skin_url, 'style.css').'">',0);
 $types=['illustration'=>'일러스트','manga'=>'만화','novel'=>'소설'];
 $type=$_GET['px_type'] ?? ''; if(!is_string($type)||!isset($types[$type])) $type='';
 $raw=$_GET['tag'] ?? []; if (!is_array($raw)) $raw=[$raw];

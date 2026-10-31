@@ -47,3 +47,11 @@ function pixiv_cover_file(array $files, $order): ?array {
     }
     return $files[0] ?? null;
 }
+
+/** Version assets by bytes, so consecutive updates cannot reuse a stale cache key. */
+function pixiv_asset_url(string $skin_url, string $file): string {
+    static $versions = [];
+    if (!in_array($file, ['style.css', 'viewer.js', 'write.js'], true)) return '';
+    if (!isset($versions[$file])) $versions[$file] = substr(hash_file('sha256', __DIR__.'/'.$file), 0, 16);
+    return $skin_url.'/'.$file.'?v='.$versions[$file];
+}

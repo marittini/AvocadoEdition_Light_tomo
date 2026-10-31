@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit;
 include_once __DIR__.'/pixiv.lib.php';
 include_once G5_LIB_PATH.'/thumbnail.lib.php';
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=5">',0);
+add_stylesheet('<link rel="stylesheet" href="'.pixiv_asset_url($board_skin_url, 'style.css').'">',0);
 $images=pixiv_files($bo_table,(int)$wr_id,$write['wr_3']??'');
 $cover=pixiv_cover_file($images,$write['wr_3']??'');
 $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['wr_1']??'')==='pixiv:novel';$isManga=($write['wr_1']??'')==='pixiv:manga';
@@ -32,4 +32,4 @@ $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['
 <header><span aria-hidden="true"></span><span><?=pixiv_escape($view['wr_subject'])?></span><button type="button" data-comic="close">✕ 닫기</button></header>
 <button type="button" class="px-comic-prev" data-comic="prev" aria-label="이전 페이지">‹</button><img class="px-comic-image" alt=""><button type="button" class="px-comic-next" data-comic="next" aria-label="다음 페이지">›</button>
 </div>
-<script src="<?=$board_skin_url?>/viewer.js?v=5" defer></script>
+<script src="<?=pixiv_asset_url($board_skin_url, 'viewer.js')?>" defer></script>

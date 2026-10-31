@@ -145,11 +145,11 @@ if ($_rating_raw === 'watching') {
                 <label for="chkall" class="sound_only">현재 페이지 게시물 전체</label>
                 <input type="checkbox" id="chkall" onclick="if (this.checked) all_checked(true); else all_checked(false);">
             </p> 
-		    <button type="submit" name="btn_submit" value="선택삭제" onclick="document.pressed=this.value" class="ui-btn admin">선택삭제</button>
+		    <button type="submit" name="btn_submit" value="선택삭제" onclick="document.pressed=this.value" class="ui-btn etc">선택삭제</button>
             <?php } ?>
 		<?php  if ($list_href) { ?><a href="<?php  echo $list_href ?>" class="ui-btn">목록</a><?php  } ?>		
 		<?php  } ?>
-		<?php  if($admin_href){?><a href="<?=$admin_href?>" class="ui-btn admin" target="_blank">관리자</a><?php }?>
+		<?php  if($admin_href){?><a href="<?=$admin_href?>" class="ui-btn etc" target="_blank">관리자</a><?php }?>
 	</div>
 	<?php  } ?>
 

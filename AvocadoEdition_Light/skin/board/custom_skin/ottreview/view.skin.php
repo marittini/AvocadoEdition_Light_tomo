@@ -74,7 +74,7 @@ else if (!$view['mb_id']) { // 회원이 쓴 글이 아니라면
 
     <div class="bo_v_com">
         <?php  if ($update_href) { ?><a href="<?php  echo $update_href ?>" class="ui-btn">수정</a><?php  } ?>
-        <?php  if ($delete_href) { ?><a href="<?php  echo $delete_href ?>" class="ui-btn admin" onclick="del(this.href); return false;">삭제</a><?php  } ?>
+        <?php  if ($delete_href) { ?><a href="<?php  echo $delete_href ?>" class="ui-btn etc" onclick="del(this.href); return false;">삭제</a><?php  } ?>
         <a href="<?php  echo $list_href ?>" class="ui-btn">목록</a>
     </div>
     <?php 

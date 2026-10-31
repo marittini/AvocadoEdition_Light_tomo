@@ -20,7 +20,7 @@
   const category = document.querySelector("#pixiv-type"),
     contentRow = document.querySelector("#pixiv-content-row");
   function updateType() {
-    contentRow.hidden = category.value !== "novel";
+    contentRow.hidden = false;
   }
   category.addEventListener("change", updateType);
   updateType();

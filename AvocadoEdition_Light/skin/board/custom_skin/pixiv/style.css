@@ -555,3 +555,10 @@
 .px-write textarea,.px-write input[type=text],.px-write select { border-radius:8px; padding:8px 10px; box-sizing:border-box; }
 @media(max-width:700px){.px-detail-layout { grid-template-columns:1fr; }.px-write{padding:16px}.px-write .px-write-fields{grid-template-columns:1fr}.px-write .px-write-fields small,.px-write #pixiv-tag-suggestions{grid-column:1}.px-reader header,.px-comic header{grid-template-columns:80px minmax(0,1fr) 80px}}
 .px-write select { height:auto; min-height:38px; line-height:1.4; }
+.px-write .px-write-fields { display:grid; grid-template-columns:100px minmax(0,1fr); }
+.px-write .px-file-list { flex-wrap:nowrap; overflow-x:auto; padding:8px 0; }
+.px-write .px-file-list li { width:96px; flex:0 0 96px; }
+.px-write .px-file-list li>img { height:72px; }
+.px-write #pixiv-content-row textarea { width:100%; min-height:220px; }
+@media(max-width:700px){.px-write .px-write-fields{grid-template-columns:1fr}}
+.px-write #pixiv-content-row textarea { height:180px; min-height:180px; }

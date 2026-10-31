@@ -41,32 +41,38 @@
 .bbscat-category a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
 /* ---------- 목록 ---------- */
+/* 한 줄의 체크박스·공개 표시·말머리·제목·댓글 수·날짜를 flex로 세로 가운데 정렬한다. */
 .bbscat-rows { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
-.bbscat-rows li { display: block; position: relative; padding: 5px 0; margin-bottom: 5px; border-radius: var(--bbscat-radius); }
-.bbscat-rows li.no-data { text-align: center; line-height: 200px; }
-.bbscat-rows li > a { display: block; position: relative; padding: 0 120px 0 40px; line-height: 35px; font-size: 14px; color: inherit; text-decoration: none; }
-.bbscat-rows li > a:hover .subject, .bbscat-rows li > a:focus-visible .subject { color: var(--bbscat-point, inherit); }
+.bbscat-rows li { display: flex; align-items: center; position: relative; min-height: 45px; padding: 5px 0; margin-bottom: 5px; box-sizing: border-box; border-radius: var(--bbscat-radius); }
+.bbscat-rows li.no-data { display: block; text-align: center; line-height: 200px; }
+.bbscat-rows .td_chk { flex: none; display: flex; align-items: center; padding-left: 12px; }
+.bbscat-rows .td_chk input { margin: 0; }
+.bbscat-rows li > a { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0 0 0 40px; min-height: 35px; font-size: 14px; line-height: 1.4; color: inherit; text-decoration: none; }
+.bbscat-rows .td_chk + a { padding-left: 15px; }
+.bbscat-rows li > a:hover .title, .bbscat-rows li > a:focus-visible .title { color: var(--bbscat-point, inherit); }
 .bbscat-rows li > a:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; border-radius: var(--bbscat-radius); }
-.bbscat-rows .subject { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: var(--bbscat-point-font); font-weight: normal; }
-.bbscat-rows .info { position: absolute; top: 0; right: 0; width: 110px; text-align: center; }
+.bbscat-rows .subject { flex: 1; min-width: 0; display: flex; align-items: center; font-family: var(--bbscat-point-font); font-weight: normal; }
+.bbscat-rows .subject .title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.bbscat-rows .subject > .mark, .bbscat-rows .subject > .genre, .bbscat-rows .cnt_cmt { flex: none; }
+.bbscat-rows .info { flex: none; display: flex; align-items: center; justify-content: center; width: 110px; line-height: 1; }
 .bbscat-rows .date { opacity: .6; font-family: var(--bbscat-sub-font); font-size: 10px; }
 .bbscat-rows .cnt_cmt { margin-left: 10px; font-size: 10px; color: var(--bbscat-point, inherit); }
 .bbscat-rows .cnt_cmt::before { content: "+ "; }
-.bbscat-rows .td_chk { position: absolute; left: 12px; top: 13px; z-index: 2; }
 
 .bbscat .genre {
-	display: inline-block; margin-right: 10px; padding: 0 8px;
-	line-height: 1.9em; border-radius: var(--bbscat-radius);
+	display: inline-flex; align-items: center; margin-right: 10px; padding: 0 8px; height: 1.9em;
+	border-radius: var(--bbscat-radius);
 	background-color: var(--bbscat-chip-bg, currentColor);
 	color: var(--bbscat-chip-color, inherit);
-	font-family: var(--bbscat-point-font);
+	font-family: var(--bbscat-point-font); line-height: 1;
 }
 .bbscat .mark {
-	display: inline-flex; align-items: center; margin-right: 4px; padding: 2px 5px;
-	border-radius: 4px; font-size: 11px; line-height: 1.2; vertical-align: 1px;
+	display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; padding: 0 5px; height: 1.4em;
+	border-radius: 4px; font-size: 11px; line-height: 1;
 	background-color: var(--bbscat-mark-bg, var(--bbscat-faint));
 	color: var(--bbscat-mark-color, inherit);
 }
+.bbscat .mark .material-icons { vertical-align: 0; }
 
 .bbscat .bo_fx { position: relative; padding: 20px 10px; }
 .bbscat .bo_fx .chk_all { position: absolute; left: 10px; top: 20px; margin: 0; }
@@ -84,8 +90,9 @@
 /* ---------- 본문 ---------- */
 .bbscat .board-viewer.theme-box { display: block; position: relative; padding: 20px; }
 .bbscat .board-viewer .subject { text-align: center; }
-.bbscat .board-viewer .subject strong { display: block; font-size: 20px; line-height: 1.5; font-family: var(--bbscat-point-font); font-weight: normal; overflow-wrap: anywhere; }
-.bbscat .board-viewer .subject .genre { font-size: 14px; vertical-align: 2px; }
+.bbscat .board-viewer .subject strong { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; row-gap: 6px; font-size: 20px; line-height: 1.5; font-family: var(--bbscat-point-font); font-weight: normal; overflow-wrap: anywhere; }
+.bbscat .board-viewer .subject .genre { font-size: 14px; }
+.bbscat .board-viewer .subject .title { min-width: 0; }
 .bbscat .board-viewer .info { margin-top: 15px; padding: 8px 8px 1px; text-align: right; font-size: 11px; font-family: var(--bbscat-sub-font); }
 .bbscat .board-viewer .info > span { display: inline-block; opacity: .8; }
 .bbscat .board-viewer .info > span + span::before { content: ""; display: inline-block; width: 1px; height: 8px; margin: 0 10px; vertical-align: middle; background: currentColor; opacity: .5; }
@@ -130,10 +137,13 @@
 
 /* ---------- 모바일 ---------- */
 @media all and (max-width: 640px) {
-	.bbscat-rows li > a { padding: 12px 15px; line-height: 1.4; }
-	.bbscat-rows li .td_chk ~ a { padding-left: 40px; }
-	.bbscat-rows .subject { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-	.bbscat-rows .info { position: static; display: block; width: auto; padding-top: 6px; text-align: right; line-height: 1; }
+	.bbscat-rows li > a { flex-wrap: wrap; row-gap: 8px; padding: 10px 15px; }
+	.bbscat-rows .td_chk + a { padding-left: 10px; }
+	/* 모바일은 날짜가 아래 줄로 내려가므로 체크박스를 제목 줄 가운데에 맞춘다. */
+	.bbscat-rows .td_chk { align-self: flex-start; margin-top: 10px; height: 26.6px; }
+	.bbscat-rows .subject { flex: 1 1 100%; min-height: 26.6px; }
+	.bbscat-rows .subject .title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+	.bbscat-rows .info { width: 100%; justify-content: flex-end; }
 	.bbscat .genre { margin-right: 6px; }
 	.bbscat .bo_fx { padding: 20px 10px !important; }
 	.bbscat .bo_fx .chk_all { position: static; display: inline-block; margin-right: 6px; }

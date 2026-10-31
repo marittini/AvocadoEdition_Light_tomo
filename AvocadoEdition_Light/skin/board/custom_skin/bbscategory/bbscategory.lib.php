@@ -24,8 +24,8 @@ function bbscat_split_subject(string $subject): array
 function bbscat_subject_html(string $escaped_subject): string
 {
     [$genre, $rest] = bbscat_split_subject($escaped_subject);
-    if ($genre === '') return $escaped_subject;
-    return '<span class="genre">'.$genre.'</span>'.$rest;
+    if ($genre === '') return '<span class="title">'.$escaped_subject.'</span>';
+    return '<span class="genre">'.$genre.'</span><span class="title">'.$rest.'</span>';
 }
 
 /** 게시판에 쓰인 말머리와 글 수(댓글 제외). 게시판 설정(분류)은 건드리지 않는다. */

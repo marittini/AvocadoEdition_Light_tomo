@@ -6,7 +6,9 @@ if(!mask)return;
 const element=target=>target instanceof Element?target:target?.parentElement;
 const editable=target=>{
  const el=element(target);
- return !el||el.isContentEditable||!!el.closest('input,textarea,select,button,[data-tomo-allow-copy]');
+ if(!el)return true;
+ if(el.closest('img'))return !!el.closest('[data-tomo-allow-copy],[contenteditable=true]');
+ return el.isContentEditable||!!el.closest('input,textarea,select,button,[data-tomo-allow-copy]');
 };
 if(mask&1)document.addEventListener('contextmenu',event=>{if(!editable(event.target))event.preventDefault();});
 if(mask&2){

@@ -36,10 +36,6 @@ for ($i = 0; $i < count($view['file']); $i++) {
 		</ul>
 		<?php } ?>
 
-		<footer class="diary-sign">
-			<p class="by">&mdash; <?=get_text($view['wr_name'])?></p>
-			<p class="on"><?=date('F j, Y', $diary_dt)?></p>
-		</footer>
 	</article>
 
 	<div class="diary-actions diary-view-actions">

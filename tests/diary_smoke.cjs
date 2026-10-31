@@ -81,7 +81,17 @@ const { chromium } = require("playwright"),
   await p.goto(board + "&yr=2026&mo=3");
   await Promise.all([p.waitForURL(/wr_id=/), p.locator(".diary-entries a").first().click()]);
   assert.match(await p.locator("#bo_v_con").innerText(), /본문비밀문장 2/);
-  assert.match(await p.locator(".diary-sign .on").innerText(), /March 20, 2026/);
+  assert.equal(await p.locator(".diary-sign").count(), 0, "서명 없음");
+  // 제목 수정: 날짜(연·월)는 그대로, 목록에 새 제목
+  await Promise.all([p.waitForURL(/w=u/), p.locator(".diary-view-actions a", { hasText: "수정" }).click()]);
+  assert.equal(await p.locator("#wr_subject").inputValue(), "기록 3");
+  await p.locator("#wr_subject").fill("고친 제목");
+  await p.locator("#btn_submit").click();
+  await p.waitForLoadState();
+  await p.goto(board + "&yr=2026&mo=3");
+  assert.deepEqual(await p.locator(".diary-entries .title").allInnerTexts(), ["고친 제목", "기록 2"]);
+  assert.deepEqual(await p.locator(".diary-entries time").allInnerTexts(), ["03.20", "03.10"], "날짜만, 요일 없음");
+  await Promise.all([p.waitForURL(/wr_id=/), p.locator(".diary-entries a").first().click()]);
   await Promise.all([p.waitForURL(/mo=3/), p.locator(".diary-view-actions a", { hasText: "목록" }).click()]);
 
   // 토큰 없는 글쓰기는 막는다
@@ -89,6 +99,6 @@ const { chromium } = require("playwright"),
   assert((await forged.text()).includes("글쓰기 요청을 확인할 수 없습니다"));
 
   assert.deepEqual(errors, []);
-  console.log("PASS diary editor, no excerpt, years 2025-2028, months, paging, secret, view, forged write");
+  console.log("PASS diary editor, no excerpt, years 2025-2028, months, paging, secret, view, title edit, forged write");
   await b.close();
 })().catch((e) => { console.error(e); process.exit(1); });

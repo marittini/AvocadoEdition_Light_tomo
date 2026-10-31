@@ -1,12 +1,12 @@
 @charset "utf-8";
 /*
  * 다이어리 게시판 (custom_skin/diary)
- * 편지지에 쓴 글처럼: 넓은 여백, 명조 계열 본문, 가는 구분선, 오른쪽 아래 서명.
+ * 편지지에 쓴 글처럼: 넓은 여백, 명조 계열 본문, 가는 구분선.
  * 색은 관리자 > 디자인 설정을 따른다.
  *   - 종이: .theme-box (기본 박스 설정의 배경·글자·테두리)
  *   - 버튼: .ui-btn / .ui-btn.point / .ui-btn.etc
  *   - 강조선(선택한 달, 마우스 오버): 포인트 색 (--diary-point)
- * 글꼴: 날짜·제목·본문·서명에만 --diary-serif(명조 계열)를 쓰고, 나머지(버튼 등)는
+ * 글꼴: 날짜·제목·본문에만 --diary-serif(명조 계열)를 쓰고, 나머지(버튼 등)는
  * 디자인 설정의 기본 글꼴을 따른다. 외부 웹폰트는 불러오지 않으며 기기에 있는 명조 글꼴을
  * 순서대로 쓴다. 사이트 기본 글꼴을 그대로 쓰려면 --diary-serif에 그 글꼴 이름을 넣는다.
  */
@@ -29,11 +29,11 @@
 /* 사이트 전역 글꼴 규칙(*)이 하위 요소마다 걸리므로, 명조를 쓸 영역은 하위 요소까지 지정한다 */
 .diary-year-title, .diary-year-title *, .diary-months a, .diary-months span,
 .diary-entries time, .diary-entries time *, .diary-entries .title,
-.diary-empty, .diary-title, .diary-body, .diary-body *, .diary-sign, .diary-sign *,
+.diary-empty, .diary-title, .diary-body, .diary-body *,
 .diary-title-input.frm_input { font-family: var(--diary-serif); }
 .diary-body .material-icons { font-family: 'Material Icons'; }
 /* 사이트 공통의 글자 단위 줄바꿈 대신, 편지처럼 단어 단위로 줄을 바꾼다(긴 주소는 그래도 줄바꿈). */
-.diary-title, .diary-body, .diary-body *, .diary-sign { word-break: keep-all; overflow-wrap: anywhere; }
+.diary-title, .diary-body, .diary-body * { word-break: keep-all; overflow-wrap: anywhere; }
 
 /* ---------- 목록 ---------- */
 .diary-year { display: flex; align-items: center; justify-content: center; gap: 18px; }
@@ -56,9 +56,7 @@ a.diary-year-step:hover, a.diary-year-step:focus-visible { opacity: 1; color: va
 .diary-entries li { border-bottom: 1px solid var(--diary-line); }
 .diary-entries a { display: flex; align-items: center; gap: 22px; padding: 15px 4px; color: inherit; text-decoration: none; }
 .diary-entries a:focus-visible { outline: 1px solid currentColor; outline-offset: -1px; }
-.diary-entries time { flex: none; display: flex; align-items: baseline; gap: 6px; width: 74px; font-family: var(--diary-serif); }
-.diary-entries .day { font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
-.diary-entries .wd { font-size: 11px; opacity: .55; }
+.diary-entries time { flex: none; width: 52px; font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .diary-entries .subject { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; font-family: var(--diary-serif); font-size: 15px; }
 .diary-entries .subject .material-icons { flex: none; font-size: 14px; opacity: .6; }
 .diary-entries .title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -84,10 +82,6 @@ a.diary-year-step:hover, a.diary-year-step:focus-visible { opacity: 1; color: va
 .diary-files li + li { margin-top: 4px; }
 .diary-files a { color: inherit; }
 .diary-files span { opacity: .6; }
-.diary-sign { margin-top: 56px; text-align: right; font-family: var(--diary-serif); }
-.diary-sign p { margin: 0; }
-.diary-sign .by { font-size: 17px; font-style: italic; font-weight: bold; }
-.diary-sign .on { margin-top: 10px; font-size: 15px; }
 .diary-view-actions { justify-content: space-between; }
 .diary-view-actions > div { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -115,10 +109,9 @@ a.diary-year-step:hover, a.diary-year-step:focus-visible { opacity: 1; color: va
 	.diary-months a, .diary-months span { font-size: 13px; }
 	.diary-entries { margin-top: 20px; }
 	.diary-entries a { gap: 14px; padding: 13px 2px; }
-	.diary-entries time { width: 62px; }
+	.diary-entries time { width: 46px; }
 	.diary-entries .subject { font-size: 14px; }
 	.diary-title { font-size: 20px; margin-bottom: 26px; }
 	.diary-body { font-size: 15px; line-height: 1.9; }
-	.diary-sign { margin-top: 40px; }
-	.diary-title-input.frm_input { font-size: 19px; }
+		.diary-title-input.frm_input { font-size: 19px; }
 }

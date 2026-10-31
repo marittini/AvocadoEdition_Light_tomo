@@ -57,7 +57,7 @@ $diary_paging_url = diary_url($bo_table, ['yr' => $diary_year, 'mo' => $diary_mo
 			<?php foreach ($diary_list as $row) { $secret = strpos($row['wr_option'], 'secret') !== false; ?>
 			<li>
 				<a href="<?=diary_url($bo_table, ['wr_id' => (int)$row['wr_id'], 'yr' => $diary_year, 'mo' => $diary_month])?>">
-					<time datetime="<?=diary_e(date('c', strtotime($row['wr_datetime'])))?>"><span class="day"><?=date('m.d', strtotime($row['wr_datetime']))?></span><span class="wd"><?=diary_weekday($row['wr_datetime'])?></span></time>
+					<time datetime="<?=diary_e(date('c', strtotime($row['wr_datetime'])))?>"><?=date('m.d', strtotime($row['wr_datetime']))?></time>
 					<span class="subject"><?php if ($secret) { ?><i class="material-icons" aria-hidden="true">lock</i><span class="sound_only">비밀글</span><?php } ?><span class="title"><?=diary_e(get_text($row['wr_subject']) !== '' ? get_text($row['wr_subject']) : '제목 없음')?></span><?php if ((int)$row['wr_comment']) { ?><span class="cmt"><?=(int)$row['wr_comment']?><span class="sound_only">개 댓글</span></span><?php } ?></span>
 				</a>
 			</li>

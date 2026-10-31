@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit;
 include_once __DIR__.'/pixiv.lib.php';
 include_once G5_LIB_PATH.'/thumbnail.lib.php';
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=4">',0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=5">',0);
 $images=pixiv_files($bo_table,(int)$wr_id,$write['wr_3']??'');
 $cover=pixiv_cover_file($images,$write['wr_3']??'');
 $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['wr_1']??'')==='pixiv:novel';$isManga=($write['wr_1']??'')==='pixiv:manga';
@@ -15,6 +15,7 @@ $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['
 <button type="button" class="px-cover" id="px-open" aria-label="작품 보기"><?php if($images){?><img src="<?=$cover['url']?>" alt="작품 표지"><?php } else { ?><span><?=$isNovel?'소설 읽기':'작품 보기'?></span><?php } ?><?php if(count($images)>1){?><span class="px-count"><?=count($images)?></span><?php } ?></button>
 </div><div class="px-detail-info">
 <h1><?=pixiv_escape($view['wr_subject'])?></h1>
+<time class="px-upload-date" datetime="<?=pixiv_escape(str_replace(' ','T',$view['wr_datetime']))?>"><?=pixiv_escape(substr($view['wr_datetime'],0,16))?></time>
 <?php if($note!==''){?><div class="px-note"><?=nl2br(pixiv_escape($note))?></div><?php } ?>
 <div class="px-tags"><?php foreach($tags as $tag){?><a href="<?=G5_BBS_URL?>/board.php?bo_table=<?=rawurlencode($bo_table)?>&amp;tag[]=<?=rawurlencode($tag)?>">#<?=pixiv_escape($tag)?></a><?php } ?></div>
 <?php include G5_BBS_PATH.'/view_comment.php'; ?>
@@ -31,4 +32,4 @@ $note=pixiv_note($write);$tags=pixiv_tags($write['wr_2']??'');$isNovel=($write['
 <header><span aria-hidden="true"></span><span><?=pixiv_escape($view['wr_subject'])?></span><button type="button" data-comic="close">✕ 닫기</button></header>
 <button type="button" class="px-comic-prev" data-comic="prev" aria-label="이전 페이지">‹</button><img class="px-comic-image" alt=""><button type="button" class="px-comic-next" data-comic="next" aria-label="다음 페이지">›</button>
 </div>
-<script src="<?=$board_skin_url?>/viewer.js?v=4" defer></script>
+<script src="<?=$board_skin_url?>/viewer.js?v=5" defer></script>

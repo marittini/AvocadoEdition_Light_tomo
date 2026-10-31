@@ -14,7 +14,7 @@
 .px-categories a {
   padding: 7px 0;
 }
-.px-categories a[aria-current] {
+.px-categories a[aria-current]:not(.ui-btn) {
   font-weight: bold;
   border-bottom: 2px solid currentColor;
 }
@@ -25,7 +25,7 @@
   flex-wrap: wrap;
   margin: 16px 0;
 }
-.px-tags a,
+.px-tags a:not(.ui-btn),
 .px-tags button {
   padding: 3px 8px;
   border: 1px solid currentColor;
@@ -562,3 +562,13 @@
 .px-write #pixiv-content-row textarea { width:100%; min-height:220px; }
 @media(max-width:700px){.px-write .px-write-fields{grid-template-columns:1fr}}
 .px-write #pixiv-content-row textarea { height:180px; min-height:180px; }
+
+.px-categories a.ui-btn { padding:6px 12px; border-width:1px; border-style:solid; }
+.px-tags a.ui-btn { padding:2px 7px; font-size:11px; }
+
+.px-upload-date { display:block; font-size:12px; opacity:.75; margin:8px 0 16px; }
+.px-reader.theme-box,.px-comic.theme-box { inset:auto; top:50%; left:50%; transform:translate(-50%,-50%); max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px); }
+.px-reader.theme-box { width:min(960px,calc(100vw - 24px)); height:86dvh; }
+.px-comic .px-comic-image { top:calc(50% + 26px); max-width:none; max-height:none; transition:none!important; }
+.px-comic .px-comic-prev,.px-comic .px-comic-next { top:calc(50% + 26px); transform:translateY(-50%); }
+.px-reader .px-images img { width:100%; }

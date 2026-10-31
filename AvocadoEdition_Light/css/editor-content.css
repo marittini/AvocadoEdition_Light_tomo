@@ -1,0 +1,10 @@
+/* Editors serialize consecutive Enter presses as empty paragraphs. Keep their line
+   boxes on read pages; the site reset otherwise gives <p></p> zero height. */
+#bo_v_con p:empty,
+.px-novel p:empty,
+.px-content p:empty {
+  min-height: 1.5em;
+  min-height: 1lh;
+}
+
+.thread_content p:empty { min-height:1.5em; min-height:1lh; }

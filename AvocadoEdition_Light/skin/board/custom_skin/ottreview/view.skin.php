@@ -93,4 +93,3 @@ $(function(e){
 </script>
 <?php  } ?>
 <?php  include_once($board_skin_path.'/thread.script.php'); // 타래 공통 스크립트 ?>
-<?php  include_once($board_skin_path.'/write.script.php'); // 글 작성시 이미지 관련 ?>

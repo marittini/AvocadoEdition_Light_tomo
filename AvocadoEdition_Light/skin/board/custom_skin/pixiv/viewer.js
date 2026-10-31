@@ -11,11 +11,26 @@
     paged = false,
     novelPage = 0,
     novelPages = 1;
+  function fitImageLayer(layer, image) {
+    if (!image.naturalWidth || layer.hidden) return;
+    const availableWidth = Math.max(120, Math.min(960, window.innerWidth - 24) - 96);
+    const availableHeight = Math.max(100, window.innerHeight - 120);
+    const scale = Math.min(availableWidth / image.naturalWidth, availableHeight / image.naturalHeight);
+    const width = Math.round(image.naturalWidth * scale);
+    const height = Math.round(image.naturalHeight * scale);
+    layer.style.width = Math.min(window.innerWidth - 24, Math.max(260, width + 96)) + 'px';
+    layer.style.height = Math.min(window.innerHeight - 24, height + 76) + 'px';
+    if (layer === comic) { pic.style.width = width + 'px'; pic.style.height = height + 'px'; }
+  }
+  pic.addEventListener('load', () => fitImageLayer(comic, pic));
+  images[0]?.addEventListener('load', () => fitImageLayer(reader, images[0]));
+  window.addEventListener('resize', () => { fitImageLayer(comic, pic); if (images[0]) fitImageLayer(reader, images[0]); });
   function render() {
     if (!images.length) return;
     index = Math.max(0, Math.min(images.length - 1, index));
     pic.src = images[index].src;
     pic.alt = index + 1 + "쪽";
+    if (pic.complete) fitImageLayer(comic, pic);
 
     comic.querySelector("[data-comic=prev]").disabled = index === 0;
     comic.querySelector("[data-comic=next]").disabled =
@@ -47,6 +62,7 @@
     } else {
       reader.hidden = false;
       solidBackground(reader);
+      if (images[0]) fitImageLayer(reader, images[0]);
       reader.querySelector("[data-action=close]").focus();
     }
     document.documentElement.classList.add("px-reading");

@@ -2755,3 +2755,6 @@ hr.padding {
         margin: 14px auto;
     }
 }
+.thread_img_full { background:#111!important; background-image:none!important; z-index:100000!important; }
+.thread_img_full .thread_img_wrap { background:transparent!important; }
+.thread_img_full .thread_img_wrap img { max-width:95vw; max-height:95dvh; width:auto!important; height:auto!important; object-fit:contain; }

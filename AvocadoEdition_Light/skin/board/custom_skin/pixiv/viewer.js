@@ -5,7 +5,7 @@
   if (!open || !reader || !comic) return;
   const images = [...reader.querySelectorAll(".px-images img")],
     pic = comic.querySelector(".px-comic-image");
-  const progress = comic.querySelector("[data-comic-progress]");
+  document.body.append(reader, comic);
   let index = 0,
     previous = null,
     paged = false,
@@ -16,7 +16,7 @@
     index = Math.max(0, Math.min(images.length - 1, index));
     pic.src = images[index].src;
     pic.alt = index + 1 + "쪽";
-    progress.textContent = index + 1 + " / " + images.length;
+
     comic.querySelector("[data-comic=prev]").disabled = index === 0;
     comic.querySelector("[data-comic=next]").disabled =
       index === images.length - 1;

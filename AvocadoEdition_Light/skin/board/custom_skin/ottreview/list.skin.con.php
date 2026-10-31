@@ -1,5 +1,5 @@
 <?php
-include_once('./_common.php');
+include_once __DIR__.'/_common.php';
 if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
     http_response_code(403);
     exit('게시판을 통해 이용해 주세요.');

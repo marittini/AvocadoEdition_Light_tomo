@@ -16,11 +16,11 @@ $px_tags = pixiv_tags($write['wr_2'] ?? '');
 $px_note = pixiv_note($write ?? []);
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=3">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=4">', 0);
 ?>
 
 
-<section id="bo_w">
+<section id="bo_w" class="px-write theme-box">
 
 	<?php  if($board['bo_content_head']) { ?>
 		<div class="board-notice-box">
@@ -168,7 +168,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=3">
 		<p>이미지를 끌어 순서를 바꾸거나 버튼으로 이동하세요. 대표 이미지를 선택할 수 있습니다. 첨부 최대 <?=intval($file_count)?>장.</p>
 		<ol id="pixiv-file-list" class="px-file-list"></ol><div id="pixiv-file-inputs"></div><input type="hidden" name="pixiv_order" id="pixiv-order"><input type="hidden" name="pixiv_cover" id="pixiv-cover" value="<?=isset($px_cover['index'])?(int)$px_cover['index']:''?>">
 		<script type="application/json" id="pixiv-existing"><?=json_encode(array_map(static fn($f)=>['id'=>$f['index'],'url'=>html_entity_decode($f['url']),'name'=>stripslashes($f['source'])],$px_existing),JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?></script>
-		<script src="<?=$board_skin_url?>/write.js?v=2" defer></script>
+		<script src="<?=$board_skin_url?>/write.js?v=3" defer></script>
 		</td></tr><?php } ?>
 
 		<?php if ($is_guest) { //자동등록방지  ?>

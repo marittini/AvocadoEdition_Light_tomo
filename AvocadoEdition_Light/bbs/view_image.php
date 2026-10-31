@@ -37,6 +37,7 @@ if(is_file($filepath)) {
 }
 ?>
 
+<style>html,body { margin:0!important; padding:0!important; background:#111!important; background-image:none!important; min-height:100vh; } body>div { display:flex; justify-content:center; align-items:center; min-height:100vh; } body>div img { object-fit:contain; max-height:100vh; width:auto; height:auto!important; }</style>
 <div><?php echo $img ?></div>
 
 <script>

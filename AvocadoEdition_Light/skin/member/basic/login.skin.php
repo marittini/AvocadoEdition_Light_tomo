@@ -1,6 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
-if(strstr($url, 'adm')) {
+if(strstr((string)($url ?? ''), 'adm')) {
 	include_once($member_skin_path.'/login.admin.skin.php');
 } else {
 

@@ -33,7 +33,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 				<input type="hidden" name="w" value="<?php echo $w ?>">
 				<input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
 				<input type="hidden" name="wr_id" value="<?php echo $wr_id ?>">
-				<input type="hidden" name="comment_id" value="<?php echo $comment_id ?>">
+				<input type="hidden" name="comment_id" value="<?php echo $comment_id ?? '' ?>">
 				<input type="hidden" name="sfl" value="<?php echo $sfl ?>">
 				<input type="hidden" name="stx" value="<?php echo $stx ?>">
 				<input type="hidden" name="page" value="<?php echo $page ?>">

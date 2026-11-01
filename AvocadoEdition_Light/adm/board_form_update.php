@@ -5,9 +5,17 @@ include_once('./_common.php');
 if ($w == 'u')
 	check_demo();
 
-auth_check($auth[$sub_menu], 'w');
+auth_check($auth[$sub_menu] ?? '', 'w');
 
 check_admin_token();
+
+// 체크하지 않은 체크박스처럼 전송되지 않은 값은 빈 값으로 둔다(PHP 8 경고 방지, 저장 결과는 이전과 같음).
+$board_columns = sql_query(" SHOW COLUMNS FROM `{$g5['board_table']}` ", false);
+while ($board_columns && $board_column = sql_fetch_array($board_columns)) {
+    $board_field = $board_column['Field'];
+    if (!isset($_POST[$board_field])) $_POST[$board_field] = '';
+    if (!isset(${$board_field})) ${$board_field} = $_POST[$board_field];
+}
 
 // Synchronize POST and the legacy extracted variables used by group/all updates.
 foreach (['bo_content_head','bo_content_tail','bo_mobile_content_head','bo_mobile_content_tail'] as $editor_field) {

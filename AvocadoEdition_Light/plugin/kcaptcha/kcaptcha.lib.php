@@ -17,6 +17,7 @@
 # See kcaptcha_config.php for customization
 
 class KCAPTCHA{
+	var $keystring = ''; // PHP 8.2+ 동적 속성 경고 방지
 
 	// generates keystring and image
 	function image(){
@@ -169,10 +170,12 @@ class KCAPTCHA{
 				if($sx<0 || $sy<0 || $sx>=$width-1 || $sy>=$height-1){
 					continue;
 				}else{
-					$color=imagecolorat($img, $sx, $sy) & 0xFF;
-					$color_x=imagecolorat($img, $sx+1, $sy) & 0xFF;
-					$color_y=imagecolorat($img, $sx, $sy+1) & 0xFF;
-					$color_xy=imagecolorat($img, $sx+1, $sy+1) & 0xFF;
+					// 좌표는 정수로(이전의 암묵 변환과 같은 버림, PHP 8.1+ 경고 방지)
+					$ix=(int)$sx; $iy=(int)$sy;
+					$color=imagecolorat($img, $ix, $iy) & 0xFF;
+					$color_x=imagecolorat($img, $ix+1, $iy) & 0xFF;
+					$color_y=imagecolorat($img, $ix, $iy+1) & 0xFF;
+					$color_xy=imagecolorat($img, $ix+1, $iy+1) & 0xFF;
 				}
 
 				if($color==255 && $color_x==255 && $color_y==255 && $color_xy==255){
@@ -202,7 +205,7 @@ class KCAPTCHA{
 					$newblue=$newcolor0*$foreground_color[2]+$newcolor*$background_color[2];
 				}
 
-				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newred, $newgreen, $newblue));
+				imagesetpixel($img2, (int)$x, (int)$y, imagecolorallocate($img2, (int)$newred, (int)$newgreen, (int)$newblue));
 			}
 		}
 
@@ -240,6 +243,7 @@ function captcha_html($class="captcha")
     if(is_mobile())
         $class .= ' m_captcha';
 
+    $html = '';
     $html .= "\n".'<script>var g5_captcha_url  = "'.G5_CAPTCHA_URL.'";</script>';
     //$html .= "\n".'<script>var g5_captcha_path = "'.G5_CAPTCHA_PATH.'";</script>';
     $html .= "\n".'<script src="'.G5_CAPTCHA_URL.'/kcaptcha.js"></script>';

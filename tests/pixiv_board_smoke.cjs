@@ -302,12 +302,11 @@ const { chromium } = require("playwright"),
     await p.locator("#px-reader").evaluate((e) => getComputedStyle(e).position),
     "fixed",
   );
-  // Novel cards show the character count (spaces excluded) in the list; image works do not.
+  // Novel cards show the character count (spaces excluded) in the thumbnail badge, where image works show "N장".
   await p.goto(base + "/bbs/board.php?bo_table=" + id);
-  assert.equal(
-    await p.locator(".px-item").filter({ hasText: "소설 테스트" }).locator(".px-chars").innerText(),
-    "10,000자",
-  );
+  const novelCard = p.locator(".px-item").filter({ hasText: "소설 테스트" });
+  assert.equal((await novelCard.locator(".px-thumb .px-count").innerText()).trim(), "10,000자");
+  assert.equal(await novelCard.locator(".px-item-meta .px-chars").count(), 0, "not next to the date");
   assert.equal(await p.locator(".px-item").filter({ hasNotText: "소설 테스트" }).locator(".px-chars").count(), 0);
   // Secret tags and images are not exposed to another logged-in member.
   await p.setViewportSize({ width: 1280, height: 900 });

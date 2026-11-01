@@ -2,8 +2,9 @@
 
 ## 1. pixiv: 소설 글자 수
 
-`custom_skin/pixiv` list cards and series episode rows show the character count of novel works (spaces excluded,
-HTML tags and entities stripped) next to the date, e.g. `2026-10-31 10,000자`. Secret works do not show it.
+`custom_skin/pixiv` list cards and series episode thumbnails show the character count of novel works (spaces excluded,
+HTML tags and entities stripped) in the bottom-right thumbnail badge, the same place and style as `2장` on image works,
+e.g. `10,000자`. Secret works do not show it.
 
 - `pixiv.lib.php`: `pixiv_char_count()`; `pixiv_series_works()` also selects `wr_content`.
 - `list.skin.php`, `series.skin.php`, `style.css`.

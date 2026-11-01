@@ -135,6 +135,7 @@ function get_site_content($co_id) {
 
 	$result = "";
 	$co = sql_fetch( " select * from {$g5['content_table']} where co_id = '{$co_id}' ");
+	if (!is_array($co) || empty($co['co_id'])) return $result; // 등록되지 않은 화면
 
 	$pc_str = conv_content($co['co_content'], $co['co_html'], $co['co_tag_filter_use']);
 	$mo_str = conv_content($co['co_mobile_content'], $co['co_html'], $co['co_tag_filter_use']);

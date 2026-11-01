@@ -3,7 +3,7 @@ $sub_menu = "300100";
 include_once('./_common.php');
 include_once(G5_EDITOR_LIB);
 
-auth_check($auth[$sub_menu], 'w');
+auth_check($auth[$sub_menu] ?? '', 'w');
 
 $sql = " select count(*) as cnt from {$g5['group_table']} ";
 $row = sql_fetch($sql);
@@ -78,7 +78,15 @@ if (!isset($board['bo_mobile_subject'])) {
 
 $required = "";
 $readonly = "";
+$required_valid = "";
+$sound_only = "";
 if ($w == '') {
+	// 새 게시판: 게시판 테이블의 모든 칸을 빈 값으로 먼저 채운다(PHP 8 경고 방지). 아래에서 기본값을 덮어쓴다.
+	$board = is_array($board ?? null) ? $board : [];
+	$board_columns = sql_query(" SHOW COLUMNS FROM `{$g5['board_table']}` ", false);
+	while ($board_columns && $board_column = sql_fetch_array($board_columns)) {
+		if (!isset($board[$board_column['Field']])) $board[$board_column['Field']] = '';
+	}
 
 	$html_title .= ' 생성';
 
@@ -196,7 +204,7 @@ $pg_anchor = '<ul class="anchor">
 		<tr>
 			<th scope="row"><label for="bo_table">TABLE<?php echo $sound_only ?></label></th>
 			<td colspan="2">
-				<input type="text" name="bo_table" value="<?php echo $board['bo_table'] ?>" id="bo_table" <?php echo $required ?> <?php echo $readonly ?> class="frm_input <?php echo $reaonly ?> <?php echo $required ?> <?php echo $required_valid ?>" maxlength="20">
+				<input type="text" name="bo_table" value="<?php echo $board['bo_table'] ?>" id="bo_table" <?php echo $required ?> <?php echo $readonly ?> class="frm_input <?php echo $readonly ?> <?php echo $required ?> <?php echo $required_valid ?>" maxlength="20">
 				<?php if ($w == '') { ?>
 					영문자, 숫자, _ 만 가능 (공백없이 20자 이내)
 				<?php } else { ?>

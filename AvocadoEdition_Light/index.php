@@ -1,6 +1,7 @@
 <?php
 include_once('./_common.php');
 define('_INDEX_', true);
+$index_url = '';
 
 $enter = get_style('intro_use');
 $enter = $enter['cs_value'];

@@ -1,0 +1,157 @@
+@charset "utf-8";
+/*
+ * 갤러리 · 글 보관함 (custom_skin/gallery)
+ * 분류 = 접는 폴더, 그림 = 정사각 썸네일, 글 = 같은 크기의 종이 카드. 가는 선 · 작은 라벨 · 넉넉한 여백.
+ * 색과 글꼴은 지정하지 않는다. 관리자 > 디자인 설정을 그대로 따른다.
+ *   - 종이: .theme-box / 입력칸: .frm_input / 버튼: .ui-btn, .ui-btn.point, .ui-btn.etc
+ *   - 포인트 색: --gl-point (디자인 설정의 포인트 색에서 자동으로 채움)
+ *   - 선: 글자색을 옅게 섞어 쓴다(밝은 테마 · 어두운 테마 모두).
+ */
+.gl {
+	--gl-line: rgba(128, 128, 128, .28);
+	--gl-accent: var(--gl-point, currentColor);
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 16px 0 32px;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+}
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+	.gl { --gl-line: color-mix(in srgb, currentColor 16%, transparent); }
+}
+.gl p, .gl li { word-break: keep-all; }
+.gl [hidden] { display: none !important; }
+.gl .material-icons { font-size: 1em; line-height: 1; vertical-align: -0.125em; }
+.gl .board-notice-box { margin-bottom: 12px; }
+/* 사이트 전역의 * {transition: all .3s}가 펼치기 · 팝업을 늦추지 않게 */
+.gl-folder-body, .gl-folder-head *, .gl-modal, .gl-modal *, .gl-c-editor { transition: none; }
+
+.gl .gl-paper { padding: 16px 20px; box-sizing: border-box; }
+.gl-bar { display: flex; justify-content: flex-end; gap: 4px; margin-bottom: 10px; }
+.gl-empty { margin: 0; padding: 24px 0; text-align: center; font-size: 13px; opacity: .62; }
+.gl-result { margin: 0 0 14px; font-size: 12px; opacity: .7; }
+.gl-result b { font-weight: normal; font-variant-numeric: tabular-nums; }
+
+/* ---------- 폴더(분류) ---------- */
+.gl-folders { display: grid; gap: 8px; }
+.gl .gl-folder { padding: 0; }
+.gl-folder-head { margin: 0; font-size: inherit; font-weight: normal; }
+.gl-folder-head button { display: flex; align-items: center; gap: 8px; width: 100%; margin: 0; padding: 12px 16px; border: 0; background: none; color: inherit; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.gl-folder-head button:focus-visible { outline: 1px solid currentColor; outline-offset: -4px; }
+.gl-folder-icon { font-size: 18px !important; opacity: .55; }
+.gl-folder-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gl-folder-count { font-size: 12px; opacity: .5; font-variant-numeric: tabular-nums; }
+.gl-chev { margin-left: auto; font-size: 18px !important; opacity: .5; }
+[aria-expanded="true"] > .gl-chev { transform: rotate(180deg); }
+.gl-folder-body { padding: 4px 16px 16px; border-top: 1px solid var(--gl-line); padding-top: 16px; }
+
+/* ---------- 카드 ---------- */
+.gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 12px; margin: 0; padding: 0; list-style: none; }
+.gl-card { display: block; min-width: 0; color: inherit; text-decoration: none; }
+.gl-card:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+.gl-thumb, .gl-sheet { display: block; aspect-ratio: 1; overflow: hidden; box-shadow: inset 0 0 0 1px var(--gl-line); }
+.gl-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.gl-card:hover .gl-thumb img { opacity: .85; }
+.gl-sheet { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px; box-sizing: border-box; font-size: 12px; opacity: .55; }
+.gl-sheet .material-icons { font-size: 22px; }
+.gl-page { align-items: stretch; justify-content: flex-start; gap: 6px; text-align: left; opacity: 1; }
+.gl-kind { font-size: 11px; opacity: .55; }
+.gl-excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; font-size: 12px; line-height: 1.65; opacity: .78; }
+.gl-count { margin-top: auto; font-size: 11px; opacity: .5; font-variant-numeric: tabular-nums; }
+.gl-card:hover .gl-page { box-shadow: inset 0 0 0 1px var(--gl-accent); }
+.gl-cap { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 13px; }
+.gl-cap .material-icons { flex: none; font-size: 13px; opacity: .55; }
+.gl-title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ---------- 아래: 쪽 · 검색 ---------- */
+.gl .pg_wrap { margin-top: 14px; }
+.gl-search { display: flex; align-items: center; gap: 4px; margin: 14px 0 0; }
+.gl-search .frm_input { width: 180px; box-sizing: border-box; }
+
+/* ---------- 팝업 ---------- */
+html.gl-modal-open { overflow: hidden; }
+.gl-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 24px; }
+.gl-modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); }
+.gl .gl-modal-panel { position: relative; width: 100%; max-width: 760px; max-height: calc(100vh - 48px); overflow: auto; padding: 28px 32px; box-sizing: border-box; outline: 0; overscroll-behavior: contain; }
+.gl-modal.is-loading .gl-modal-panel { opacity: .6; }
+.gl-modal-close { position: sticky; top: 0; float: right; z-index: 1; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; margin: -12px -16px 0 8px; }
+.gl-modal-body:empty { min-height: 120px; }
+
+/* ---------- 본문 ---------- */
+.gl-page-view { max-width: 760px; }
+.gl-page-view .gl-paper { padding: 28px 32px; }
+.gl-v-head { margin-bottom: 20px; }
+.gl-v-meta, .gl-v-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; margin: 0; font-size: 12px; opacity: .6; font-variant-numeric: tabular-nums; }
+.gl-v-vis { display: inline-flex; align-items: center; gap: 3px; }
+.gl-v-title { margin: 6px 0 6px; font-size: 22px; font-weight: normal; line-height: 1.35; text-wrap: balance; }
+.gl-v-images { margin: 0 0 18px; text-align: center; }
+.gl-v-images img, .gl-v-body img { max-width: 100%; height: auto; }
+.gl-v-images img { display: block; margin: 0 auto 12px; }
+.gl-v-body { font-size: 14px; line-height: 1.8; }
+.gl-view.is-text .gl-v-body { max-width: 36em; margin: 0 auto; font-size: 15px; line-height: 1.95; }
+.gl-view.is-text .gl-v-body p { margin: 0 0 1em; }
+.gl-v-files { margin: 18px 0 0; padding: 0; list-style: none; font-size: 13px; }
+.gl-v-files a { color: inherit; }
+.gl-v-files span { opacity: .55; }
+
+.gl-v-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; padding: 12px 0; border-top: 1px solid var(--gl-line); border-bottom: 1px solid var(--gl-line); }
+.gl-v-nav a { display: flex; flex-direction: column; min-width: 0; color: inherit; text-decoration: none; }
+.gl-v-nav a.is-next { grid-column: 2; text-align: right; }
+.gl-v-nav small { font-size: 11px; opacity: .55; }
+.gl-v-nav span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; }
+.gl-v-nav a:hover span { box-shadow: inset 0 -1px 0 var(--gl-accent); }
+.gl-v-actions { display: flex; justify-content: flex-end; gap: 4px; margin: 14px 0 0; }
+
+/* ---------- 댓글 ---------- */
+.gl-comments { margin-top: 22px; }
+.gl-c-title { margin: 0 0 8px; font-size: 12px; font-weight: normal; opacity: .6; }
+.gl-c-title b { font-weight: normal; font-variant-numeric: tabular-nums; }
+.gl-c-list { margin: 0 0 10px; padding: 0; list-style: none; border-top: 1px solid var(--gl-line); }
+.gl-comment { padding: 8px 0; border-bottom: 1px solid var(--gl-line); }
+.gl-c-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; font-size: 12px; }
+.gl-c-head b { font-weight: normal; }
+.gl-c-head time { font-size: 11px; opacity: .55; font-variant-numeric: tabular-nums; }
+.gl-c-tools { display: inline-flex; gap: 4px; margin-left: auto; }
+.gl-c-tools .ui-btn { line-height: 1.7; }
+.gl-c-body { margin-top: 2px; font-size: 13px; line-height: 1.6; }
+.gl-c-editor { margin-top: 6px; }
+.gl-c-form textarea.frm_input { display: block; width: 100%; height: auto; min-height: 34px; padding: 6px 10px; box-sizing: border-box; line-height: 1.6; resize: vertical; }
+.gl-c-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.gl-c-opts { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.gl-c-opts .frm_input { width: 110px; box-sizing: border-box; }
+.gl-c-btns { display: flex; gap: 4px; margin-left: auto; }
+.gl-c-captcha { margin-top: 8px; }
+
+/* ---------- 쓰기 ---------- */
+.gl-write { max-width: 760px; }
+.gl-write .gl-paper { padding: 20px 24px; }
+.gl-w-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 12px; align-items: center; margin-bottom: 10px; }
+.gl-w-row.is-top { align-items: start; }
+.gl-w-label { font-size: 12px; opacity: .62; }
+.gl-w-full { width: 100%; box-sizing: border-box; }
+.gl-w-seg, .gl-w-inline { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; }
+.gl-w-seg label, .gl-w-check { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; cursor: pointer; }
+.gl-w-inline .frm_input { width: auto; }
+.gl-w-note { margin: 0 0 6px; font-size: 12px; opacity: .6; }
+.gl-w-editor { margin: 14px 0; }
+.gl-w-files { display: grid; gap: 6px; }
+.gl-w-file { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.gl-w-file .frm_input { max-width: 100%; }
+.gl-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; }
+
+@media (max-width: 680px) {
+	.gl { padding: 8px 0 24px; }
+	.gl .gl-paper, .gl-page-view .gl-paper, .gl-write .gl-paper { padding: 16px 14px; }
+	.gl-folder-head button { padding: 11px 14px; }
+	.gl-folder-body { padding: 14px 14px 14px; }
+	.gl-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px 10px; }
+	.gl-modal { padding: 0; }
+	.gl .gl-modal-panel { max-width: none; height: 100%; max-height: none; padding: 20px 16px; border-radius: 0; }
+	.gl-v-title { font-size: 19px; }
+	.gl-view.is-text .gl-v-body { font-size: 15px; }
+	.gl-w-row { grid-template-columns: minmax(0, 1fr); }
+	.gl-search { width: 100%; }
+	.gl-search .frm_input { flex: 1; width: auto; min-width: 0; }
+	.gl-c-opts .frm_input { flex: 1 1 0; width: auto; min-width: 0; }
+	.gl-c-opts:has(.frm_input) { width: 100%; }
+}

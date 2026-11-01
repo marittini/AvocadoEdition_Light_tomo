@@ -132,11 +132,14 @@
 .bbscat .board-comment-list .co-info span + span::before { content: ""; display: inline-block; width: 1px; height: 8px; margin: 0 10px; vertical-align: middle; background: currentColor; opacity: .5; }
 .bbscat .board-comment-list .item.reply .co-name { background: none; }
 .bbscat .board-comment-list + .board-comment-write { margin-top: 10px; }
-.bbscat .board-comment-form { position: relative; padding-right: 80px; }
-.bbscat .board-comment-form .btn_confirm { display: block; padding: 0; position: absolute; top: 0; right: 0; bottom: 29px; width: 80px; }
-.bbscat .board-comment-form .btn_confirm .ui-btn { width: 100%; height: 100%; }
-.bbscat .board-comment-form p { margin: 0; padding: 5px 10px; }
-.bbscat .board-comment-form textarea { display: block; width: 100%; height: 50px; box-sizing: border-box; resize: vertical; }
+/* 댓글 쓰기: [글상자 | 등록] 한 줄, 아래에 [비밀글 · · · 이모티콘]. 등록 버튼은 글상자 높이에 맞춘다. */
+.bbscat .board-comment-form { display: grid; grid-template-columns: minmax(0, 1fr) 84px; gap: 6px 8px; align-items: stretch; }
+.bbscat .board-comment-form > #char_cnt, .bbscat .board-comment-form > .bbscat-cform-opts { grid-column: 1 / -1; }
+.bbscat .board-comment-form textarea { grid-column: 1; display: block; width: 100%; height: 56px; min-height: 56px; box-sizing: border-box; resize: vertical; }
+.bbscat .board-comment-form .btn_confirm { grid-column: 2; grid-row: span 1; display: flex; margin: 0; padding: 0; }
+.bbscat .board-comment-form .btn_confirm .ui-btn { flex: 1; width: 100%; height: auto; min-height: 0; margin: 0; padding: 0 6px; line-height: 1.3; white-space: nowrap; }
+.bbscat .board-comment-form .bbscat-cform-opts { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; padding: 0 4px; font-size: 13px; }
+.bbscat .board-comment-form .bbscat-cform-opts > span { display: inline-flex; align-items: center; gap: 4px; }
 
 /* ---------- 모바일 ---------- */
 @media all and (max-width: 640px) {

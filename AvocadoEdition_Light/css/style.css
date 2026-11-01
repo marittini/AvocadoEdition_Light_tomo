@@ -217,7 +217,7 @@ th, td {border:none;}
 #bo_vc .member, #bo_vc .guest, #bo_vc .sv_member, #bo_vc .sv_guest {font-weight:bold}
 .bo_vc_hdinfo {display:inline-block;margin:0 15px 0 5px}
 #bo_vc h1 {position:absolute;font-size:0;line-height:0;overflow:hidden}
-#bo_vc a {color:#fff;text-decoration:none}
+#bo_vc a {color:inherit;text-decoration:none} /* 예전엔 #fff로 고정돼 밝은 테마에서 댓글 이름 · 답글/수정/삭제가 안 보였다. 디자인 설정의 글자색을 따른다 */
 #bo_vc p {padding:0 0 5px;line-height:1.8em}
 #bo_vc p a {text-decoration:underline}
 #bo_vc p a.s_cmt {text-decoration:none}
@@ -227,7 +227,7 @@ th, td {border:none;}
 #bo_vc footer:after {display:block;visibility:hidden;clear:both;content:""}
 
 .bo_vc_act {float:right;margin:0;list-style:none;zoom:1}
-.bo_vc_act a		{ color:#fff; }
+.bo_vc_act a		{ color:inherit; }
 .bo_vc_act:after {display:block;visibility:hidden;clear:both;content:""}
 .bo_vc_act li {float:left;margin-left:5px}
 

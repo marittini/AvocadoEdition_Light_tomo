@@ -92,6 +92,29 @@ const { chromium, devices } = require("playwright"),
     await form.locator("#btn_submit").click();
     await p.waitForLoadState();
     assert.equal(await p.locator("#bo_vc img.emoticon, .cmt_contents img.emoticon").count() >= 1, true, "pixiv 댓글에 이모티콘 이미지");
+    // 로그인한 상태에서도 댓글 작성자 · 답변/수정/삭제가 흰 글자로 사라지지 않는다(예전 core의 #bo_vc a {color:#fff})
+    const white = await p.locator("#bo_vc a").evaluateAll((els) => els.filter((e) => e.offsetParent && getComputedStyle(e).color === "rgb(255, 255, 255)" && getComputedStyle(e).backgroundColor === "rgba(0, 0, 0, 0)").map((e) => e.textContent.trim()));
+    assert.deepEqual(white, [], "pixiv 댓글 링크가 흰색이 아님");
+
+    // 2-1. bbscategory: 댓글 칸 [글상자 | 등록] + 아래 [비밀글 · 이모티콘], 링크 색
+    const bc = await board("bbscategory", "bo_comment_level=1");
+    await p.goto(base + "/bbs/write.php?bo_table=" + bc);
+    await p.locator("#wr_subject").fill("댓글 모양");
+    await p.locator(".ProseMirror").first().click();
+    await p.keyboard.insertText("본문");
+    await p.locator("#btn_submit").click();
+    await p.waitForLoadState();
+    const bcf = p.locator("form[name=fviewcomment]");
+    assert.equal(await bcf.locator(".emoticon-auto-bar").count(), 0, "스킨에 버튼이 있으니 자동 버튼은 붙지 않음");
+    const [ta, btn] = await Promise.all([bcf.locator("textarea[name=wr_content]").boundingBox(), bcf.locator("#btn_submit").boundingBox()]);
+    assert.ok(Math.abs(ta.height - btn.height) <= 2 && Math.abs(ta.y - btn.y) <= 2, "등록 버튼은 글상자 높이에 맞춤: " + ta.height + " / " + btn.height);
+    await bcf.locator("textarea[name=wr_content]").fill("좋아요 ");
+    await pick(bcf.locator(".bbscat-cform-opts"), areaHas("form[name=fviewcomment] textarea[name=wr_content]"));
+    await bcf.locator("#btn_submit").click();
+    await p.waitForLoadState();
+    assert.equal(await p.locator(".board-comment-list img.emoticon").count(), 1, "bbscategory 댓글에 이모티콘 이미지");
+    const bcWhite = await p.locator("#bo_vc a, .board-comment-list a").evaluateAll((els) => els.filter((e) => e.offsetParent && getComputedStyle(e).color === "rgb(255, 255, 255)").map((e) => e.textContent.trim()));
+    assert.deepEqual(bcWhite, [], "bbscategory 댓글 이름 · 답글/수정/삭제가 흰색이 아님");
 
     // 3. 다이어리: 본문 편집기
     const dy = await board("diary");
@@ -177,7 +200,7 @@ const { chromium, devices } = require("playwright"),
     await mc.close();
 
     assert.deepEqual(errors, [], "자바스크립트 오류 없음");
-    console.log("emoticon skins smoke ok", gb, px, dy, ot);
+    console.log("emoticon skins smoke ok", gb, px, bc, dy, ot);
   } finally {
     sql(`UPDATE ${prefix}config SET cf_delay_sec=${Number(delay) || 0};`);
     await b.close();

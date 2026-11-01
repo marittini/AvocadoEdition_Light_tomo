@@ -112,3 +112,24 @@ The page layer used to resize to every image, so its width jumped between pages.
 New: `tests/font_order_smoke.cjs`, `tests/ucho_menu_smoke.cjs`.
 Extended: `tests/emoticon_skins_smoke.cjs` (OTT review body/comment/focus, diary emoticon width),
 `tests/emoticon_admin_smoke.cjs`, `tests/otaku_smoke.cjs`, `tests/gallery_smoke.cjs`, skin paths in all tests.
+
+## 추가 수정 (리뷰 반영)
+
+- **Emoticon size in post bodies** (diary and others): the shared `#bo_v_con img { height:auto !important }` rule beat
+  `img.emoticon`. The size style now carries two `:not(#…)` (no filtering, just two IDs of priority).
+- **Comment names and 답글 · 수정 · 삭제 were white when logged in** (bbscategory, pixiv, any skin using `#bo_vc`): the
+  original core `css/style.css` hardcoded `#bo_vc a` and `.bo_vc_act a` to `#fff`. Both now inherit the theme colour.
+  `style.css` gets a version query so browsers reload it.
+- **bbscategory comment form**: [글상자 | 등록] on one row with the button exactly as tall as the box, then
+  [비밀글 · 이모티콘] below. The reply link reads "답글" instead of "R".
+- **Automatic emoticon bar** (`js/emoticon-picker.js`): when the comment box sits in a row (flex / grid / absolute
+  button), the bar goes below that row instead of inside it.
+- **Captcha (자동등록방지)**: new shared `css/captcha.css`, loaded by `captcha_html()`. PC: image · listen · refresh ·
+  input on one line, hint below. Phone: image and icons, then a full-width input. Round icon buttons, numeric keypad.
+- **otaku**: the bubble tail overlaps the bubble by 1px (no hairline gap at some widths); mobile list minis up to 88px;
+  categories **자캐 · 드림** (or the board's own category list when board categories are on) with list tabs and counts,
+  a category chip on the post, and AU posts inheriting the original's category.
+- **gallery**: rounded thumbnails and text cards.
+
+New test: `tests/captcha_style_smoke.cjs`. Extended: `emoticon_admin_smoke` (diary body size), `emoticon_skins_smoke`
+(comment link colours, bbscategory comment form), `otaku_smoke` (categories).

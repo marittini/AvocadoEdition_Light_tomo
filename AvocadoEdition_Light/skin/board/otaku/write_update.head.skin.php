@@ -11,6 +11,16 @@ if (!otaku_table()) alert('프로필 저장 테이블을 만들 수 없습니다
 $otaku_is_au = $w === 'r' || ($w === 'u' && ($wr['wr_reply'] ?? '') !== '');
 if ($w === 'r' && ($wr['wr_reply'] ?? '') !== '') alert('AU는 원본 글에만 추가할 수 있습니다.');
 
+// 분류(자캐 · 드림 등): 원본 글은 고른 값, AU는 원본 글의 분류
+$otaku_cats = otaku_categories($board);
+if ($otaku_is_au) {
+    $otaku_root = sql_fetch("SELECT ca_name FROM `{$write_table}` WHERE wr_num='".(int)$wr['wr_num']."' AND wr_reply='' AND wr_is_comment=0");
+    $otaku_cat = (string)($otaku_root['ca_name'] ?? '');
+} else {
+    $otaku_cat = trim(stripslashes((string)($_POST['ca_name'] ?? '')));
+}
+$ca_name = in_array($otaku_cat, $otaku_cats, true) ? sql_real_escape_string($otaku_cat) : '';
+
 $otaku_entries = otaku_entries($write_table);
 $otaku_data = otaku_blank();
 $otaku_data['title'] = otaku_clean($_POST['otaku_title'] ?? '', 60);

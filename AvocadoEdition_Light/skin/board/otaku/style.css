@@ -78,7 +78,8 @@
 	background: var(--otaku-person, rgba(128, 128, 128, .14)); color: var(--otaku-person-text, inherit);
 }
 .otaku-bubble::before {
-	content: ''; position: absolute; left: -7px; top: 50%; margin-top: -7px; border: 7px solid transparent; border-left: 0;
+	/* 1px 겹쳐 둔다: 창 너비에 따라 소수점 위치가 반올림되며 꼬리와 상자 사이에 1px 틈이 보이던 것 */
+	content: ''; position: absolute; left: -6px; top: 50%; margin-top: -7px; border: 7px solid transparent; border-left: 0;
 	border-right-color: var(--otaku-person, rgba(128, 128, 128, .14));
 }
 /* 사진이 없으면 가리킬 곳이 없으니 꼬리 없이 */
@@ -127,6 +128,17 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 /* ---------- 아래 버튼 ---------- */
 .otaku-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .otaku-actions > div, .otaku-version-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- 목록: 분류 탭(전체 · 자캐 · 드림) ---------- */
+.otaku-cats { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 0 0 22px; border-bottom: 1px solid var(--otaku-line); }
+.otaku-cats a { padding: 0 0 9px; color: inherit; text-decoration: none; font-size: 14px; opacity: .55; }
+.otaku-cats a small { margin-left: 2px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.otaku-cats a:hover { opacity: .85; }
+.otaku-cats a.is-on { opacity: 1; box-shadow: inset 0 -2px 0 var(--otaku-accent); }
+.otaku-cats a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+/* 읽기 화면 머리의 분류 */
+.otaku-cat-chip { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--otaku-line); color: inherit; text-decoration: none; font-size: 11px; line-height: 18px; }
+.otaku-cat-chip:hover { box-shadow: inset 0 0 0 1px var(--otaku-accent); }
 
 /* ---------- 목록: 썸네일 카드 ---------- */
 .otaku-list { max-width: 1100px; }
@@ -246,9 +258,12 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 	.otaku-id { grid-template-columns: 112px minmax(0, 1fr); gap: 14px; margin-bottom: 16px; }
 	.otaku-tl li { grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
 
-	.otaku-cards { grid-template-columns: minmax(0, 1fr); gap: 30px; }
-	.otaku-card-minis img { max-height: 64px; max-width: 64px; }
-	.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text b { padding-right: 140px; }
+	.otaku-cards { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+	/* 휴대폰은 카드가 한 줄 전체라 미니를 크게 */
+	.otaku-card-minis { bottom: -22px; gap: 4px; }
+	.otaku-card-minis img { max-height: 88px; max-width: 88px; }
+	.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text { padding-top: 14px; }
+	.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text b { padding-right: 196px; }
 
 	.otaku-cover-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
 	.otaku-id-edit { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }

@@ -127,6 +127,10 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 				<div class="otaku-cover-grid">
 				<?=$otaku_pick(OTAKU_SLOTS['cover'], '썸네일', 'is-cover')?>
 				<div class="otaku-cover-fields">
+					<?php $otaku_cats = otaku_categories($board); $otaku_cat_now = in_array((string)($write['ca_name'] ?? ''), $otaku_cats, true) ? (string)$write['ca_name'] : ((string)$sca !== '' && in_array((string)$sca, $otaku_cats, true) ? (string)$sca : $otaku_cats[0]); ?>
+					<fieldset class="otaku-f otaku-marks otaku-cat-pick"><legend class="sound_only">분류</legend><span class="otaku-marks-title" aria-hidden="true">분류</span>
+						<?php foreach ($otaku_cats as $ck) { ?><label><input type="radio" name="ca_name" value="<?=otaku_e($ck)?>"<?=$ck === $otaku_cat_now ? ' checked' : ''?>> <?=otaku_e($ck)?></label><?php } ?>
+					</fieldset>
 					<label class="otaku-f"><span>페어 이름 <small>선택</small></span><input type="text" name="otaku_title" class="frm_input" value="<?=otaku_e($otaku['title'])?>" maxlength="60" placeholder="비우면 두 사람 이름"></label>
 					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 모양</legend><span class="otaku-marks-title" aria-hidden="true">한마디 모양</span>
 						<?php foreach (OTAKU_QSTYLES as $qk => $qv) { ?><label><input type="radio" name="otaku_qstyle" value="<?=$qk?>"<?=otaku_qstyle($otaku['qstyle'] ?? '') === $qk ? ' checked' : ''?>> <?=otaku_e($qv)?></label><?php } ?>

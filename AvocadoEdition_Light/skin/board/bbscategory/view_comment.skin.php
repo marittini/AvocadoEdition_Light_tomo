@@ -37,7 +37,7 @@ var char_max = parseInt(<?=(int)$comment_max?>); // 최대
 					$c_reply_href = './board.php?'.$query_string.'&amp;c_id='.$comment_id.'&amp;w=c#bo_vc_w';
 					$c_edit_href = './board.php?'.$query_string.'&amp;c_id='.$comment_id.'&amp;w=cu#bo_vc_w';
 				?>
-					<?php if ($list[$i]['is_reply']) { ?><span><a href="<?=$c_reply_href?>" onclick="comment_box('<?=$comment_id?>', 'c'); return false;" title="답글" aria-label="답글">R</a></span><?php } ?>
+					<?php if ($list[$i]['is_reply']) { ?><span><a href="<?=$c_reply_href?>" onclick="comment_box('<?=$comment_id?>', 'c'); return false;" >답글</a></span><?php } ?>
 					<?php if ($list[$i]['is_edit']) { ?><span><a href="<?=$c_edit_href?>" onclick="comment_box('<?=$comment_id?>', 'cu'); return false;">수정</a></span><?php } ?>
 					<?php if ($list[$i]['is_del']) { ?><span><a href="<?=$list[$i]['del_link']?>" onclick="return comment_delete();">삭제</a></span><?php } ?>
 				<?php } ?>
@@ -73,10 +73,13 @@ var char_max = parseInt(<?=(int)$comment_max?>); // 최대
 			<label for="wr_content" class="sound_only">댓글 내용</label>
 			<textarea id="wr_content" name="wr_content" maxlength="10000" required class="required" title="내용"<?php if ($comment_min || $comment_max) { ?> onkeyup="check_byte('wr_content', 'char_count');"<?php } ?>><?=bbscat_e($c_wr_content)?></textarea>
 			<?php if ($comment_min || $comment_max) { ?><script>check_byte('wr_content', 'char_count');</script><?php } ?>
-			<p><input type="checkbox" name="wr_secret" value="secret" id="wr_secret"> <label for="wr_secret">비밀글</label></p>
 			<div class="btn_confirm">
 				<button type="submit" id="btn_submit" class="ui-btn">댓글등록</button>
 			</div>
+			<p class="bbscat-cform-opts">
+				<span><input type="checkbox" name="wr_secret" value="secret" id="wr_secret"> <label for="wr_secret">비밀글</label></span>
+				<?php include_once G5_LIB_PATH.'/emoticon.lib.php'; echo emoticon_button('textarea'); // 이모티콘(등록된 것이 있을 때만) ?>
+			</p>
 		</div>
 	</form>
 </div>

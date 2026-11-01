@@ -101,7 +101,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	<input type="hidden" name="w" value="<?php echo $w ?>" id="w">
 	<input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
 	<input type="hidden" name="wr_id" value="<?php echo $wr_id ?>">
-	<input type="hidden" name="comment_id" value="<?php echo $c_id ?>" id="comment_id">
+	<input type="hidden" name="comment_id" value="<?php echo (int)($c_id ?? 0) ?>" id="comment_id">
 	<input type="hidden" name="sca" value="<?php echo $sca ?>">
 	<input type="hidden" name="sfl" value="<?php echo $sfl ?>">
 	<input type="hidden" name="stx" value="<?php echo $stx ?>">
@@ -142,7 +142,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 			<td>
 				<?php if ($comment_min || $comment_max) { ?><strong id="char_cnt"><span id="char_count"></span>글자</strong><?php } ?>
 				<textarea id="wr_content" name="wr_content" maxlength="10000" required class="required" title="내용"
-				<?php if ($comment_min || $comment_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?php } ?>><?php echo $c_wr_content;  ?></textarea>
+				<?php if ($comment_min || $comment_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?php } ?>><?php echo htmlspecialchars((string)($c_wr_content ?? ""), ENT_QUOTES, "UTF-8");  ?></textarea>
 				<?php if ($comment_min || $comment_max) { ?><script> check_byte('wr_content', 'char_count'); </script><?php } ?>
 				<script>
 				$(document).on( "keyup change", "textarea#wr_content[maxlength]", function(){

@@ -340,6 +340,7 @@ fwrite($f, "\$g5['new_win_table'] = G5_TABLE_PREFIX.'new_win'; // 새창 테이�
 fwrite($f, "\$g5['menu_table'] = G5_TABLE_PREFIX.'menu'; // 메뉴관리 테이블\n");
 fwrite($f, "\$g5['banner_table'] = G5_TABLE_PREFIX.'banner'; // 배너 테이블\n");
 fwrite($f, "\$g5['css_table'] = G5_TABLE_PREFIX.'css_config'; // CSS STYLE 정의 저장하는 테이블\n");
+fwrite($f, "\$g5['emoticon_table'] = G5_TABLE_PREFIX.'emoticon'; // 이모티콘 테이블\n");
 fwrite($f, "?>");
 
 fclose($f);

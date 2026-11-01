@@ -87,7 +87,7 @@ $px_href = static fn($row) => $px_base.'&amp;wr_id='.(int)$row['wr_id'];
 				<span class="px-episode-no">#<?=(int)$px_w['px_no']?></span>
 				<strong class="px-episode-name"><?php if ($px_secret) { ?><span class="px-lock" aria-label="비밀글">🔒</span><?php } ?><?=pixiv_escape($px_w['wr_subject'])?></strong>
 				<?php if (!$px_secret && trim($px_w['wr_4']) !== '') { ?><span class="px-episode-note"><?=pixiv_escape(cut_str($px_w['wr_4'], 80, '…'))?></span><?php } ?>
-				<time datetime="<?=pixiv_escape(str_replace(' ','T',$px_w['wr_datetime']))?>"><?=pixiv_escape(substr($px_w['wr_datetime'],0,10))?></time>
+				<span class="px-episode-meta"><time datetime="<?=pixiv_escape(str_replace(' ','T',$px_w['wr_datetime']))?>"><?=pixiv_escape(substr($px_w['wr_datetime'],0,10))?></time><?php if (!$px_secret && $px_w['wr_1']==='pixiv:novel') { ?><span class="px-chars"><?=number_format(pixiv_char_count((string)$px_w['wr_content']))?>자</span><?php } ?></span>
 			</span>
 		</a></li>
 	<?php } ?>

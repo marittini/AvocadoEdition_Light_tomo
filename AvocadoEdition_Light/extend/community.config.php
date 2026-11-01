@@ -241,6 +241,9 @@ function get_site_content($co_id) {
 }
 
 
+// 이모티콘 테이블: 이전 설치본의 data/dbconfig.php에는 이 줄이 없어서 여기서 채운다.
+if (empty($g5['emoticon_table'])) $g5['emoticon_table'] = G5_TABLE_PREFIX.'emoticon';
+
 function emote_ev($comment) {
 	global $g5;
 

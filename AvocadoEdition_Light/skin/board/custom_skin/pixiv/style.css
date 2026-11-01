@@ -605,6 +605,8 @@
 a.px-item-title:hover { text-decoration: underline; }
 .px-item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 12px; min-width: 0; }
 .px-item-meta time, .px-item-meta .px-upload-date { margin: 0; opacity: .65; font-size: 12px; display: inline; }
+/* 소설 글자 수(공백 제외) */
+.px-chars { opacity: .65; font-size: 12px; font-variant-numeric: tabular-nums; }
 .px-series-chip {
   display: inline-flex; align-items: center; gap: 4px; max-width: 100%; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 700; text-decoration: none;
@@ -652,6 +654,7 @@ a.px-item-title:hover { text-decoration: underline; }
 .px-episode-name { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .px-episode-note { font-size: 13px; opacity: .8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .px-episode-body time { font-size: 12px; opacity: .6; }
+.px-episode-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
 
 /* Series editor */
 .px-series-edit { padding: 24px; border-radius: 16px; margin-top: 12px; }

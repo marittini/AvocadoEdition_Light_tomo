@@ -1,0 +1,23 @@
+@charset "utf-8";
+/* 클릭 효과(tail.click_effect.php): 누른 자리에서 테두리만 있는 원이 퍼지며 사라진다. 색은 디자인 설정의 포인트 색. */
+.click-effect {
+	position: fixed;
+	z-index: 2147483000;
+	width: var(--click-effect-size, 120px);
+	height: var(--click-effect-size, 120px);
+	margin: calc(var(--click-effect-size, 120px) / -2) 0 0 calc(var(--click-effect-size, 120px) / -2);
+	border: 2px solid var(--click-effect-color, currentColor);
+	border-radius: 50%;
+	box-sizing: border-box;
+	pointer-events: none;
+	transform: scale(.05);
+	opacity: 1;
+	animation: click-effect var(--click-effect-speed, .4s) ease-out forwards;
+	transition: none;
+}
+@keyframes click-effect {
+	to { transform: scale(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.click-effect { display: none; }
+}

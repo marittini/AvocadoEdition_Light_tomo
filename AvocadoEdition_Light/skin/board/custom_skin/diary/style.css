@@ -94,6 +94,7 @@ a.diary-year-step:hover, a.diary-year-step:focus-visible { opacity: 1; color: va
 .diary-title-input.frm_input:focus { outline: none; border-bottom-color: var(--diary-point, currentColor); }
 .diary-guide { margin: -14px 0 20px; font-size: 12px; opacity: .75; }
 .diary-editor { margin-bottom: 8px; }
+.diary-emoticon { display: flex; justify-content: flex-end; margin-top: 6px; }
 .diary-field { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 16px; }
 .diary-label { font-size: 12px; letter-spacing: .04em; opacity: .75; }
 .diary-options { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--diary-line); font-size: 13px; }

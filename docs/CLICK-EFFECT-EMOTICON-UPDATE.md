@@ -49,3 +49,24 @@ TEST_URL=... TEST_USER=admin TEST_PASSWORD=... TEST_MEMBER=<member id> TEST_IMAG
 TEST_URL=... TEST_USER=admin TEST_PASSWORD=... node tests/click_effect_smoke.cjs
 TEST_URL=... TEST_USER=admin TEST_PASSWORD=... TEST_IMAGE=... node tests/pixiv_board_smoke.cjs   # includes the list character count
 ```
+
+## 4. 다이어리 · 방명록 · pixiv 이모티콘
+
+Shared module `lib/emoticon.lib.php` + `js/emoticon-picker.js` + `css/emoticon-picker.css`:
+
+- `emoticon_button($target)`: an "이모티콘" button next to the input. It opens a list popup (image + code, box colours from
+  `.theme-box`), and picking one inserts the code at the cursor — into the form's `wr_content` textarea, or into the site
+  editor with `editor:<field id>` (`window.tomoEditors`). The popup stays inside the viewport, closes on Esc / outside click.
+  Nothing is printed when no emoticon is registered.
+- `emoticon_html($html)`: replaces codes with images in the text parts of HTML only (tags untouched). Posts are stored with
+  the codes; images are added only when shown.
+
+Used in:
+
+| Skin | Where |
+| --- | --- |
+| `custom_skin/guestbook` | post and comment forms; entries and comments |
+| `custom_skin/pixiv` | comment form; comments |
+| `custom_skin/diary` | under the editor in the write page; post body |
+
+Test: `tests/emoticon_skins_smoke.cjs` (registers an emoticon, then picks and posts it in all three skins).

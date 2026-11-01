@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
+include_once G5_LIB_PATH.'/emoticon.lib.php'; // 이모티콘(관리자 > 이모티콘관리)
 
 /*
  * 다이어리 게시판 (custom_skin/diary)

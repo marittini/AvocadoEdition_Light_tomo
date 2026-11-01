@@ -27,7 +27,7 @@ for ($i = 0; $i < count($view['file']); $i++) {
 
 		<div class="diary-body">
 			<?php if ($diary_images !== '') { ?><div id="bo_v_img" class="diary-images"><?=$diary_images?></div><?php } ?>
-			<div id="bo_v_con"><?=get_view_thumbnail($view['content'])?></div>
+			<div id="bo_v_con"><?=emoticon_html(get_view_thumbnail($view['content']))?></div>
 		</div>
 
 		<?php if ($diary_files) { ?>

@@ -77,7 +77,6 @@ const { chromium } = require("playwright"),
     const notice = await write(admin, "반가워요 #환영 인사", { notice: true });
     const n = admin.locator(`#gb-${notice}`).first();
     assert.equal((await n.locator(".gb-no").textContent()).trim(), "공지");
-    assert.equal(await admin.locator("[data-gb-emo-open], #gb-emo").count(), 0, "이모티콘 없음");
     assert.equal(await n.locator("a.gb-tag").textContent(), "#환영", "해시태그 링크");
 
     // 2. 회원: 글(주소, [[ ]]는 꾸미지 않고 글자 그대로) → 수정해도 링크가 늘지 않음

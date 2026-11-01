@@ -58,7 +58,8 @@ Shared module `lib/emoticon.lib.php` + `js/emoticon-picker.js` + `css/emoticon-p
   separate browser window (image + code, site design settings). Clicking an emoticon there sends the code to the page
   (`postMessage`, same origin, registered codes only), which inserts it at the cursor — into the form's `wr_content`
   textarea, or into the site editor with `editor:<field id>` (`window.tomoEditors`). The window stays open for more picks.
-  If the browser blocks the window, an in-page list popup opens instead. If the writing page was closed, the window copies
+  On phones and tablets (narrow or touch screens) a new window opens as a separate tab, so a bottom sheet list slides up
+  instead. If the browser blocks the window, the in-page list popup opens instead. If the writing page was closed, the window copies
   the code. Nothing is printed when no emoticon is registered.
 - `emoticon_html($html)`: replaces codes with images in the text parts of HTML only (tags untouched). Posts are stored with
   the codes; images are added only when shown.

@@ -1,6 +1,6 @@
 // 이모티콘 고르기 · 목록 팝업 · 표시: 방명록(글 · 댓글), pixiv(댓글), 다이어리(본문 편집기).
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_IMAGE(png/jpg), TEST_SQL(예: "mysql -uroot g5").
-const { chromium } = require("playwright"),
+const { chromium, devices } = require("playwright"),
   assert = require("node:assert/strict"),
   { execSync } = require("node:child_process");
 (async () => {
@@ -113,6 +113,34 @@ const { chromium } = require("playwright"),
     assert.equal(await p.locator(".emoticon-pop").isVisible(), true, "막히면 페이지 안 팝업");
     await p.locator(`.emoticon-pop [data-emoticon-code="${code}"]`).click();
     assert.equal(await p.locator("#gb-write textarea").inputValue(), code);
+
+    // 휴대폰: 새 창(새 탭) 대신 화면 아래에서 올라오는 목록
+    const mc = await b.newContext({ ...devices["iPhone 13"], storageState: await c.storageState() });
+    await mc.route("**/*", (r) => (r.request().url().startsWith(base) ? r.continue() : r.abort()));
+    const m = await mc.newPage();
+    m.on("pageerror", (e) => errors.push(e.message));
+    let popups = 0;
+    m.on("popup", () => popups++);
+    for (const [url, area, btn] of [
+      [`/bbs/board.php?bo_table=${gb}`, "#gb-write textarea", "#gb-write [data-emoticon-open]"],
+      [`/bbs/write.php?bo_table=${dy}`, null, ".diary-emoticon [data-emoticon-open]"],
+    ]) {
+      await m.goto(base + url);
+      if (area) await m.locator(area).fill("");
+      else { await m.locator(".ProseMirror").first().click(); }
+      await m.locator(btn).tap();
+      const sheet = m.locator(".emoticon-pop.is-sheet");
+      assert.equal(await sheet.isVisible(), true, "휴대폰은 아래에서 올라오는 목록");
+      const box = await sheet.evaluate((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right), Math.round(r.bottom), innerWidth, innerHeight]; });
+      assert.deepEqual([box[0], box[1], box[2]], [0, box[3], box[4]], "화면 폭 전체, 아래에 붙음: " + box);
+      await sheet.locator(`[data-emoticon-code="${code}"]`).tap();
+      assert.equal(await sheet.isVisible(), false, "고르면 닫힘");
+      const got = area ? await m.locator(area).inputValue() : await m.locator(".ProseMirror").first().innerText();
+      assert.ok(got.includes(code), "휴대폰에서도 커서 자리에 코드");
+    }
+    assert.equal(popups, 0, "휴대폰에서는 새 창을 열지 않음");
+    assert.equal(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, "가로 넘침 없음");
+    await mc.close();
 
     assert.deepEqual(errors, [], "자바스크립트 오류 없음");
     console.log("emoticon skins smoke ok", gb, px, dy);

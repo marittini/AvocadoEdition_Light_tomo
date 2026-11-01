@@ -15,6 +15,12 @@
 .emoticon-open .material-icons { font-size: 1.1em; }
 img.emoticon { display: inline-block; max-width: 100%; max-height: 80px; margin: 0; padding: 0; border: 0; vertical-align: middle; }
 
+/* 휴대폰: 화면 아래에서 올라오는 목록 */
+.emoticon-pop.is-sheet { left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 50vh; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); border-radius: 12px 12px 0 0 !important; box-shadow: 0 -4px 20px rgba(0, 0, 0, .18); }
+.emoticon-pop.is-sheet .emoticon-pop-list { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); }
+.emoticon-pop.is-sheet .emoticon-pop-list button { padding: 8px 2px; }
+.emoticon-pop.is-sheet .emoticon-pop-close { width: 32px; height: 32px; }
+
 /* 이모티콘 목록 창(bbs/emoticon.php) */
 .emoticon-window { max-width: 480px; margin: 0 auto; padding: 16px 16px 20px; box-sizing: border-box; }
 .emoticon-window-head h1 { margin: 0; font-size: 15px; font-weight: normal; }

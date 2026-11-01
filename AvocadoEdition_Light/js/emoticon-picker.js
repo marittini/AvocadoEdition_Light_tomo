@@ -37,6 +37,8 @@
   }
 
   function place() {
+    pop.classList.toggle("is-sheet", mobile());
+    if (mobile()) { pop.style.left = pop.style.top = pop.style.width = ""; return; } // 아래에서 올라오는 목록(CSS)
     const r = opener.getBoundingClientRect();
     const w = Math.min(320, window.innerWidth - 16);
     pop.style.width = w + "px";
@@ -59,7 +61,7 @@
     opener = btn;
     target = btn.dataset.emoticonOpen || "textarea";
     const br = btn.getBoundingClientRect();
-    if (br.bottom > window.innerHeight || br.top < 0) btn.scrollIntoView({ block: "center" });
+    if (!mobile() && (br.bottom > window.innerHeight || br.top < 0)) btn.scrollIntoView({ block: "center" });
     pop.hidden = false;
     btn.setAttribute("aria-expanded", "true");
     place();
@@ -90,10 +92,13 @@
     area.focus();
   }
 
-  // 목록 창(새 창) 열기. 막히면 false.
+  // 휴대폰 · 태블릿(작은 화면이나 터치 화면)은 새 창이 새 탭으로 열려 오가기 불편하므로 화면 아래에서 올라오는 목록을 쓴다.
+  const mobile = () => window.matchMedia("(max-width: 680px), (hover: none) and (pointer: coarse)").matches;
+
+  // 목록 창(새 창) 열기. 휴대폰이거나 막히면 false.
   function openWindow(btn) {
     const url = btn.dataset.emoticonUrl;
-    if (!url) return false;
+    if (!url || mobile()) return false;
     const w = window.open(url, "tomo_emoticon", "width=400,height=560,scrollbars=yes,resizable=yes");
     if (!w) return false;
     if (opener) opener.setAttribute("aria-expanded", "false");

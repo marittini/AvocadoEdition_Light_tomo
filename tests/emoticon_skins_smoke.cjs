@@ -48,28 +48,32 @@ const { chromium } = require("playwright"),
       if (extra) sql(`UPDATE ${prefix}board SET ${extra} WHERE bo_table='${id}';`);
       return id;
     }
-    // 버튼 → 목록 팝업 → 코드 고르기
-    async function pick(scope) {
-      await scope.locator("[data-emoticon-open]").first().click();
-      const pop = p.locator(".emoticon-pop");
-      assert.equal(await pop.isVisible(), true, "목록 팝업");
-      assert.ok(await pop.locator(`[data-emoticon-code="${code}"] img`).count(), "팝업에 이미지와 코드");
-      await pop.locator(`[data-emoticon-code="${code}"]`).click();
-      assert.equal(await pop.isVisible(), false, "고르면 닫힘");
+    // 버튼 → 목록 창(새 창) → 코드 고르기 → 원래 페이지에 들어감
+    async function pick(scope, check) {
+      const [win] = await Promise.all([p.waitForEvent("popup"), scope.locator("[data-emoticon-open]").first().click()]);
+      await win.waitForLoadState();
+      assert.match(win.url(), /\/bbs\/emoticon\.php$/, "목록 창 주소");
+      const item = win.locator(`[data-emoticon-code="${code}"]`);
+      assert.ok(await item.locator("img").count(), "창에 이미지와 코드");
+      await item.click();
+      await p.waitForFunction(check, code);
+      assert.match(await win.locator(".emoticon-window-status").innerText(), /넣었어요/);
+      await win.close();
     }
+    const areaHas = (sel) => new Function("code", `return (document.querySelector(${JSON.stringify(sel)})?.value || "").includes(code);`);
 
     // 1. 방명록: 글과 댓글
     const gb = await board("guestbook", "bo_comment_level=1");
     await p.goto(base + "/bbs/board.php?bo_table=" + gb);
     await p.locator("#gb-write textarea").fill("안녕하세요 ");
-    await pick(p.locator("#gb-write"));
-    assert.match(await p.locator("#gb-write textarea").inputValue(), new RegExp("안녕하세요 " + code.replace(/[()]/g, "\\$&")), "커서 자리에 코드");
+    await pick(p.locator("#gb-write"), areaHas("#gb-write textarea"));
+    assert.equal(await p.locator("#gb-write textarea").inputValue(), "안녕하세요 " + code, "커서 자리에 코드");
     await p.locator("#gb-write [type=submit]").click();
     await p.waitForLoadState();
     assert.equal(await p.locator(".gb-entry .gb-body img.emoticon").count(), 1, "방명록 글에 이모티콘 이미지");
     const entry = p.locator(".gb-entry").first();
     await entry.locator("[data-gb-toggle]").click();
-    await pick(entry.locator(".gb-form-comment"));
+    await pick(entry.locator(".gb-form-comment"), areaHas(".gb-entry .gb-form-comment textarea"));
     await entry.locator(".gb-form-comment [type=submit]").click();
     await p.waitForLoadState();
     assert.equal(await p.locator(".gb-comment .gb-body img.emoticon").count(), 1, "방명록 댓글에 이모티콘 이미지");
@@ -83,7 +87,7 @@ const { chromium } = require("playwright"),
     await p.waitForLoadState();
     const form = p.locator("form[name=fviewcomment]");
     await form.locator("#wr_content").fill("좋아요 ");
-    await pick(form);
+    await pick(form, areaHas("form[name=fviewcomment] #wr_content"));
     await form.locator("#btn_submit").click();
     await p.waitForLoadState();
     assert.equal(await p.locator("#bo_vc img.emoticon, .cmt_contents img.emoticon").count() >= 1, true, "pixiv 댓글에 이모티콘 이미지");
@@ -95,11 +99,20 @@ const { chromium } = require("playwright"),
     const ed = p.locator(".ProseMirror").first();
     await ed.click();
     await p.keyboard.insertText("오늘은 ");
-    await pick(p.locator(".diary-emoticon"));
+    await pick(p.locator(".diary-emoticon"), new Function("code", "return (document.querySelector('.ProseMirror')?.innerText || '').includes(code);"));
     assert.ok((await ed.innerText()).includes(code), "편집기 커서 자리에 코드");
     await p.locator("#btn_submit").click();
     await p.waitForLoadState();
     assert.equal(await p.locator("#bo_v_con img.emoticon").count(), 1, "다이어리 본문에 이모티콘 이미지");
+
+    // 새 창이 막히면 페이지 안 팝업으로
+    await p.goto(base + "/bbs/board.php?bo_table=" + gb);
+    await p.evaluate(() => { window.open = () => null; });
+    await p.locator("#gb-write textarea").fill("");
+    await p.locator("#gb-write [data-emoticon-open]").click();
+    assert.equal(await p.locator(".emoticon-pop").isVisible(), true, "막히면 페이지 안 팝업");
+    await p.locator(`.emoticon-pop [data-emoticon-code="${code}"]`).click();
+    assert.equal(await p.locator("#gb-write textarea").inputValue(), code);
 
     assert.deepEqual(errors, [], "자바스크립트 오류 없음");
     console.log("emoticon skins smoke ok", gb, px, dy);

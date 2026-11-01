@@ -14,3 +14,12 @@
 .emoticon-open { display: inline-flex; align-items: center; gap: 3px; }
 .emoticon-open .material-icons { font-size: 1.1em; }
 img.emoticon { display: inline-block; max-width: 100%; max-height: 80px; margin: 0; padding: 0; border: 0; vertical-align: middle; }
+
+/* 이모티콘 목록 창(bbs/emoticon.php) */
+.emoticon-window { max-width: 480px; margin: 0 auto; padding: 16px 16px 20px; box-sizing: border-box; }
+.emoticon-window-head h1 { margin: 0; font-size: 15px; font-weight: normal; }
+.emoticon-window-head p { margin: 4px 0 12px; font-size: 12px; opacity: .65; }
+.emoticon-window .emoticon-pop-list { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+.emoticon-window-empty { padding: 40px 0; text-align: center; font-size: 13px; opacity: .65; }
+.emoticon-window-status { min-height: 1.5em; margin: 10px 0 0; font-size: 12px; text-align: center; opacity: .75; }
+.emoticon-window-foot { display: flex; justify-content: center; margin-top: 6px; }

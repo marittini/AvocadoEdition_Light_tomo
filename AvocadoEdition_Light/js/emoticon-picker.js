@@ -1,4 +1,5 @@
-/* 이모티콘 목록 팝업: [data-emoticon-open] 버튼을 누르면 열리고, 고르면 커서 자리에 코드를 넣는다. (lib/emoticon.lib.php) */
+/* 이모티콘: [data-emoticon-open] 버튼을 누르면 목록 창(bbs/emoticon.php)을 새 창으로 열고, 거기서 고른 코드를 커서 자리에 넣는다.
+   브라우저가 새 창을 막으면 페이지 안 팝업으로 연다. (lib/emoticon.lib.php) */
 (() => {
   if (window.__tomoEmoticonPicker) return;
   window.__tomoEmoticonPicker = true;
@@ -89,9 +90,33 @@
     area.focus();
   }
 
+  // 목록 창(새 창) 열기. 막히면 false.
+  function openWindow(btn) {
+    const url = btn.dataset.emoticonUrl;
+    if (!url) return false;
+    const w = window.open(url, "tomo_emoticon", "width=400,height=560,scrollbars=yes,resizable=yes");
+    if (!w) return false;
+    if (opener) opener.setAttribute("aria-expanded", "false");
+    opener = btn;
+    target = btn.dataset.emoticonOpen || "textarea";
+    close(false);
+    try { w.focus(); } catch (_) { /* 무시 */ }
+    return true;
+  }
+  // 목록 창에서 고른 코드(같은 사이트에서 보낸 등록된 코드만)
+  window.addEventListener("message", (e) => {
+    if (e.origin !== location.origin || !e.data || typeof e.data.tomoEmoticon !== "string" || !opener) return;
+    const code = e.data.tomoEmoticon;
+    if (items.some((it) => it.code === code)) insert(code);
+  });
+
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-emoticon-open]");
-    if (btn) { e.preventDefault(); return pop && !pop.hidden && opener === btn ? close(false) : open(btn); }
+    if (btn) {
+      e.preventDefault();
+      if (openWindow(btn)) return;
+      return pop && !pop.hidden && opener === btn ? close(false) : open(btn);
+    }
     if (!pop || pop.hidden) return;
     const pick = e.target.closest("[data-emoticon-code]");
     if (pick) { insert(pick.dataset.emoticonCode); return close(false); }

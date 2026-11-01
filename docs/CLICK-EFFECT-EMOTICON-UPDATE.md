@@ -54,10 +54,12 @@ TEST_URL=... TEST_USER=admin TEST_PASSWORD=... TEST_IMAGE=... node tests/pixiv_b
 
 Shared module `lib/emoticon.lib.php` + `js/emoticon-picker.js` + `css/emoticon-picker.css`:
 
-- `emoticon_button($target)`: an "이모티콘" button next to the input. It opens a list popup (image + code, box colours from
-  `.theme-box`), and picking one inserts the code at the cursor — into the form's `wr_content` textarea, or into the site
-  editor with `editor:<field id>` (`window.tomoEditors`). The popup stays inside the viewport, closes on Esc / outside click.
-  Nothing is printed when no emoticon is registered.
+- `emoticon_button($target)`: an "이모티콘" button next to the input. It opens the list window `bbs/emoticon.php` in a
+  separate browser window (image + code, site design settings). Clicking an emoticon there sends the code to the page
+  (`postMessage`, same origin, registered codes only), which inserts it at the cursor — into the form's `wr_content`
+  textarea, or into the site editor with `editor:<field id>` (`window.tomoEditors`). The window stays open for more picks.
+  If the browser blocks the window, an in-page list popup opens instead. If the writing page was closed, the window copies
+  the code. Nothing is printed when no emoticon is registered.
 - `emoticon_html($html)`: replaces codes with images in the text parts of HTML only (tags untouched). Posts are stored with
   the codes; images are added only when shown.
 
@@ -69,4 +71,5 @@ Used in:
 | `custom_skin/pixiv` | comment form; comments |
 | `custom_skin/diary` | under the editor in the write page; post body |
 
-Test: `tests/emoticon_skins_smoke.cjs` (registers an emoticon, then picks and posts it in all three skins).
+Test: `tests/emoticon_skins_smoke.cjs` (registers an emoticon, opens the list window and posts it in all three skins,
+then checks the in-page fallback when the window is blocked).

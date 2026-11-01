@@ -4,7 +4,7 @@ if (!defined('_GNUBOARD_')) exit;
  * 이모티콘(관리자 > 게시판관리 > 이모티콘관리에 등록한 것)을 스킨에서 쓰는 공용 함수.
  *  - emoticon_items(): 등록된 이모티콘 [['code','url'], …] (긴 코드부터)
  *  - emoticon_html(): 본문 HTML의 글자 부분에서 코드를 이미지로 바꾼다(태그 안은 건드리지 않음)
- *  - emoticon_button(): 입력칸 옆 '이모티콘' 버튼(누르면 목록 팝업, 고르면 커서 자리에 코드)
+ *  - emoticon_button(): 입력칸 옆 '이모티콘' 버튼(누르면 목록 창 bbs/emoticon.php가 새 창으로 열리고, 고르면 커서 자리에 코드)
  * 저장되는 글은 코드 그대로이고, 보여 줄 때만 바꾼다.
  */
 
@@ -54,7 +54,7 @@ function emoticon_button(string $target = 'textarea', string $class = 'ui-btn sm
 {
     if (!emoticon_items()) return '';
     return emoticon_assets().'<button type="button" class="'.htmlspecialchars($class, ENT_QUOTES, 'UTF-8').' emoticon-open" data-emoticon-open="'
-        .htmlspecialchars($target, ENT_QUOTES, 'UTF-8').'" aria-haspopup="dialog" aria-expanded="false"><i class="material-icons" aria-hidden="true">mood</i> 이모티콘</button>';
+        .htmlspecialchars($target, ENT_QUOTES, 'UTF-8').'" data-emoticon-url="'.G5_BBS_URL.'/emoticon.php" aria-haspopup="dialog" aria-expanded="false" title="이모티콘 목록 창 열기"><i class="material-icons" aria-hidden="true">mood</i> 이모티콘</button>';
 }
 
 /** 팝업 스크립트 · 스타일 · 목록 데이터(한 화면에 한 번). */

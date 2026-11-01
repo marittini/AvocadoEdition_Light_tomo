@@ -2,3 +2,4 @@
 /tests/runtime/
 *.log
 .env
+node_modules/

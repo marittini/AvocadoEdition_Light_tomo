@@ -511,10 +511,13 @@ hr.padding {
     }
 }
 
-@media (max-width:420px) {
-    .type_list > .list-box {
-        width: 100%;
-    }
+/* 휴대폰도 2열: 칸 사이를 좁히고, 썸네일은 고정 높이 대신 세로 3:4 비율 */
+@media (max-width:576px) {
+    .type_list { gap: 12px; }
+    .type_list > .list-box { width: calc(50% - 12px/2); }
+    .type_list > .list-box .list_thumb { height: auto; aspect-ratio: 3 / 4; }
+    .type_list > .list-box .list_thumb.no_img { font-size: 24px; }
+    .type_list > .list-box .list_title { padding: 40px 10px 10px; font-size: 13px; }
 }
 
 /* 작성자 아이콘 */

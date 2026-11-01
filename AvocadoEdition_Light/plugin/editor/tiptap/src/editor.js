@@ -70,6 +70,57 @@ const Spoiler = Mark.create({
     return ["span", { class: "tomo-spoiler" }, 0];
   },
 });
+// Image group: images side by side in 2-4 columns. Read pages show it as a CSS grid
+// (css/editor-content.css) that turns into one column, in order, on narrow screens.
+const GRID_COLS = [2, 3, 4];
+const ImageGrid = Node.create({
+  name: "imageGrid",
+  group: "block",
+  content: "image+",
+  draggable: true,
+  isolating: true,
+  addAttributes() {
+    return {
+      cols: {
+        default: 2,
+        parseHTML: (el) => {
+          const n = Number((/\btomo-grid-(\d)\b/.exec(el.className) || [])[1]);
+          return GRID_COLS.includes(n) ? n : 2;
+        },
+        renderHTML: () => ({}),
+      },
+    };
+  },
+  parseHTML() {
+    return [{ tag: "div.tomo-grid" }];
+  },
+  renderHTML({ node }) {
+    return ["div", { class: "tomo-grid tomo-grid-" + node.attrs.cols }, 0];
+  },
+});
+// Block styles stored as classes (the server HTML filter keeps class attributes).
+const QUOTE_STYLES = [
+  ["기본", ""],
+  ["상자", "box"],
+  ["배경", "fill"],
+  ["말풍선", "bubble"],
+  ["큰 따옴표", "mark"],
+];
+const HR_STYLES = [
+  ["실선", ""],
+  ["점선", "dotted"],
+  ["이중선", "double"],
+  ["짧은 선", "short"],
+  ["굵은 선", "thick"],
+];
+const classStyle = (prefix, list) => ({
+  default: "",
+  parseHTML: (el) => {
+    const m = new RegExp("\\b" + prefix + "-([a-z]+)\\b").exec(el.className || "");
+    return m && list.some(([, v]) => v === m[1]) ? m[1] : "";
+  },
+});
+
 // Keep attribute edits and drag resizing in sync in the editable node view.
 const ProfileImage = Image.extend({
   addNodeView() {
@@ -146,6 +197,26 @@ const Formatting = Extension.create({
               Number.isFinite(attrs.paragraphSpacing)
                 ? { style: "margin-bottom:" + attrs.paragraphSpacing + "px" }
                 : {},
+          },
+        },
+      },
+      {
+        types: ["blockquote"],
+        attributes: {
+          quoteStyle: {
+            ...classStyle("tomo-quote", QUOTE_STYLES),
+            renderHTML: (attrs) =>
+              attrs.quoteStyle ? { class: "tomo-quote-" + attrs.quoteStyle } : {},
+          },
+        },
+      },
+      {
+        types: ["horizontalRule"],
+        attributes: {
+          hrStyle: {
+            ...classStyle("tomo-hr", HR_STYLES),
+            renderHTML: (attrs) =>
+              attrs.hrStyle ? { class: "tomo-hr-" + attrs.hrStyle } : {},
           },
         },
       },
@@ -274,60 +345,16 @@ const icons = {
   table: "M3 4h18v16H3z M3 9h18 M3 14h18 M9 4v16 M15 4v16",
   full: "M8 3H3v5 M16 3h5v5 M21 16v5h-5 M8 21H3v-5",
   clear: "M4 4l16 16 M10 4h10 M15 4l-4 12 M4 20h8",
+  alignJustify: "M3 5h18 M3 10h18 M3 15h18 M3 20h18",
+  palette: "M12 3a10 10 0 1 0 0 20c1.5 0 2-1 2-2s-1-1.5-1-2.5 1-2 2.5-2H18a4 4 0 0 0 4-4C22 7 17.5 3 12 3z M7.5 12h.01 M9.5 7.5h.01 M14.5 7.5h.01",
+  grid: "M3 4h8v8H3z M13 4h8v8h-8z M3 14h8v8H3z M13 14h8v8h-8z",
+  symbol: "M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z",
+  more: "M4 13a1.6 1.6 0 1 0 3.2 0 1.6 1.6 0 1 0-3.2 0 M10.4 13a1.6 1.6 0 1 0 3.2 0 1.6 1.6 0 1 0-3.2 0 M16.8 13a1.6 1.6 0 1 0 3.2 0 1.6 1.6 0 1 0-3.2 0",
 };
 const svg = (key) =>
   '<svg viewBox="0 0 24 26" width="18" height="18" aria-hidden="true"><path d="' +
   icons[key] +
   '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const toolIcons = {
-  "추가 서식": "format",
-  "표 편집": "table",
-  "이미지 편집": "image",
-  "이미지 관리": "gallery",
-  "찾기·바꾸기": "search",
-  HTML: "source",
-  "동영상·기호": "video",
-  "루비·스포일러": "ruby",
-  "위 첨자": "superscript",
-  "아래 첨자": "subscript",
-  체크리스트: "checklist",
-  "코드 블록": "codeblock",
-  구분선: "hr",
-  "접기·펼치기": "collapse",
-  "배경색 해제": "clear",
-  "자간 해제": "clear",
-  "루비 적용": "ruby",
-  "루비 해제": "clear",
-  "스포일러 블러": "spoiler",
-  "블러 해제": "clear",
-  "위에 행 추가": "rowAbove",
-  "아래에 행 추가": "rowBelow",
-  "행 삭제": "rowDelete",
-  "왼쪽 열 추가": "colLeft",
-  "오른쪽 열 추가": "colRight",
-  "열 삭제": "colDelete",
-  "셀 병합": "merge",
-  "셀 나누기": "split",
-  "제목 행 전환": "headerRow",
-  "제목 열 전환": "headerCol",
-  "표 삭제": "trash",
-  "셀 배경색 해제": "clear",
-  "이미지 정보 적용": "apply",
-  "이미지 왼쪽": "alignLeft",
-  "이미지 가운데": "alignCenter",
-  "이미지 오른쪽": "alignRight",
-  "원래 크기로": "refresh",
-  "목록 새로고침": "refresh",
-  "선택 이미지 삽입": "insert",
-  "선택 이미지 본문에서 제거": "remove",
-  "선택 업로드 목록에서 제외": "close",
-  "다음 찾기": "search",
-  "선택 바꾸기": "replace",
-  "모두 바꾸기": "replace",
-  "HTML 적용": "apply",
-  "HTML 변경 취소": "undo",
-  "유튜브 삽입": "video",
-};
 function iconify(button, label, icon) {
   button.classList.add("tomo-editor-icon-button");
   button.title = label;
@@ -441,15 +468,21 @@ function init() {
       return item.editor.chain();
     };
 
+    // Footer: words and characters (spaces included), like the counters in other editors.
+    const countText = () => {
+      const text = item.editor.getText(),
+        words = (text.trim().match(/\S+/g) || []).length,
+        nf = new Intl.NumberFormat("ko-KR");
+      return nf.format(words) + "단어 · " + nf.format(text.length) + "자";
+    };
     const sync = () => {
       window.tomoEditorSync(field.id);
-      count.textContent =
-        new Intl.NumberFormat("ko-KR").format(item.editor.getText().length) +
-        "자";
+      count.textContent = countText();
       field.dispatchEvent(new Event("input", { bubbles: true }));
     };
     const upload = async (files, { insert = true } = {}) => {
       let position = item.editor.state.selection.from;
+      const done = [];
       // Count the whole batch so saving cannot race between two uploads.
       item.uploading += files.length;
       for (const file of files) {
@@ -477,6 +510,7 @@ function init() {
             throw new Error(result.error || "이미지 업로드에 실패했습니다.");
           const image = { src: result.url, alt: file.name, selected: true };
           item.gallery.push(image);
+          done.push({ src: result.url, alt: file.name });
           const mapped = Math.min(position, item.editor.state.doc.content.size);
           if (insert)
             focused()
@@ -498,6 +532,7 @@ function init() {
           item.uploading--;
         }
       }
+      return done;
     };
     item.upload = upload;
     item.editor = new Editor({
@@ -519,7 +554,10 @@ function init() {
           },
         }),
         TextStyleKit,
-        TextAlign.configure({ types: ["heading", "paragraph"] }),
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+          alignments: ["left", "center", "right", "justify"],
+        }),
         TableKit.configure({ table: { resizable: true } }),
         Formatting,
         Ruby,
@@ -531,6 +569,7 @@ function init() {
         Placeholder.configure({
           placeholder: "내용을 입력하거나 이미지를 붙여넣으세요.",
         }),
+        ImageGrid,
         Details.configure({ persist: true }),
         DetailsSummary,
         DetailsContent,
@@ -576,39 +615,66 @@ function init() {
       onUpdate: sync,
       onSelectionUpdate: () => refresh(),
     });
+    /* ================================================================
+       Toolbar: one grouped row (wraps on narrow screens). Rare tools live in
+       popovers; image / table / image-group tools appear on their own when the
+       cursor is on one (contextual bar), so the toolbar never needs a panel toggle.
+       ================================================================ */
     const buttons = [];
     const selects = new Map();
-    const button = (name, icon, run, active) => {
-      const el = document.createElement("button");
-      el.type = "button";
-      el.title = name;
-      el.setAttribute("aria-label", name);
-      el.innerHTML = svg(icon);
-      el.addEventListener("mousedown", (event) => {
+    const el = (tag, cls, text) => {
+      const node = document.createElement(tag);
+      if (cls) node.className = cls;
+      if (text != null) node.textContent = text;
+      return node;
+    };
+    const keepSelection = (node) =>
+      node.addEventListener("mousedown", (event) => {
         rememberEditorSelection();
         event.preventDefault();
       });
-      el.addEventListener("click", () => {
+    // Icon button (the label is the tooltip and the accessible name).
+    const button = (parent, name, icon, run, active, disabled, keep = true) => {
+      const b = el("button");
+      b.type = "button";
+      iconify(b, name, icon);
+      if (keep) keepSelection(b); // 서식 버튼은 본문 선택을 그대로 둔다(팝업 여는 버튼은 포커스를 받는다)
+      else b.addEventListener("mousedown", rememberEditorSelection);
+      b.addEventListener("click", () => {
         run();
         refresh();
       });
-      toolbar.append(el);
-      buttons.push({ el, active });
-      return el;
+      parent.append(b);
+      buttons.push({ el: b, active, disabled });
+      return b;
     };
-    const select = (name, options, change) => {
-      const el = document.createElement("select");
-      el.setAttribute("aria-label", name);
-      options.forEach(([label, value]) => el.add(new Option(label, value)));
+    // Text button for popovers and the contextual bar.
+    const textButton = (parent, label, run, disabled, cls) => {
+      const b = el("button", cls || "", label);
+      b.type = "button";
+      keepSelection(b);
+      b.addEventListener("click", () => {
+        run();
+        refresh();
+      });
+      parent.append(b);
+      if (disabled) buttons.push({ el: b, disabled });
+      return b;
+    };
+    const select = (parent, name, options, change) => {
+      const s = el("select");
+      s.setAttribute("aria-label", name);
+      s.title = name;
+      options.forEach(([label, value]) => s.add(new Option(label, value)));
       let bookmark = null;
       const remember = () => {
         rememberEditorSelection();
         bookmark = item.editor.state.selection.getBookmark();
       };
-      el.addEventListener("pointerdown", remember);
-      el.addEventListener("focus", remember);
-      el.addEventListener("change", () => {
-        const value = el.value;
+      s.addEventListener("pointerdown", remember);
+      s.addEventListener("focus", remember);
+      s.addEventListener("change", () => {
+        const value = s.value;
         if (!bookmark) remember();
         if (bookmark) {
           try {
@@ -625,11 +691,88 @@ function init() {
         bookmark = null;
         refresh();
       });
-      toolbar.append(el);
-      selects.set(name, el);
-      return el;
+      parent.append(s);
+      selects.set(name, s);
+      return s;
     };
-    const style = select(
+    const labelInput = (parent, label, type = "text") => {
+      const wrap = el("label", "tomo-editor-field");
+      wrap.append(el("span", "", label));
+      const input = el("input");
+      input.type = type;
+      input.setAttribute("aria-label", label);
+      wrap.append(input);
+      parent.append(wrap);
+      return input;
+    };
+    const group = (label) => {
+      const g = el("div", "tomo-tb-group");
+      g.setAttribute("role", "group");
+      g.setAttribute("aria-label", label);
+      toolbar.append(g);
+      return g;
+    };
+
+    // Mode tabs (편집 / HTML) and the wide-screen toggle sit above the toolbar.
+    const top = el("div", "tomo-editor-top");
+    const modes = el("div", "tomo-editor-modes");
+    modes.setAttribute("role", "tablist");
+    modes.setAttribute("aria-label", "편집 방식");
+    const modeTab = (label) => {
+      const b = el("button", "", label);
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-label", label);
+      modes.append(b);
+      return b;
+    };
+    const visualTab = modeTab("편집"),
+      sourceTab = modeTab("HTML");
+    top.append(modes);
+    toolbar.before(top);
+
+    // Popovers open under the toolbar, one at a time.
+    const pops = el("div", "tomo-editor-pops");
+    toolbar.after(pops);
+    const popovers = [];
+    const popover = (parent, name, icon, title, active) => {
+      const toggle = button(parent, name, icon, () => {}, active, null, false);
+      toggle.setAttribute("aria-expanded", "false");
+      const body = el("div", "tomo-editor-pop");
+      body.hidden = true;
+      body.id = field.id + "-pop-" + popovers.length;
+      toggle.setAttribute("aria-controls", body.id);
+      body.append(el("p", "tomo-editor-pop-title", title || name));
+      pops.append(body);
+      const entry = { toggle, body, onOpen: [] };
+      popovers.push(entry);
+      toggle.addEventListener("click", () => openPop(entry, body.hidden));
+      return entry;
+    };
+    const openPop = (entry, open) => {
+      popovers.forEach((p) => {
+        p.body.hidden = true;
+        p.toggle.setAttribute("aria-expanded", "false");
+      });
+      if (!entry || !open) return;
+      entry.body.hidden = false;
+      entry.toggle.setAttribute("aria-expanded", "true");
+      entry.onOpen.forEach((fn) => fn());
+      entry.body.querySelector("input:not([type=file]):not([type=color]), textarea")?.focus({ preventScroll: true });
+    };
+    const closePops = () => openPop(null, false);
+    wrapper.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && popovers.some((p) => !p.body.hidden)) {
+        event.preventDefault();
+        closePops();
+        item.editor.commands.focus();
+      }
+    });
+
+    /* ---------- 1. 문단 · 글꼴 · 크기 ---------- */
+    const gText = group("글자 모양");
+    select(
+      gText,
       "문단 스타일",
       [
         ["본문", "paragraph"],
@@ -644,325 +787,193 @@ function init() {
               .toggleHeading({ level: Number(value) })
               .run(),
     );
-    const fontOptions = [
-      ["기본 글꼴", ""],
-      ["고딕", "sans-serif"],
-      ["명조", "serif"],
-      ["고정폭", "monospace"],
-      ...JSON.parse(wrapper.dataset.fonts || "[]").map((font) => [
-        font.label,
-        font.family,
-      ]),
-    ];
-    select("글꼴", fontOptions, (value) =>
-      value
-        ? focused().setFontFamily(value).run()
-        : focused().unsetFontFamily().run(),
+    select(
+      gText,
+      "글꼴",
+      [
+        ["기본 글꼴", ""],
+        ["고딕", "sans-serif"],
+        ["명조", "serif"],
+        ["고정폭", "monospace"],
+        ...JSON.parse(wrapper.dataset.fonts || "[]").map((font) => [
+          font.label,
+          font.family,
+        ]),
+      ],
+      (value) =>
+        value
+          ? focused().setFontFamily(value).run()
+          : focused().unsetFontFamily().run(),
     );
     select(
+      gText,
       "글자 크기",
       [
         ["기본 크기", ""],
-        ...["12", "14", "16", "18", "24", "32"].map((size) => [
-          size + "px",
-          size + "px",
-        ]),
+        ...["12", "13", "14", "15", "16", "18", "20", "24", "28", "32", "40"].map(
+          (size) => [size + "px", size + "px"],
+        ),
       ],
       (value) =>
         value
           ? focused().setFontSize(value).run()
           : focused().unsetFontSize().run(),
     );
-    button("실행 취소", "undo", () => focused().undo().run());
-    button("다시 실행", "redo", () => focused().redo().run());
+
+    /* ---------- 2. 굵게 · 기울임 · 밑줄 · 취소선 · 색 ---------- */
+    const gMark = group("글자 서식");
     for (const [name, icon, command, type] of [
       ["굵게", "bold", "toggleBold", "bold"],
       ["기울임", "italic", "toggleItalic", "italic"],
       ["밑줄", "underline", "toggleUnderline", "underline"],
       ["취소선", "strike", "toggleStrike", "strike"],
-      ["글머리 목록", "list", "toggleBulletList", "bulletList"],
-      ["번호 목록", "ordered", "toggleOrderedList", "orderedList"],
-      ["인용", "quote", "toggleBlockquote", "blockquote"],
     ])
       button(
+        gMark,
         name,
         icon,
         () => focused()[command]().run(),
         () => item.editor.isActive(type),
       );
-    const color = document.createElement("input");
-    color.type = "color";
-    color.value = "#49393c";
-    color.title = "글자 색상";
-    color.setAttribute("aria-label", "글자 색상");
-    color.addEventListener("input", () =>
-      focused().setColor(color.value).run(),
+    const colorPop = popover(gMark, "색상", "palette", "글자 색 · 형광펜");
+    const SWATCHES = ["#49393c", "#7a7a7a", "#c0392b", "#d35400", "#b7950b", "#1e8449", "#1f618d", "#6c3483", "#c2185b", "#ffffff"];
+    const HIGHLIGHTS = ["#fff0ad", "#ffd8b8", "#ffd1dc", "#d7f5d0", "#d3ecff", "#e6dcff", "#eeeeee"];
+    const swatchRow = (title, colors, apply, clear, custom) => {
+      const row = el("div", "tomo-editor-swatches");
+      row.append(el("span", "tomo-editor-swatch-title", title));
+      colors.forEach((c) => {
+        const b = el("button", "tomo-editor-swatch");
+        b.type = "button";
+        b.style.background = c;
+        b.title = title + " " + c;
+        b.setAttribute("aria-label", title + " " + c);
+        keepSelection(b);
+        b.addEventListener("click", () => {
+          apply(c);
+          refresh();
+        });
+        row.append(b);
+      });
+      const pick = el("input");
+      pick.type = "color";
+      pick.value = custom;
+      pick.setAttribute("aria-label", title + " 직접 고르기");
+      pick.title = "직접 고르기";
+      pick.addEventListener("input", () => apply(pick.value));
+      row.append(pick);
+      textButton(row, "없애기", clear, null, "tomo-editor-plain");
+      colorPop.body.append(row);
+      return pick;
+    };
+    swatchRow(
+      "글자 색상",
+      SWATCHES,
+      (c) => focused().setColor(c).run(),
+      () => focused().unsetColor().run(),
+      "#49393c",
     );
-    toolbar.append(color);
+    swatchRow(
+      "글자 배경색",
+      HIGHLIGHTS,
+      (c) => focused().setBackgroundColor(c).run(),
+      () => focused().unsetBackgroundColor().run(),
+      "#fff0ad",
+    );
+
+    /* ---------- 3. 정렬 ---------- */
+    const gAlign = group("정렬");
+    const alignOf = () =>
+      item.editor.getAttributes(item.editor.isActive("heading") ? "heading" : "paragraph").textAlign || "left";
+    for (const [name, icon, value] of [
+      ["왼쪽 정렬", "alignLeft", "left"],
+      ["가운데 정렬", "alignCenter", "center"],
+      ["오른쪽 정렬", "alignRight", "right"],
+      ["양쪽 정렬", "alignJustify", "justify"],
+    ])
+      button(
+        gAlign,
+        name,
+        icon,
+        () => focused().setTextAlign(value).run(),
+        () => alignOf() === value,
+      );
+
+    /* ---------- 4. 줄 간격 · 자간 ---------- */
+    const gSpace = group("간격");
     select(
-      "정렬",
-      [
-        ["왼쪽 정렬", "left"],
-        ["가운데 정렬", "center"],
-        ["오른쪽 정렬", "right"],
-      ],
-      (value) => focused().setTextAlign(value).run(),
+      gSpace,
+      "줄 간격",
+      [["줄 간격", ""], ...["1.0", "1.2", "1.4", "1.6", "1.8", "2.0", "2.4", "3.0"].map((v) => [v, v])],
+      (value) =>
+        value
+          ? focused().setLineHeight(value).run()
+          : focused().unsetLineHeight().run(),
     );
-    const linkPanel = document.createElement("div");
-    linkPanel.className = "tomo-editor-link";
-    linkPanel.hidden = true;
-    const linkInput = document.createElement("input");
-    linkInput.type = "url";
-    linkInput.placeholder = "https://example.com";
-    linkInput.setAttribute("aria-label", "링크 주소");
-    linkPanel.append(linkInput);
-    const apply = document.createElement("button");
-    apply.type = "button";
-    apply.textContent = "적용";
-    const unlink = document.createElement("button");
-    unlink.type = "button";
-    unlink.textContent = "링크 해제";
-    const cancel = document.createElement("button");
-    cancel.type = "button";
-    cancel.textContent = "닫기";
-    linkPanel.append(apply, unlink, cancel);
-    toolbar.after(linkPanel);
-    let linkSelection = null;
-    button(
-      "링크",
-      "link",
-      () => {
-        linkSelection = item.editor.state.selection;
-        linkInput.value = item.editor.getAttributes("link").href || "";
-        linkPanel.hidden = false;
-        linkInput.focus();
-      },
-      () => item.editor.isActive("link"),
+    select(
+      gSpace,
+      "자간",
+      [["자간", ""], ...["-1", "-0.5", "0.5", "1", "1.5", "2", "3", "5"].map((v) => [v + "px", v])],
+      (value) =>
+        value === ""
+          ? focused().setMark("textStyle", { letterSpacing: null }).removeEmptyTextStyle().run()
+          : focused().setMark("textStyle", { letterSpacing: Number(value) }).run(),
     );
-    apply.addEventListener("click", () => {
-      try {
-        const url = new URL(linkInput.value, location.href);
-        if (!["https:", "http:", "mailto:"].includes(url.protocol))
-          throw Error();
-        focused()
-          .setTextSelection({ from: linkSelection.from, to: linkSelection.to })
-          .extendMarkRange("link")
-          .setLink({ href: url.href })
-          .run();
-        linkPanel.hidden = true;
-      } catch {
-        status.textContent = "https:// 또는 http:// 주소를 입력해 주세요.";
-      }
-    });
-    unlink.addEventListener("click", () => {
-      focused()
-        .setTextSelection({ from: linkSelection.from, to: linkSelection.to })
-        .unsetLink()
-        .run();
-      linkPanel.hidden = true;
-    });
-    cancel.addEventListener("click", () => {
-      linkPanel.hidden = true;
-      item.editor.commands.focus();
-    });
-    const file = document.createElement("input");
-    file.type = "file";
-    file.setAttribute("aria-label", "본문 이미지 첨부");
-    file.accept = "image/png,image/jpeg,image/gif,image/webp";
-    file.multiple = true;
-    file.hidden = true;
-    wrapper.append(file);
-    file.addEventListener("change", () => {
-      upload([...file.files]);
-      file.value = "";
-    });
-    button("이미지 첨부", "image", () => file.click());
-    button("표 삽입", "table", () =>
+
+    /* ---------- 5. 목록 · 표 ---------- */
+    const gList = group("목록 · 표");
+    button(gList, "글머리 목록", "list", () => focused().toggleBulletList().run(), () => item.editor.isActive("bulletList"));
+    button(gList, "번호 목록", "ordered", () => focused().toggleOrderedList().run(), () => item.editor.isActive("orderedList"));
+    button(gList, "체크리스트", "checklist", () => focused().toggleTaskList().run(), () => item.editor.isActive("taskList"));
+    button(gList, "표 삽입", "table", () =>
       focused().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
     );
-    button("서식 지우기", "clear", () =>
-      focused().unsetAllMarks().clearNodes().run(),
-    );
-    button(
-      "화면 넓게 보기",
-      "full",
-      () => {
-        wrapper.classList.toggle("is-expanded");
-      },
-      () => wrapper.classList.contains("is-expanded"),
-    );
-    // Keep presets, frequent actions and contextual tools on separate, consistent rows.
-    const presets = document.createElement("div");
-    presets.className = "tomo-editor-presets";
-    const actions = document.createElement("div");
-    actions.className = "tomo-editor-actions";
-    const moveControl = (parent, label) => {
-      const el = [...toolbar.querySelectorAll("[aria-label]")].find(
-        (el) => el.getAttribute("aria-label") === label,
-      );
-      if (el) parent.append(el);
-    };
-    ["문단 스타일", "글꼴", "글자 크기"].forEach((label) =>
-      moveControl(presets, label),
-    );
-    for (const [name, labels] of [
-      ["실행 기록", ["실행 취소", "다시 실행"]],
-      ["글자 서식", ["굵게", "기울임", "밑줄", "취소선", "글자 색상"]],
-      ["문단 서식", ["글머리 목록", "번호 목록", "인용", "정렬"]],
-      ["삽입", ["링크", "이미지 첨부", "표 삽입"]],
-      ["화면 도구", ["서식 지우기", "화면 넓게 보기"]],
-    ]) {
-      const group = document.createElement("div");
-      group.className = "tomo-editor-action-group";
-      group.setAttribute("role", "group");
-      group.setAttribute("aria-label", name);
-      labels.forEach((label) => moveControl(group, label));
-      actions.append(group);
-    }
-    toolbar.replaceChildren(presets, actions);
 
-    // Additional tools remain discoverable without crowding the main formatting row.
-    const tools = document.createElement("div");
-    tools.className = "tomo-editor-tools";
-    toolbar.after(tools);
-    const panels = [];
-    const panel = (label) => {
-      const toggle = document.createElement("button");
-      toggle.type = "button";
-      iconify(toggle, label, toolIcons[label]);
-      toggle.setAttribute("aria-expanded", "false");
-      tools.append(toggle);
-      const body = document.createElement("div");
-      body.className = "tomo-editor-panel";
-      body.dataset.kind = {
-        "추가 서식": "format",
-        "표 편집": "table",
-        "이미지 편집": "image",
-        "찾기·바꾸기": "find",
-        HTML: "source",
-        "동영상·기호": "media",
-        "루비·스포일러": "annotation",
-        "이미지 관리": "gallery",
-      }[label];
-      body.hidden = true;
-      const heading = document.createElement("h3");
-      heading.className = "tomo-editor-panel-title";
-      heading.textContent = label;
-      body.append(heading);
-      const id = field.id + "-panel-" + panels.length;
-      body.id = id;
-      toggle.setAttribute("aria-controls", id);
-      tools.after(body);
-      panels.push({ body, toggle });
-      toggle.addEventListener("click", () => {
-        const open = body.hidden;
-        panels.forEach((p) => {
-          p.body.hidden = true;
-          p.toggle.setAttribute("aria-expanded", "false");
-        });
-        body.hidden = !open;
-        toggle.setAttribute("aria-expanded", String(open));
-      });
-      return body;
-    };
-    const toolButton = (parent, label, action, disabled) => {
-      const el = document.createElement("button");
-      el.type = "button";
-      if (toolIcons[label]) iconify(el, label, toolIcons[label]);
-      else el.textContent = label; // Character palette buttons remain the literal character.
-      el.addEventListener("mousedown", (event) => {
-        rememberEditorSelection();
-        event.preventDefault();
-      });
-      el.addEventListener("click", () => {
-        action();
-        refresh();
-      });
-      parent.append(el);
-      buttons.push({ el, disabled });
-      return el;
-    };
-    const labelInput = (parent, label, type = "text") => {
-      const wrap = document.createElement("label");
-      const caption = document.createElement("span");
-      caption.textContent = label;
-      wrap.append(caption);
-      const input = document.createElement("input");
-      input.type = type;
-      input.setAttribute("aria-label", label);
-      wrap.append(input);
-      parent.append(wrap);
-      return input;
-    };
-    const extra = panel("추가 서식");
-    toolButton(extra, "위 첨자", () => focused().toggleSuperscript().run());
-    toolButton(extra, "아래 첨자", () => focused().toggleSubscript().run());
-    toolButton(extra, "체크리스트", () => focused().toggleTaskList().run());
-    toolButton(extra, "코드 블록", () => focused().toggleCodeBlock().run());
-    toolButton(extra, "구분선", () => focused().setHorizontalRule().run());
-    toolButton(extra, "접기·펼치기", () => focused().setDetails().run());
-    const highlight = labelInput(extra, "글자 배경색", "color");
-    highlight.value = "#fff0ad";
-    highlight.addEventListener("input", () =>
-      focused().setBackgroundColor(highlight.value).run(),
-    );
-    toolButton(extra, "배경색 해제", () =>
-      focused().unsetBackgroundColor().run(),
-    );
-    const line = labelInput(extra, "줄 간격", "number");
-    line.min = "1";
-    line.max = "3";
-    line.step = "0.1";
-    line.value = "1.8";
-    line.addEventListener("change", () => {
-      const value = Number(line.value);
-      if (value >= 1 && value <= 3)
-        focused().setLineHeight(String(value)).run();
+    /* ---------- 6. 인용 · 구분선 · 접기 · 루비 · 스포일러 ---------- */
+    const gBlock = group("꾸미기");
+    const quotePop = popover(gBlock, "인용", "quote", "인용구 모양", () => item.editor.isActive("blockquote"));
+    const quoteRow = el("div", "tomo-editor-choices");
+    QUOTE_STYLES.forEach(([label, value]) => {
+      const b = textButton(quoteRow, label, () => {
+        const chain = focused();
+        if (!item.editor.isActive("blockquote")) chain.setBlockquote();
+        chain.updateAttributes("blockquote", { quoteStyle: value }).run();
+        closePops();
+      }, null, "tomo-editor-choice tomo-quote-sample" + (value ? " tomo-quote-" + value : ""));
+      b.setAttribute("aria-label", "인용구 " + label);
     });
-    const spacing = labelInput(extra, "문단 아래 여백(px)", "number");
-    spacing.min = "0";
-    spacing.max = "100";
-    spacing.value = "12";
-    spacing.addEventListener("change", () => {
-      const value = Number(spacing.value);
-      if (value >= 0 && value <= 100) {
-        const type = item.editor.isActive("heading") ? "heading" : "paragraph";
-        focused().updateAttributes(type, { paragraphSpacing: value }).run();
-      }
+    textButton(quoteRow, "인용 해제", () => {
+      focused().unsetBlockquote().run();
+      closePops();
+    }, () => !item.editor.isActive("blockquote"), "tomo-editor-plain");
+    quotePop.body.append(quoteRow);
+    const hrPop = popover(gBlock, "구분선", "hr", "구분선 모양");
+    const hrRow = el("div", "tomo-editor-choices");
+    HR_STYLES.forEach(([label, value]) => {
+      const b = textButton(hrRow, "", () => {
+        focused().insertContent({ type: "horizontalRule", attrs: { hrStyle: value } }).run();
+        closePops();
+      }, null, "tomo-editor-choice tomo-editor-hr-choice");
+      const sample = el("hr", value ? "tomo-hr-" + value : "");
+      b.append(sample, el("span", "", label));
+      b.setAttribute("aria-label", "구분선 " + label);
     });
-    const letters = labelInput(extra, "자간(px)", "number");
-    letters.min = "-2";
-    letters.max = "10";
-    letters.step = "0.1";
-    letters.value = "0";
-    letters.addEventListener("change", () => {
-      const value = Number(letters.value);
-      if (Number.isFinite(value) && value >= -2 && value <= 10)
-        focused().setMark("textStyle", { letterSpacing: value }).run();
-      else status.textContent = "자간은 -2~10px로 입력해 주세요.";
-    });
-    toolButton(extra, "자간 해제", () =>
-      focused()
-        .setMark("textStyle", { letterSpacing: null })
-        .removeEmptyTextStyle()
-        .run(),
-    );
-    const annotationPanel = panel("루비·스포일러");
-    const annotationHelp = document.createElement("p");
-    annotationHelp.textContent =
-      "글자를 선택해 발음·설명을 붙이세요. 블러는 시각 효과이며 비공개 접근 권한을 대신하지 않습니다.";
-    annotationPanel.append(annotationHelp);
-    const annotation = labelInput(annotationPanel, "루비 발음·설명");
+    hrPop.body.append(hrRow);
+    button(gBlock, "접기·펼치기", "collapse", () => focused().setDetails().run());
+    const rubyPop = popover(gBlock, "루비", "ruby", "루비(읽는 법 · 설명)", () => item.editor.isActive("ruby"));
+    rubyPop.body.append(el("p", "tomo-editor-help", "한 문단 안에서 글자를 선택한 뒤 읽는 법이나 설명을 적으세요."));
+    const annotation = labelInput(rubyPop.body, "루비 발음·설명");
     annotation.maxLength = 200;
     const showAnnotation = () => {
-      if (document.activeElement !== annotation && item.editor.isActive("ruby"))
-        annotation.value = item.editor.getAttributes("ruby").annotation || "";
+      if (document.activeElement !== annotation)
+        annotation.value = item.editor.isActive("ruby") ? item.editor.getAttributes("ruby").annotation || "" : "";
     };
-    item.editor.on("selectionUpdate", showAnnotation);
-    panels
-      .find((p) => p.body === annotationPanel)
-      .toggle.addEventListener("click", showAnnotation);
-    toolButton(annotationPanel, "루비 적용", () => {
+    rubyPop.onOpen.push(showAnnotation);
+    item.editor.on("selectionUpdate", () => {
+      if (!rubyPop.body.hidden) showAnnotation();
+    });
+    const rubyActions = el("div", "tomo-editor-pop-actions");
+    rubyPop.body.append(rubyActions);
+    textButton(rubyActions, "루비 적용", () => {
       const editor = item.editor,
         text = annotation.value.trim();
       if (!text || text.length > 200) {
@@ -987,160 +998,117 @@ function init() {
         return;
       }
       const base = editor.state.doc.slice(from, to).content.toJSON();
-      focused()
-        .insertContent({
-          type: "ruby",
-          attrs: { annotation: text },
-          content: base,
-        })
-        .run();
-    });
-    toolButton(annotationPanel, "루비 해제", () => {
+      focused().insertContent({ type: "ruby", attrs: { annotation: text }, content: base }).run();
+    }, null, "tomo-editor-primary");
+    textButton(rubyActions, "루비 해제", () => {
       const { doc, selection } = item.editor.state,
         changes = [];
       doc.descendants((node, pos) => {
-        if (
-          node.type.name === "ruby" &&
-          pos < selection.to &&
-          pos + node.nodeSize > selection.from
-        ) {
+        if (node.type.name === "ruby" && pos < selection.to && pos + node.nodeSize > selection.from) {
           changes.push({ node, pos });
           return false;
         }
       });
       if (!changes.length) {
-        status.textContent =
-          "해제할 루비 안에 커서를 두거나 루비를 선택해 주세요.";
+        status.textContent = "해제할 루비 안에 커서를 두거나 루비를 선택해 주세요.";
         return;
       }
       const tr = item.editor.state.tr;
-      changes
-        .reverse()
-        .forEach(({ node, pos }) =>
-          tr.replaceWith(pos, pos + node.nodeSize, node.content),
-        );
+      changes.reverse().forEach(({ node, pos }) => tr.replaceWith(pos, pos + node.nodeSize, node.content));
       item.editor.view.dispatch(tr);
       item.editor.commands.focus();
     });
-    const spoilerToggle = toolButton(annotationPanel, "스포일러 블러", () =>
-      focused().toggleMark("spoiler").run(),
-    );
-    buttons.push({
-      el: spoilerToggle,
-      active: () => item.editor.isActive("spoiler"),
+    button(gBlock, "스포일러 블러", "spoiler", () => focused().toggleMark("spoiler").run(), () => item.editor.isActive("spoiler"));
+
+    /* ---------- 7. 링크 · 이미지 · 이미지 묶음 · 동영상 · 기호 ---------- */
+    const gInsert = group("넣기");
+    const linkPop = popover(gInsert, "링크", "link", "링크", () => item.editor.isActive("link"));
+    const linkInput = labelInput(linkPop.body, "링크 주소", "url");
+    linkInput.placeholder = "https://example.com";
+    let linkSelection = null;
+    linkPop.onOpen.push(() => {
+      linkSelection = item.editor.state.selection;
+      linkInput.value = item.editor.getAttributes("link").href || "";
     });
-    toolButton(annotationPanel, "블러 해제", () =>
-      focused().unsetMark("spoiler").run(),
-    );
-    const tablePanel = panel("표 편집");
-    const tableHelp = document.createElement("p");
-    tableHelp.textContent =
-      "표 안의 셀을 클릭한 뒤 편집하세요. 여러 셀을 선택하면 병합할 수 있습니다.";
-    tablePanel.append(tableHelp);
-    for (const [label, command] of [
-      ["위에 행 추가", "addRowBefore"],
-      ["아래에 행 추가", "addRowAfter"],
-      ["행 삭제", "deleteRow"],
-      ["왼쪽 열 추가", "addColumnBefore"],
-      ["오른쪽 열 추가", "addColumnAfter"],
-      ["열 삭제", "deleteColumn"],
-      ["셀 병합", "mergeCells"],
-      ["셀 나누기", "splitCell"],
-      ["제목 행 전환", "toggleHeaderRow"],
-      ["제목 열 전환", "toggleHeaderColumn"],
-      ["표 삭제", "deleteTable"],
-    ])
-      toolButton(
-        tablePanel,
-        label,
-        () => focused()[command]().run(),
-        () => !item.editor.can()[command](),
-      );
-    const cellColor = labelInput(tablePanel, "셀 배경색", "color");
-    cellColor.value = "#fcf0f3";
-    cellColor.addEventListener("input", () =>
-      focused().setCellAttribute("backgroundColor", cellColor.value).run(),
-    );
-    toolButton(tablePanel, "셀 배경색 해제", () =>
-      focused().setCellAttribute("backgroundColor", null).run(),
-    );
-    const imagePanel = panel("이미지 편집");
-    const imageHelp = document.createElement("p");
-    imageHelp.textContent =
-      "본문에서 이미지를 클릭하세요. 모서리를 드래그하거나 크기를 입력할 수 있습니다.";
-    imagePanel.append(imageHelp);
-    const width = labelInput(imagePanel, "이미지 너비(px)", "number");
-    width.min = "24";
-    width.max = "10000";
-    const height = labelInput(imagePanel, "이미지 높이(px)", "number");
-    height.min = "24";
-    height.max = "10000";
-    const alt = labelInput(imagePanel, "이미지 설명");
-    toolButton(imagePanel, "이미지 정보 적용", () => {
-      if (!item.editor.isActive("image")) {
-        status.textContent = "먼저 본문 이미지를 클릭해 주세요.";
-        return;
-      }
-      const w = Number(width.value),
-        h = Number(height.value);
-      if (
-        (width.value && (!Number.isFinite(w) || w < 24 || w > 10000)) ||
-        (height.value && (!Number.isFinite(h) || h < 24 || h > 10000))
-      ) {
-        status.textContent = "이미지 크기는 24~10000px로 입력해 주세요.";
-        return;
-      }
-      focused()
-        .updateAttributes("image", {
-          width: width.value ? w : null,
-          height: height.value ? h : null,
-          alt: alt.value,
-        })
-        .run();
-    });
-    for (const [label, align] of [
-      ["이미지 왼쪽", "left"],
-      ["이미지 가운데", "center"],
-      ["이미지 오른쪽", "right"],
-    ])
-      toolButton(
-        imagePanel,
-        label,
-        () => focused().updateAttributes("image", { imageAlign: align }).run(),
-        () => !item.editor.isActive("image"),
-      );
-    toolButton(
-      imagePanel,
-      "원래 크기로",
-      () =>
+    const linkActions = el("div", "tomo-editor-pop-actions");
+    linkPop.body.append(linkActions);
+    const applyLink = () => {
+      try {
+        const url = new URL(linkInput.value, location.href);
+        if (!["https:", "http:", "mailto:"].includes(url.protocol)) throw Error();
         focused()
-          .updateAttributes("image", { width: null, height: null })
-          .run(),
-      () => !item.editor.isActive("image"),
-    );
-    const galleryPanel = panel("이미지 관리");
-    const galleryHelp = document.createElement("p");
-    galleryHelp.textContent =
-      "이 글의 이미지와 이번 화면에서 업로드한 이미지를 관리합니다. 원본은 WebP 변환 성공 후 삭제되며, 움직이는 GIF·기존 WebP는 유지합니다. 본문 제거·목록 제외는 서버 파일을 삭제하지 않습니다. 작성 취소 시 업로드 파일이 남을 수 있습니다.";
-    galleryPanel.append(galleryHelp);
-    const galleryUpload = document.createElement("input");
+          .setTextSelection({ from: linkSelection.from, to: linkSelection.to })
+          .extendMarkRange("link")
+          .setLink({ href: url.href })
+          .run();
+        closePops();
+      } catch {
+        status.textContent = "https:// 또는 http:// 주소를 입력해 주세요.";
+      }
+    };
+    textButton(linkActions, "적용", applyLink, null, "tomo-editor-primary");
+    linkInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        applyLink();
+      }
+    });
+    textButton(linkActions, "링크 해제", () => {
+      focused().setTextSelection({ from: linkSelection.from, to: linkSelection.to }).unsetLink().run();
+      closePops();
+    });
+
+    // Hidden file input used by "이미지 첨부" (insert at the cursor).
+    const file = el("input");
+    file.type = "file";
+    file.setAttribute("aria-label", "본문 이미지 첨부");
+    file.accept = "image/png,image/jpeg,image/gif,image/webp";
+    file.multiple = true;
+    file.hidden = true;
+    wrapper.append(file);
+    let fileTarget = "insert";
+    file.addEventListener("change", async () => {
+      const files = [...file.files];
+      file.value = "";
+      if (!files.length) return;
+      if (fileTarget === "grid") {
+        const uploaded = await upload(files, { insert: false });
+        insertGrid(uploaded, Number(gridCols.value));
+      } else if (fileTarget === "grid-add") {
+        const uploaded = await upload(files, { insert: false });
+        addToGrid(uploaded);
+      } else upload(files);
+      fileTarget = "insert";
+      renderGallery();
+    });
+    const chooseFiles = (target) => {
+      fileTarget = target;
+      file.click();
+    };
+
+    const imagePop = popover(gInsert, "이미지", "image", "이미지");
+    const imageTop = el("div", "tomo-editor-pop-actions");
+    imagePop.body.append(imageTop);
+    textButton(imageTop, "이미지 첨부", () => chooseFiles("insert"), null, "tomo-editor-primary");
+    const drop = el("p", "tomo-editor-drop", "본문에 그림을 끌어 놓거나 붙여 넣어도 됩니다. 아래에서 고른 그림을 넣거나 묶음으로 넣을 수 있습니다.");
+    imagePop.body.append(drop);
+    const galleryUpload = el("input");
     galleryUpload.type = "file";
     galleryUpload.accept = file.accept;
     galleryUpload.multiple = true;
     galleryUpload.setAttribute("aria-label", "관리창 이미지 업로드");
-    galleryPanel.append(galleryUpload);
-    const galleryList = document.createElement("div");
-    galleryList.className = "tomo-editor-gallery";
-    galleryPanel.append(galleryList);
+    const galleryUploadLabel = el("label", "tomo-editor-field tomo-editor-upload");
+    galleryUploadLabel.append(el("span", "", "목록에만 올리기"), galleryUpload);
+    imageTop.append(galleryUploadLabel);
+    const galleryList = el("div", "tomo-editor-gallery");
+    imagePop.body.append(galleryList);
+    const galleryActions = el("div", "tomo-editor-pop-actions");
+    imagePop.body.append(galleryActions);
     const currentImages = () => {
       const result = new Map();
       item.editor.state.doc.descendants((node, pos) => {
         if (node.type.name !== "image") return;
-        const entry = result.get(node.attrs.src) || {
-          src: node.attrs.src,
-          alt: node.attrs.alt || "이미지",
-          positions: [],
-        };
+        const entry = result.get(node.attrs.src) || { src: node.attrs.src, alt: node.attrs.alt || "이미지", positions: [] };
         entry.positions.push({ pos, size: node.nodeSize });
         result.set(node.attrs.src, entry);
       });
@@ -1150,50 +1118,33 @@ function init() {
     const renderGallery = () => {
       const current = currentImages();
       item.gallery.forEach((image) => {
-        if (!current.has(image.src))
-          current.set(image.src, { ...image, positions: [] });
+        if (!current.has(image.src)) current.set(image.src, { ...image, positions: [] });
         if (image.selected) {
           chosenImages.add(image.src);
           image.selected = false;
         }
       });
-      for (const url of chosenImages)
-        if (!current.has(url)) chosenImages.delete(url);
+      for (const url of chosenImages) if (!current.has(url)) chosenImages.delete(url);
       galleryList.replaceChildren();
-      if (!current.size)
-        galleryList.textContent =
-          "이 글에 이미지가 없습니다. 파일을 선택해 업로드하세요.";
+      if (!current.size) galleryList.textContent = "이 글에 이미지가 없습니다. '이미지 첨부'로 올려 주세요.";
       current.forEach((image) => {
-        const card = document.createElement("label");
-        card.className = "tomo-editor-gallery-card";
-        const check = document.createElement("input");
+        const card = el("label", "tomo-editor-gallery-card");
+        const check = el("input");
         check.type = "checkbox";
         check.checked = chosenImages.has(image.src);
         check.setAttribute("aria-label", image.alt + " 선택");
-        check.addEventListener("change", () =>
-          check.checked
-            ? chosenImages.add(image.src)
-            : chosenImages.delete(image.src),
-        );
-        const thumb = document.createElement("img");
+        check.addEventListener("change", () => (check.checked ? chosenImages.add(image.src) : chosenImages.delete(image.src)));
+        const thumb = el("img");
         thumb.src = image.src;
         thumb.alt = "";
         thumb.loading = "lazy";
-        const name = document.createElement("span");
-        name.textContent = image.alt;
-        const location = document.createElement("small");
-        location.textContent = image.positions.length
-          ? "본문 " + image.positions.length + "개"
-          : "본문 밖 · 서버에 업로드됨";
-        card.append(check, thumb, name, location);
+        card.append(check, thumb, el("span", "", image.alt), el("small", "", image.positions.length ? "본문 " + image.positions.length + "개" : "본문 밖 · 서버에 업로드됨"));
         galleryList.append(card);
       });
       return current;
     };
     item.renderGallery = renderGallery;
-    panels
-      .find((p) => p.body === galleryPanel)
-      .toggle.addEventListener("click", renderGallery);
+    imagePop.onOpen.push(renderGallery);
     galleryUpload.addEventListener("change", async () => {
       galleryUpload.disabled = true;
       try {
@@ -1204,23 +1155,19 @@ function init() {
         renderGallery();
       }
     });
-    toolButton(galleryPanel, "목록 새로고침", renderGallery);
-    toolButton(galleryPanel, "선택 이미지 삽입", () => {
-      if (item.uploading) {
-        status.textContent = "업로드가 끝난 뒤 삽입해 주세요.";
-        return;
-      }
+    const chosenContent = () => {
       const current = currentImages();
       item.gallery.forEach((image) => {
         if (!current.has(image.src)) current.set(image.src, image);
       });
-      const content = [...chosenImages]
-        .map((src) => current.get(src))
-        .filter(Boolean)
-        .map((image) => ({
-          type: "image",
-          attrs: { src: image.src, alt: image.alt },
-        }));
+      return [...chosenImages].map((src) => current.get(src)).filter(Boolean).map((image) => ({ src: image.src, alt: image.alt }));
+    };
+    textButton(galleryActions, "선택 이미지 삽입", () => {
+      if (item.uploading) {
+        status.textContent = "업로드가 끝난 뒤 삽입해 주세요.";
+        return;
+      }
+      const content = chosenContent().map((attrs) => ({ type: "image", attrs }));
       if (!content.length) {
         status.textContent = "삽입할 이미지를 선택해 주세요.";
         return;
@@ -1228,37 +1175,153 @@ function init() {
       focused().insertContent(content).run();
       chosenImages.clear();
       renderGallery();
+    }, null, "tomo-editor-primary");
+    textButton(galleryActions, "선택 이미지 묶어 넣기", () => {
+      const images = chosenContent();
+      if (images.length < 2) {
+        status.textContent = "묶을 이미지를 두 장 이상 선택해 주세요.";
+        return;
+      }
+      insertGrid(images, Math.min(4, images.length));
+      chosenImages.clear();
+      renderGallery();
     });
-    toolButton(galleryPanel, "선택 이미지 본문에서 제거", () => {
+    textButton(galleryActions, "선택 이미지 본문에서 제거", () => {
       const current = currentImages(),
-        changes = [...chosenImages].flatMap(
-          (src) => current.get(src)?.positions || [],
-        );
+        changes = [...chosenImages].flatMap((src) => current.get(src)?.positions || []);
       const tr = item.editor.state.tr;
-      changes
-        .sort((a, b) => b.pos - a.pos)
-        .forEach(({ pos, size }) => tr.delete(pos, pos + size));
+      changes.sort((a, b) => b.pos - a.pos).forEach(({ pos, size }) => tr.delete(pos, pos + size));
       if (changes.length) item.editor.view.dispatch(closeHistory(tr));
       chosenImages.clear();
       renderGallery();
-      status.textContent =
-        "선택 이미지를 본문에서 제거했습니다. 서버 파일은 보관하며 실행 취소로 되돌릴 수 있습니다.";
+      status.textContent = "선택 이미지를 본문에서 제거했습니다. 서버 파일은 보관하며 실행 취소로 되돌릴 수 있습니다.";
     });
-    toolButton(galleryPanel, "선택 업로드 목록에서 제외", () => {
-      item.gallery = item.gallery.filter(
-        (image) => !chosenImages.has(image.src),
-      );
+    textButton(galleryActions, "선택 업로드 목록에서 제외", () => {
+      item.gallery = item.gallery.filter((image) => !chosenImages.has(image.src));
       chosenImages.clear();
       renderGallery();
-      status.textContent =
-        "이번 업로드 목록에서 제외했습니다. 본문과 서버 파일은 유지됩니다.";
+      status.textContent = "이번 업로드 목록에서 제외했습니다. 본문과 서버 파일은 유지됩니다.";
     });
-    const findPanel = panel("찾기·바꾸기");
-    const findInput = labelInput(findPanel, "찾을 내용");
-    const replaceInput = labelInput(findPanel, "바꿀 내용");
-    const findStatus = document.createElement("span");
+
+    /* Image group (imageGrid): helpers shared by the toolbar popover and the contextual bar. */
+    const gridAt = () => {
+      const { selection } = item.editor.state;
+      if (selection.node?.type.name === "imageGrid") return { node: selection.node, pos: selection.from };
+      const $from = selection.$from;
+      for (let d = $from.depth; d > 0; d--)
+        if ($from.node(d).type.name === "imageGrid") return { node: $from.node(d), pos: $from.before(d) };
+      return null;
+    };
+    const imageNodes = (images) =>
+      images.map((attrs) => item.editor.schema.nodes.image.create({ src: attrs.src, alt: attrs.alt || "" }));
+    function insertGrid(images, cols) {
+      if (!images.length) return;
+      const grid = item.editor.schema.nodes.imageGrid.create({ cols: GRID_COLS.includes(cols) ? cols : 2 }, imageNodes(images));
+      const { tr } = item.editor.state;
+      tr.replaceSelectionWith(grid);
+      item.editor.view.dispatch(tr.scrollIntoView());
+      item.editor.commands.focus();
+      status.textContent = "이미지 묶음을 넣었습니다. 읽는 화면에서 휴대폰은 한 줄에 하나씩 보입니다.";
+    }
+    function addToGrid(images) {
+      const at = gridAt();
+      if (!at || !images.length) return;
+      const tr = item.editor.state.tr.insert(at.pos + at.node.nodeSize - 1, imageNodes(images));
+      item.editor.view.dispatch(tr);
+    }
+    // Wrap the selected images (top-level blocks) into one group at the first one's place.
+    const groupSelectedImages = (cols) => {
+      const { doc, selection } = item.editor.state;
+      const found = [];
+      doc.forEach((node, offset) => {
+        if (node.type.name === "image" && offset < selection.to && offset + node.nodeSize > selection.from) found.push({ node, pos: offset });
+      });
+      if (found.length < 2) {
+        status.textContent = "본문에서 이미지 두 장 이상을 드래그로 함께 선택한 뒤 묶어 주세요.";
+        return;
+      }
+      const grid = item.editor.schema.nodes.imageGrid.create({ cols }, found.map((f) => f.node));
+      const tr = item.editor.state.tr;
+      [...found].reverse().forEach((f) => tr.delete(tr.mapping.map(f.pos), tr.mapping.map(f.pos + f.node.nodeSize)));
+      tr.insert(tr.mapping.map(found[0].pos), grid);
+      item.editor.view.dispatch(tr);
+      status.textContent = found.length + "장을 묶었습니다.";
+    };
+    const gridPop = popover(gInsert, "이미지 묶음", "grid", "이미지 묶음(나란히)");
+    gridPop.body.append(el("p", "tomo-editor-help", "그림을 2~4장씩 나란히 놓습니다. 세로 길이는 그림에 맞춰 저절로 정해지고, 휴대폰에서는 한 줄에 하나씩 차례대로 보입니다."));
+    const gridColsWrap = el("label", "tomo-editor-field");
+    gridColsWrap.append(el("span", "", "한 줄에"));
+    const gridCols = el("select");
+    gridCols.setAttribute("aria-label", "묶음 열 수");
+    GRID_COLS.forEach((n) => gridCols.add(new Option(n + "장", String(n))));
+    gridColsWrap.append(gridCols);
+    gridPop.body.append(gridColsWrap);
+    const gridActions = el("div", "tomo-editor-pop-actions");
+    gridPop.body.append(gridActions);
+    textButton(gridActions, "그림 올려서 묶기", () => {
+      closePops();
+      chooseFiles("grid");
+    }, null, "tomo-editor-primary");
+    textButton(gridActions, "선택한 그림 묶기", () => {
+      groupSelectedImages(Number(gridCols.value));
+      closePops();
+    });
+
+    const videoPop = popover(gInsert, "동영상", "video", "유튜브 동영상");
+    const videoUrl = labelInput(videoPop.body, "유튜브 주소");
+    videoUrl.placeholder = "https://www.youtube.com/watch?v=…";
+    const videoActions = el("div", "tomo-editor-pop-actions");
+    videoPop.body.append(videoActions);
+    textButton(videoActions, "유튜브 삽입", () => {
+      let url;
+      try {
+        url = new URL(videoUrl.value);
+        if (!["https:", "http:"].includes(url.protocol) || !["www.youtube.com", "youtube.com", "youtu.be", "m.youtube.com"].includes(url.hostname)) throw Error();
+      } catch {
+        status.textContent = "유튜브 동영상 주소를 입력해 주세요.";
+        return;
+      }
+      if (!focused().setYoutubeVideo({ src: url.href }).run()) status.textContent = "유튜브 동영상 주소를 확인해 주세요.";
+      else closePops();
+    }, null, "tomo-editor-primary");
+    const symbolPop = popover(gInsert, "기호", "symbol", "기호 넣기");
+    const symbols = el("div", "tomo-editor-symbols");
+    symbolPop.body.append(symbols);
+    for (const symbol of ["♡", "♥", "☆", "★", "✓", "※", "→", "←", "↑", "↓", "…", "—", "「", "」", "『", "』", "☀", "☁", "☾", "✨", "🌿", "📌", "💬", "🎨"]) {
+      const b = textButton(symbols, symbol, () => focused().insertContent({ type: "text", text: symbol }).run());
+      b.setAttribute("aria-label", "기호 " + symbol);
+    }
+
+    /* ---------- 8. 되돌리기 · 서식 지우기 · 더보기 · 넓게 ---------- */
+    const gHistory = group("기록");
+    button(gHistory, "실행 취소", "undo", () => focused().undo().run(), null, () => !item.editor.can().undo());
+    button(gHistory, "다시 실행", "redo", () => focused().redo().run(), null, () => !item.editor.can().redo());
+    button(gHistory, "서식 지우기", "clear", () => focused().unsetAllMarks().clearNodes().run());
+    const morePop = popover(gHistory, "더보기", "more", "더보기");
+    const moreRow = el("div", "tomo-editor-choices");
+    morePop.body.append(moreRow);
+    button(moreRow, "위 첨자", "superscript", () => focused().toggleSuperscript().run(), () => item.editor.isActive("superscript"));
+    button(moreRow, "아래 첨자", "subscript", () => focused().toggleSubscript().run(), () => item.editor.isActive("subscript"));
+    button(moreRow, "코드 블록", "codeblock", () => focused().toggleCodeBlock().run(), () => item.editor.isActive("codeBlock"));
+    const spacing = labelInput(morePop.body, "문단 아래 여백(px)", "number");
+    spacing.min = "0";
+    spacing.max = "100";
+    spacing.placeholder = "12";
+    spacing.addEventListener("change", () => {
+      const value = Number(spacing.value);
+      if (spacing.value !== "" && value >= 0 && value <= 100) {
+        const type = item.editor.isActive("heading") ? "heading" : "paragraph";
+        focused().updateAttributes(type, { paragraphSpacing: value }).run();
+      }
+    });
+    // Find and replace (in 더보기).
+    const findBox = el("div", "tomo-editor-find");
+    findBox.append(el("p", "tomo-editor-pop-subtitle", "찾기·바꾸기"));
+    morePop.body.append(findBox);
+    const findInput = labelInput(findBox, "찾을 내용");
+    const replaceInput = labelInput(findBox, "바꿀 내용");
+    const findStatus = el("span", "tomo-editor-help");
     findStatus.setAttribute("role", "status");
-    findPanel.append(findStatus);
     let matchIndex = -1;
     const matches = () => {
       const query = findInput.value,
@@ -1266,7 +1329,7 @@ function init() {
       if (!query) return found;
       item.editor.state.doc.descendants((node, pos) => {
         if (!node.isTextblock) return;
-        const text = node.textBetween(0, node.content.size, "\n", "\ufffc");
+        const text = node.textBetween(0, node.content.size, "\n", "￼");
         let at = 0;
         while ((at = text.indexOf(query, at)) !== -1) {
           found.push({ from: pos + 1 + at, to: pos + 1 + at + query.length });
@@ -1290,185 +1353,189 @@ function init() {
     findInput.addEventListener("input", () => {
       matchIndex = -1;
     });
-    toolButton(findPanel, "다음 찾기", findNext);
-    toolButton(findPanel, "선택 바꾸기", () => {
+    const findActions = el("div", "tomo-editor-pop-actions");
+    findBox.append(findActions, findStatus);
+    textButton(findActions, "다음 찾기", findNext);
+    textButton(findActions, "선택 바꾸기", () => {
       const { from, to } = item.editor.state.selection;
-      if (
-        !findInput.value ||
-        item.editor.state.doc.textBetween(from, to) !== findInput.value
-      ) {
+      if (!findInput.value || item.editor.state.doc.textBetween(from, to) !== findInput.value) {
         findNext();
         return;
       }
-      item.editor.view.dispatch(
-        item.editor.state.tr.insertText(replaceInput.value, from, to),
-      );
+      item.editor.view.dispatch(item.editor.state.tr.insertText(replaceInput.value, from, to));
       findNext();
     });
-    toolButton(findPanel, "모두 바꾸기", () => {
+    textButton(findActions, "모두 바꾸기", () => {
       const found = matches(),
         tr = item.editor.state.tr;
-      found
-        .reverse()
-        .forEach((match) =>
-          tr.insertText(replaceInput.value, match.from, match.to),
-        );
+      found.reverse().forEach((match) => tr.insertText(replaceInput.value, match.from, match.to));
       item.editor.view.dispatch(tr);
       findStatus.textContent = found.length + "개를 바꿨습니다.";
       matchIndex = -1;
     });
-    const sourcePanel = panel("HTML");
-    const sourceHelp = document.createElement("p");
-    sourceHelp.textContent =
-      "HTML을 적용하면 지원하는 문단·서식·표·이미지 구조로 정리됩니다. 스크립트나 임의 위젯은 유지되지 않을 수 있습니다.";
-    sourcePanel.append(sourceHelp);
-    const source = document.createElement("textarea");
-    source.className = "tomo-editor-source";
+    // 찾기·바꾸기 keeps its own name so it can be opened directly (and by tests/shortcuts).
+    const findOpen = button(gHistory, "찾기·바꾸기", "search", () => {
+      openPop(morePop, true);
+      findInput.focus();
+    });
+    findOpen.classList.add("tomo-editor-find-open");
+    const wide = button(top, "화면 넓게 보기", "full", () => wrapper.classList.toggle("is-expanded"), () => wrapper.classList.contains("is-expanded"));
+    wide.classList.add("tomo-editor-wide");
+
+    /* ---------- HTML mode ---------- */
+    const sourceBox = el("div", "tomo-editor-sourcebox");
+    sourceBox.hidden = true;
+    sourceBox.append(el("p", "tomo-editor-help", "HTML을 적용하면 지원하는 문단·서식·표·이미지 구조로 정리됩니다. 스크립트나 임의 위젯은 남지 않을 수 있습니다."));
+    const source = el("textarea", "tomo-editor-source");
     source.setAttribute("aria-label", "본문 HTML");
-    sourcePanel.append(source);
+    sourceBox.append(source);
+    const sourceActions = el("div", "tomo-editor-pop-actions");
+    sourceBox.append(sourceActions);
+    canvas.after(sourceBox);
     item.sourceDirty = false;
-    panels
-      .find((p) => p.body === sourcePanel)
-      .toggle.addEventListener("click", () => {
-        if (!sourcePanel.hidden && !item.sourceDirty)
-          source.value = item.editor.getHTML();
+    const setMode = (html) => {
+      sourceBox.hidden = !html;
+      canvas.hidden = html;
+      toolbar.classList.toggle("is-disabled", html);
+      toolbar.querySelectorAll("button, select, input").forEach((c) => {
+        c.disabled = html;
       });
+      visualTab.setAttribute("aria-selected", String(!html));
+      sourceTab.setAttribute("aria-selected", String(html));
+      closePops();
+      if (html) {
+        if (!item.sourceDirty) source.value = item.editor.getHTML();
+        source.focus();
+      } else {
+        refresh();
+      }
+    };
     source.addEventListener("input", () => {
       item.sourceDirty = true;
       status.textContent = "HTML 변경사항을 적용한 뒤 저장해 주세요.";
     });
-    toolButton(sourcePanel, "HTML 적용", () => {
+    const applySource = () => {
       item.editor.commands.setContent(source.value);
       item.sourceDirty = false;
       status.textContent = "HTML을 적용했습니다.";
       sync();
-    });
-    toolButton(sourcePanel, "HTML 변경 취소", () => {
+    };
+    textButton(sourceActions, "HTML 적용", () => {
+      applySource();
+      setMode(false);
+    }, null, "tomo-editor-primary");
+    textButton(sourceActions, "HTML 변경 취소", () => {
       source.value = item.editor.getHTML();
       item.sourceDirty = false;
       status.textContent = "HTML 변경을 취소했습니다.";
     });
-    const videoPanel = panel("동영상·기호");
-    const videoUrl = labelInput(videoPanel, "유튜브 주소");
-    videoUrl.placeholder = "https://www.youtube.com/watch?v=…";
-    toolButton(videoPanel, "유튜브 삽입", () => {
-      let url;
-      try {
-        url = new URL(videoUrl.value);
-        if (
-          !["https:", "http:"].includes(url.protocol) ||
-          ![
-            "www.youtube.com",
-            "youtube.com",
-            "youtu.be",
-            "m.youtube.com",
-          ].includes(url.hostname)
-        )
-          throw Error();
-      } catch {
-        status.textContent = "유튜브 동영상 주소를 입력해 주세요.";
+    visualTab.addEventListener("click", () => {
+      if (item.sourceDirty) applySource(); // 편집으로 돌아오면 고친 HTML을 그대로 적용
+      setMode(false);
+    });
+    sourceTab.addEventListener("click", () => setMode(true));
+
+    /* ---------- Contextual bar: image · table · image group ---------- */
+    const context = el("div", "tomo-editor-context");
+    context.setAttribute("role", "toolbar");
+    pops.after(context);
+    const ctx = (name, title) => {
+      const bar = el("div", "tomo-editor-ctx");
+      bar.dataset.kind = name;
+      bar.setAttribute("aria-label", title);
+      bar.append(el("span", "tomo-editor-ctx-title", title));
+      bar.hidden = true;
+      context.append(bar);
+      return bar;
+    };
+    const imageBar = ctx("image", "이미지");
+    const width = labelInput(imageBar, "이미지 너비(px)", "number");
+    width.min = "24";
+    width.max = "10000";
+    const height = labelInput(imageBar, "이미지 높이(px)", "number");
+    height.min = "24";
+    height.max = "10000";
+    const alt = labelInput(imageBar, "이미지 설명");
+    textButton(imageBar, "이미지 정보 적용", () => {
+      if (!item.editor.isActive("image")) {
+        status.textContent = "먼저 본문 이미지를 클릭해 주세요.";
         return;
       }
-      if (!focused().setYoutubeVideo({ src: url.href }).run())
-        status.textContent = "유튜브 동영상 주소를 확인해 주세요.";
-    });
-    const symbols = document.createElement("div");
-    symbols.className = "tomo-editor-symbols";
-    videoPanel.append(symbols);
-    for (const symbol of [
-      "♡",
-      "♥",
-      "☆",
-      "★",
-      "✓",
-      "※",
-      "→",
-      "←",
-      "↑",
-      "↓",
-      "…",
-      "—",
-      "☀",
-      "☁",
-      "☾",
-      "✨",
-      "🌿",
-      "📌",
-      "💬",
-      "🎨",
+      const w = Number(width.value),
+        h = Number(height.value);
+      if ((width.value && (!Number.isFinite(w) || w < 24 || w > 10000)) || (height.value && (!Number.isFinite(h) || h < 24 || h > 10000))) {
+        status.textContent = "이미지 크기는 24~10000px로 입력해 주세요.";
+        return;
+      }
+      focused().updateAttributes("image", { width: width.value ? w : null, height: height.value ? h : null, alt: alt.value }).run();
+    }, null, "tomo-editor-primary");
+    for (const [label, icon, align] of [
+      ["이미지 왼쪽", "alignLeft", "left"],
+      ["이미지 가운데", "alignCenter", "center"],
+      ["이미지 오른쪽", "alignRight", "right"],
     ])
-      toolButton(symbols, symbol, () =>
-        focused().insertContent({ type: "text", text: symbol }).run(),
-      );
-    const groupTools = (parent, title, labels) => {
-      const group = document.createElement("fieldset");
-      group.className = "tomo-editor-tool-group";
-      const legend = document.createElement("legend");
-      legend.textContent = title;
-      group.append(legend);
-      labels.forEach((label) => {
-        const control = [...parent.children].find((el) =>
-          el.matches("button")
-            ? el.textContent === label
-            : el.matches("label") &&
-              el.querySelector("[aria-label]")?.getAttribute("aria-label") ===
-                label,
-        );
-        if (control) group.append(control);
-      });
-      parent.append(group);
-      return group;
+      button(imageBar, label, icon, () => focused().updateAttributes("image", { imageAlign: align }).run(), () => item.editor.getAttributes("image").imageAlign === align);
+    button(imageBar, "원래 크기로", "refresh", () => focused().updateAttributes("image", { width: null, height: null }).run());
+
+    const gridBar = ctx("grid", "이미지 묶음");
+    GRID_COLS.forEach((n) =>
+      textButton(gridBar, n + "열", () => {
+        const at = gridAt();
+        if (at) item.editor.view.dispatch(item.editor.state.tr.setNodeMarkup(at.pos, undefined, { ...at.node.attrs, cols: n }));
+      }, null, "tomo-editor-grid-cols").dataset.cols = String(n),
+    );
+    textButton(gridBar, "묶음에 그림 추가", () => chooseFiles("grid-add"));
+    textButton(gridBar, "묶음 풀기", () => {
+      const at = gridAt();
+      if (!at) return;
+      const images = [];
+      at.node.forEach((child) => images.push(child));
+      item.editor.view.dispatch(item.editor.state.tr.replaceWith(at.pos, at.pos + at.node.nodeSize, images));
+    });
+
+    const tableBar = ctx("table", "표");
+    for (const [label, icon, command] of [
+      ["위에 행 추가", "rowAbove", "addRowBefore"],
+      ["아래에 행 추가", "rowBelow", "addRowAfter"],
+      ["행 삭제", "rowDelete", "deleteRow"],
+      ["왼쪽 열 추가", "colLeft", "addColumnBefore"],
+      ["오른쪽 열 추가", "colRight", "addColumnAfter"],
+      ["열 삭제", "colDelete", "deleteColumn"],
+      ["셀 병합", "merge", "mergeCells"],
+      ["셀 나누기", "split", "splitCell"],
+      ["제목 행 전환", "headerRow", "toggleHeaderRow"],
+      ["제목 열 전환", "headerCol", "toggleHeaderColumn"],
+    ])
+      button(tableBar, label, icon, () => focused()[command]().run(), null, () => !item.editor.can()[command]());
+    const cellColor = el("input");
+    cellColor.type = "color";
+    cellColor.value = "#fcf0f3";
+    cellColor.setAttribute("aria-label", "셀 배경색");
+    cellColor.title = "셀 배경색";
+    cellColor.addEventListener("input", () => focused().setCellAttribute("backgroundColor", cellColor.value).run());
+    tableBar.append(cellColor);
+    button(tableBar, "셀 배경색 해제", "clear", () => focused().setCellAttribute("backgroundColor", null).run());
+    button(tableBar, "표 삭제", "trash", () => focused().deleteTable().run()).classList.add("tomo-editor-danger");
+
+    const updateContext = () => {
+      const grid = gridAt(),
+        inTable = item.editor.isActive("table"),
+        isImage = !grid && item.editor.isActive("image");
+      imageBar.hidden = !isImage;
+      gridBar.hidden = !grid;
+      tableBar.hidden = !inTable || !!grid;
+      if (grid) gridBar.querySelectorAll("[data-cols]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.cols) === grid.node.attrs.cols)));
+      context.hidden = imageBar.hidden && gridBar.hidden && tableBar.hidden;
     };
-    groupTools(extra, "문자·블록", [
-      "위 첨자",
-      "아래 첨자",
-      "체크리스트",
-      "코드 블록",
-      "구분선",
-      "접기·펼치기",
-    ]);
-    groupTools(extra, "간격·색상", [
-      "글자 배경색",
-      "배경색 해제",
-      "줄 간격",
-      "문단 아래 여백(px)",
-      "자간(px)",
-      "자간 해제",
-    ]);
-    groupTools(tablePanel, "행·열", [
-      "위에 행 추가",
-      "아래에 행 추가",
-      "행 삭제",
-      "왼쪽 열 추가",
-      "오른쪽 열 추가",
-      "열 삭제",
-    ]);
-    groupTools(tablePanel, "셀·제목", [
-      "셀 병합",
-      "셀 나누기",
-      "제목 행 전환",
-      "제목 열 전환",
-    ]);
-    groupTools(tablePanel, "셀 색상", ["셀 배경색", "셀 배경색 해제"]);
-    tablePanel.querySelector("button")?.classList.add("tomo-editor-danger");
-    groupTools(imagePanel, "크기·설명", [
-      "이미지 너비(px)",
-      "이미지 높이(px)",
-      "이미지 설명",
-      "이미지 정보 적용",
-    ]);
-    groupTools(imagePanel, "배치", [
-      "이미지 왼쪽",
-      "이미지 가운데",
-      "이미지 오른쪽",
-      "원래 크기로",
-    ]);
-    groupTools(findPanel, "내용", ["찾을 내용", "바꿀 내용"]);
-    groupTools(findPanel, "찾기·바꾸기", [
-      "다음 찾기",
-      "선택 바꾸기",
-      "모두 바꾸기",
-    ]);
+    // Close popovers when clicking into the text; keep them while working inside.
+    canvas.addEventListener("mousedown", () => closePops());
+    item.editor.on("selectionUpdate", updateContext);
+    item.editor.on("transaction", updateContext);
+    updateContext();
+    // Start in 편집 mode (refresh() runs once it is defined below).
+    sourceBox.hidden = true;
+    visualTab.setAttribute("aria-selected", "true");
+    sourceTab.setAttribute("aria-selected", "false");
 
     let composing = false;
     canvas.addEventListener("compositionstart", () => {
@@ -1516,16 +1583,13 @@ function init() {
       const textStyle = item.editor.getAttributes("textStyle");
       setSelectValue("글꼴", textStyle.fontFamily || "");
       setSelectValue("글자 크기", textStyle.fontSize || "");
-      const block = item.editor.isActive("heading") ? "heading" : "paragraph";
-      setSelectValue(
-        "정렬",
-        item.editor.getAttributes(block).textAlign || "left",
-      );
+      setSelectValue("줄 간격", textStyle.lineHeight ? Number(textStyle.lineHeight).toFixed(1) : "");
+      setSelectValue("자간", Number.isFinite(textStyle.letterSpacing) ? String(textStyle.letterSpacing) : "");
     };
     window.tomoEditorSync(field.id);
     item.editor.on("transaction", refresh);
     refresh();
-    count.textContent = item.editor.getText().length + "자";
+    count.textContent = countText();
     field.form?.addEventListener(
       "submit",
       (event) => {

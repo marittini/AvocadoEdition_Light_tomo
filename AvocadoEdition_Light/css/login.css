@@ -26,4 +26,7 @@ body {height:100%;}
 .login-form-box .login-auto {display:flex; align-items:center; gap:5px; margin-top:6px; font-size:12px; text-align:left; cursor:pointer; opacity:.8;}
 .login-form-box .login-auto input {width:auto; margin:0;}
 .login-form-box fieldset + fieldset {margin-top:5px;}
-.login-form-box input {width:100%;}
+.login-form-box input {width:100%;}/* 로그인 아래 작은 링크: 회원가입(가입을 허용했을 때) · 아이디/비밀번호 찾기 */
+.login-form-box .login-links {display:flex; justify-content:center; flex-wrap:wrap; gap:4px 14px; margin:12px 0 0; font-size:12px;}
+.login-form-box .login-links a {color:inherit; opacity:.75; text-decoration:none;}
+.login-form-box .login-links a:hover {opacity:1; text-decoration:underline;}

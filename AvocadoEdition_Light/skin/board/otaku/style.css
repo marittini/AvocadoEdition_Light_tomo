@@ -32,9 +32,13 @@
 
 /* ---------- 머리: 이름 + 원본/AU ---------- */
 .otaku-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-.otaku-title { margin: 4px 0 0; font-size: 26px; font-weight: normal; line-height: 1.3; text-wrap: balance; }
+.otaku-title { margin: 0; font-size: 26px; font-weight: normal; line-height: 1.3; text-wrap: balance; }
 .otaku-versions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 .otaku-versions .ui-btn { display: inline-flex; align-items: center; gap: 2px; }
+
+/* 제목 아래 두 사람 이름 */
+.otaku-names { margin-top: 4px; }
+.otaku-names .otaku-sep { margin: 0 2px; }
 
 /* ---------- 탭: 글자 + 포인트 색 밑줄 ---------- */
 .otaku-tabs { display: flex; gap: 24px; margin: 22px 0 28px; border-bottom: 1px solid var(--otaku-line); }
@@ -71,16 +75,17 @@
 	.otaku-hl { background: linear-gradient(transparent 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 92%, transparent 92%); }
 }
 /* 한마디: 말풍선. 지향색 바탕 + 읽히는 글자색, 없으면 옅은 회색 바탕. 꼬리는 왼쪽(인물 사진 쪽)을 가리킨다. */
-.otaku-quote.is-bubble { margin-left: 7px; }
+.otaku-quote.is-bubble { margin-left: 6px; }
 .otaku-bubble {
 	position: relative; display: inline-block; max-width: 100%; box-sizing: border-box;
 	padding: 8px 13px; border-radius: 12px; line-height: 1.6;
-	background: var(--otaku-person, rgba(128, 128, 128, .14)); color: var(--otaku-person-text, inherit);
+	background: var(--otaku-person, var(--otaku-bubble-plain, rgba(128, 128, 128, .14))); color: var(--otaku-person-text, inherit);
 }
 .otaku-bubble::before {
-	/* 1px 겹쳐 둔다: 창 너비에 따라 소수점 위치가 반올림되며 꼬리와 상자 사이에 1px 틈이 보이던 것 */
-	content: ''; position: absolute; left: -6px; top: 50%; margin-top: -7px; border: 7px solid transparent; border-left: 0;
-	border-right-color: var(--otaku-person, rgba(128, 128, 128, .14));
+	/* 꼬리는 상자 안쪽으로 1.5px 겹친다: 화면 배율(125% · 150% 등)에서 소수점 반올림으로 생기던 틈을 막는다.
+	   겹친 곳이 진하게 보이지 않도록 바탕은 불투명 색(지향색, 없으면 view.js가 종이색에 맞춰 섞은 회색). */
+	content: ''; position: absolute; right: calc(100% - 1.5px); top: 50%; margin-top: -7px; border: 7px solid transparent; border-left: 0;
+	border-right-color: var(--otaku-person, var(--otaku-bubble-plain, rgba(128, 128, 128, .14)));
 }
 /* 사진이 없으면 가리킬 곳이 없으니 꼬리 없이 */
 .otaku-id:not(:has(.otaku-photo)) .otaku-bubble::before { display: none; }
@@ -129,15 +134,13 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 .otaku-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .otaku-actions > div, .otaku-version-tools { display: flex; flex-wrap: wrap; gap: 6px; }
 
-/* ---------- 목록: 분류 탭(전체 · 자캐 · 드림) ---------- */
-.otaku-cats { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 0 0 22px; border-bottom: 1px solid var(--otaku-line); }
-.otaku-cats a { padding: 0 0 9px; color: inherit; text-decoration: none; font-size: 14px; opacity: .55; }
-.otaku-cats a small { margin-left: 2px; font-size: 11px; font-variant-numeric: tabular-nums; }
-.otaku-cats a:hover { opacity: .85; }
-.otaku-cats a.is-on { opacity: 1; box-shadow: inset 0 -2px 0 var(--otaku-accent); }
-.otaku-cats a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+/* ---------- 목록: 분류(전체 · 자캐 · 드림) — 다른 게시판처럼 가운데 둥근 버튼 ---------- */
+.otaku-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 26px; }
+.otaku-cats a.ui-btn { display: inline-flex; align-items: center; gap: 4px; height: auto; min-height: 30px; padding: 4px 14px; border-radius: 999px; line-height: 1.3; box-sizing: border-box; }
+.otaku-cats a small { font-size: 11px; opacity: .75; font-variant-numeric: tabular-nums; }
+.otaku-cats a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 /* 읽기 화면 머리의 분류 */
-.otaku-cat-chip { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--otaku-line); color: inherit; text-decoration: none; font-size: 11px; line-height: 18px; }
+.otaku-cat-chip { display: inline-block; margin: 0 0 6px; padding: 0 7px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--otaku-line); color: inherit; text-decoration: none; font-size: 11px; line-height: 18px; }
 .otaku-cat-chip:hover { box-shadow: inset 0 0 0 1px var(--otaku-accent); }
 
 /* ---------- 목록: 썸네일 카드 ---------- */
@@ -243,8 +246,12 @@ a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0
 @media (max-width: 680px) {
 	.otaku { padding: 12px 0 32px; }
 	.otaku .otaku-paper, .otaku #bo_v.otaku-paper { padding: 22px 16px 24px; }
-	.otaku-top { flex-direction: column; gap: 10px; }
-	.otaku-versions { justify-content: flex-start; }
+	/* 휴대폰: 머리(분류 · 페어 이름 · 두 사람) · 원본/AU · 탭 · 인물 탭 모두 가운데 */
+	.otaku-top { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+	.otaku-top > div { width: 100%; }
+	.otaku-versions { justify-content: center; }
+	.otaku-view .otaku-tabs { justify-content: center; }
+	.otaku-person-tabs { justify-content: center; }
 	.otaku-title { font-size: 22px; }
 	.otaku-tabs { gap: 22px; margin: 16px 0 20px; }
 	.otaku-duo, .otaku-groups { grid-template-columns: minmax(0, 1fr); }

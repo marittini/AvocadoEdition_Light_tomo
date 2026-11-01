@@ -39,9 +39,9 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 	<?php if ($board['bo_content_head']) { ?><div class="board-notice-box"><?=stripslashes($board['bo_content_head'])?></div><?php } ?>
 
 	<nav class="otaku-cats" aria-label="분류">
-		<a href="<?=otaku_url($bo_table)?>" class="<?=$otaku_cat === '' ? 'is-on' : ''?>"<?=$otaku_cat === '' ? ' aria-current="page"' : ''?>>전체 <small><?=$otaku_all?></small></a>
+		<a href="<?=otaku_url($bo_table)?>" class="ui-btn<?=$otaku_cat === '' ? ' point' : ''?>"<?=$otaku_cat === '' ? ' aria-current="page"' : ''?>>전체 <small><?=$otaku_all?></small></a>
 		<?php foreach ($otaku_cats as $c) { $on = $otaku_cat === $c; ?>
-		<a href="<?=otaku_url($bo_table, ['sca' => $c])?>" class="<?=$on ? 'is-on' : ''?>"<?=$on ? ' aria-current="page"' : ''?>><?=otaku_e($c)?> <small><?=$otaku_cat_count[$c] ?? 0?></small></a>
+		<a href="<?=otaku_url($bo_table, ['sca' => $c])?>" class="ui-btn<?=$on ? ' point' : ''?>"<?=$on ? ' aria-current="page"' : ''?>><?=otaku_e($c)?> <small><?=$otaku_cat_count[$c] ?? 0?></small></a>
 		<?php } ?>
 	</nav>
 

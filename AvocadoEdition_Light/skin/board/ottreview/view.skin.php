@@ -5,7 +5,7 @@ include_once __DIR__.'/ott.lib.php';
 include_once ($board_skin_path.'/setting/user.config.php');
 include_once ($board_skin_path.'/color.config.php');
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=20260723_ott_x_embed_v1">', 1);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v='.substr(md5_file(__DIR__.'/style.css'), 0, 10).'">', 1);
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/txtggu/textggu.css">', 1);
 if (!ott_can_read_post($view)) {
     if (!empty($view['wr_protect'])) goto_url($board_skin_url.'/protect.php?bo_table='.rawurlencode($bo_table).'&amp;wr_id='.(int)$view['wr_id']);

@@ -26,7 +26,7 @@ const fs = require("node:fs");
   await p.locator("[type=submit]").click();
   await p.goto(base + "/adm/viewer_form.php");
   // Source editing must be explicitly applied before a save can send stale content.
-  await p.getByRole("button", { name: "HTML", exact: true }).click();
+  await p.getByRole("tab", { name: "HTML", exact: true }).click();
   await p
     .getByRole("textbox", { name: "본문 HTML", exact: true })
     .fill("<h2>캐릭터 기록</h2><p>사과와 사과, 프로필을 작성합니다.</p>");
@@ -50,7 +50,7 @@ const fs = require("node:fs");
   await p.getByRole("button", { name: "표 삽입", exact: true }).click();
   assert.equal(await p.locator(".tiptap table tr").count(), 3);
   await p.locator(".tiptap th").first().click();
-  await p.getByRole("button", { name: "표 편집", exact: true }).click();
+  // 표 안에 커서가 있으면 표 도구가 저절로 나온다
   await p.getByRole("button", { name: "아래에 행 추가", exact: true }).click();
   assert.equal(await p.locator(".tiptap table tr").count(), 4);
   await p.getByRole("button", { name: "오른쪽 열 추가", exact: true }).click();
@@ -81,6 +81,7 @@ const fs = require("node:fs");
     await p.locator(".tiptap tr").first().locator("th,td").count(),
     4,
   );
+  await p.getByRole("button", { name: "이미지", exact: true }).click(); // 이미지 창
   await p.getByRole("button", { name: "이미지 첨부", exact: true }).click(); // Cancel the chooser; use the same input to provide two files.
   await p.getByLabel("본문 이미지 첨부", { exact: true }).setInputFiles([
     {
@@ -98,7 +99,7 @@ const fs = require("node:fs");
     () => document.querySelectorAll(".tiptap img").length === 2,
   );
   await p.locator(".tiptap img").first().click();
-  await p.getByRole("button", { name: "이미지 편집", exact: true }).click();
+  // 그림을 고르면 이미지 도구가 저절로 나온다
   await p
     .getByRole("spinbutton", { name: "이미지 너비(px)", exact: true })
     .fill("160");
@@ -123,7 +124,6 @@ const fs = require("node:fs");
   await p.locator(".tiptap").press("Control+End");
   await p.locator(".tiptap").press("ArrowRight");
   await p.locator(".tiptap").press("Enter");
-  await p.getByRole("button", { name: "추가 서식", exact: true }).click();
   await p.getByRole("button", { name: "접기·펼치기", exact: true }).click();
   assert.equal(await p.locator(".tiptap [data-type=details]").count(), 1);
   await p.locator(".tiptap summary").fill("더 알아보기");
@@ -131,7 +131,7 @@ const fs = require("node:fs");
   await p.locator(".tiptap").press("Enter");
   await p.getByRole("button", { name: "체크리스트", exact: true }).click();
   assert((await p.locator(".tiptap input[type=checkbox]").count()) > 0);
-  await p.getByRole("button", { name: "동영상·기호", exact: true }).click();
+  await p.getByRole("button", { name: "동영상", exact: true }).click();
   await p
     .getByRole("textbox", { name: "유튜브 주소", exact: true })
     .fill("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
@@ -161,13 +161,11 @@ const fs = require("node:fs");
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     );
-    await p.getByRole("button", { name: "표 편집", exact: true }).click();
     if (process.env.SCREENSHOT_DIR)
       await p.screenshot({
         path: process.env.SCREENSHOT_DIR + "/editor-expanded-" + width + ".png",
         fullPage: true,
       });
-    await p.getByRole("button", { name: "표 편집", exact: true }).click();
   }
   assert.deepEqual(errors, []);
   console.log(

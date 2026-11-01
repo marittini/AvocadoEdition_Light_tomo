@@ -61,7 +61,9 @@ $tabs = $types + ($px_tables ? ['series'=>'시리즈'] : []);
 ?>
 <div class="px-board">
 <?php if (!empty($board['bo_content_head'])) { ?><div class="board-notice-box"><?=stripslashes($board['bo_content_head'])?></div><?php } ?>
-<nav class="px-categories" aria-label="작품 분류"><a class="ui-btn<?=!$type?' point':''?>" href="<?=$build('',$tags)?>" <?=!$type?'aria-current="page"':''?>>전체</a><?php foreach($tabs as $id=>$label){?><a class="ui-btn<?=$type===$id?' point':''?>" href="<?=$build($id,$id==='series'?[]:$tags)?>" <?=$type===$id?'aria-current="page"':''?>><?=$label?></a><?php } ?></nav>
+<?php // 1줄: 전체 · 시리즈 / 2줄: 일러스트 · 만화 · 소설
+$px_tab = static fn($id, $label) => '<a class="ui-btn'.($type===$id?' point':'').'" href="'.$build($id, $id==='series'?[]:$tags).'" '.($type===$id?'aria-current="page"':'').'>'.$label.'</a>'; ?>
+<nav class="px-categories" aria-label="작품 분류"><?=$px_tab('', '전체')?><?php if (isset($tabs['series'])) echo $px_tab('series', '시리즈'); ?><span class="px-cat-break" aria-hidden="true"></span><?php foreach($types as $id=>$label) echo $px_tab($id, $label); ?></nav>
 <?php if($available || $tags){?><nav class="px-tags" aria-label="장르 태그"><?php foreach(array_unique(array_merge($tags,array_keys($available))) as $tag){$active=in_array($tag,$tags,true);$next=$active?array_values(array_diff($tags,[$tag])):array_merge($tags,[$tag]);?><a class="ui-btn<?=$active?' point':''?>" href="<?=$build($type,$next)?>" <?=$active?'aria-current="true"':''?>>#<?=pixiv_escape($tag)?><?=$active?' ×':''?></a><?php } ?></nav><?php } ?>
 <div class="px-grid">
 <?php if ($type==='series') { while($result && $row=sql_fetch_array($result)){

@@ -4,7 +4,7 @@ include_once __DIR__.'/ott.lib.php';
 $is_view = false;
 include_once ($board_skin_path.'/setting/user.config.php');
 include_once ($board_skin_path.'/color.config.php');
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 1);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v='.substr(md5_file(__DIR__.'/style.css'), 0, 10).'">', 1);
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/txtggu/textggu.css">', 1);
 
 ?>

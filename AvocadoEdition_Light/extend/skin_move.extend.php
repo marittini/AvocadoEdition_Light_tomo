@@ -1,7 +1,7 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 /*
- * 게시판 스킨 위치 변경: skin/board/custom_skin/스킨이름 → skin/board/스킨이름
+ * 게시판 스킨 위치 변경: skin/board/custom_skin/pixiv → skin/board/pixiv (다른 스킨도 같은 방식)
  * 예전 위치(custom_skin/…)로 설정된 게시판은 새 위치에 스킨이 있으면 자동으로 새 이름으로 바꾼다.
  * 지금 보고 있는 게시판도 바로 새 경로로 그린다.
  */

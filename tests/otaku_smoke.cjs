@@ -65,8 +65,25 @@ const { chromium } = require("playwright"),
   await p.locator("[name='p[0][name]']").fill("한여름");
   await p.locator("[name='p[1][name]']").fill("민도윤");
   await p.locator("input[name='bf_file[0]']").setInputFiles(image);
+  // 한마디 모양: 말풍선(지향색 바탕) · 없음
+  assert.equal(await p.locator("[name=otaku_qstyle][value=highlight]").isChecked(), true, "한마디 모양 기본은 하이라이트");
+  await p.locator("[name=otaku_qstyle][value=bubble]").check();
+  await p.locator("[name='p[0][quote]']").fill("오늘은 맑음.");
+  await p.locator("[name='p[0][color]']").fill("#2a4d8f");
+  await p.locator("[name='p[1][quote]']").fill("비 온대.");
   const friend = (await save()).searchParams.get("wr_id");
   assert.ok(friend, "첫 페어 저장");
+  const qBubble = p.locator(".otaku-person").first().locator(".otaku-quote.is-bubble .otaku-bubble");
+  assert.equal(await qBubble.textContent(), "“오늘은 맑음.”", "말풍선 한마디");
+  assert.deepEqual(await qBubble.evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color, getComputedStyle(e, "::before").content]),
+    ["rgb(42, 77, 143)", "rgb(255, 255, 255)", '""'], "말풍선은 지향색 바탕 · 흰 글자 · 꼬리");
+  assert.equal(await p.locator(".otaku-person").nth(1).locator(".otaku-bubble").count(), 1, "지향색이 없어도 말풍선");
+  await p.goto(base + `/bbs/write.php?w=u&bo_table=${id}&wr_id=${friend}`);
+  assert.equal(await p.locator("[name=otaku_qstyle][value=bubble]").isChecked(), true, "수정 화면에 고른 모양");
+  await p.locator("[name=otaku_qstyle][value=plain]").check();
+  await save();
+  assert.equal(await p.locator(".otaku-quote.is-plain .otaku-q").first().textContent(), "“오늘은 맑음.”", "아무것도 없음");
+  assert.equal(await p.locator(".otaku-hl, .otaku-bubble").count(), 0, "없음: 형광펜 · 말풍선 없음");
 
   // 2. 본 페어: 페어 이름, 사진·썸네일·미니, 정보·소개, 관계, 연표
   await p.goto(base + "/bbs/write.php?bo_table=" + id);

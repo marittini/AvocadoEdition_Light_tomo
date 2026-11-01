@@ -52,7 +52,7 @@ function otaku_blank_person(): array
 
 function otaku_blank(): array
 {
-    return ['title' => '', 'marks' => 'double', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
+    return ['title' => '', 'marks' => 'double', 'qstyle' => 'highlight', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
 }
 
 function otaku_load(string $bo_table, int $wr_id): array
@@ -122,11 +122,24 @@ function otaku_marks($value): string
     return isset(OTAKU_MARKS[$value]) ? (string)$value : 'double';
 }
 
-/** 한마디: 따옴표 + 형광펜(지향색, 없으면 포인트 색). */
-function otaku_quote_html(string $quote, $marks): string
+/** 한마디 모양: plain 아무것도 없음 / highlight 형광펜 / bubble 말풍선. */
+const OTAKU_QSTYLES = ['plain' => '없음', 'highlight' => '하이라이트', 'bubble' => '말풍선'];
+
+function otaku_qstyle($value): string
+{
+    return isset(OTAKU_QSTYLES[$value]) ? (string)$value : 'highlight';
+}
+
+/** 한마디: 따옴표 + 고른 모양(형광펜 · 말풍선은 지향색, 없으면 포인트 색 · 옅은 회색). */
+function otaku_quote_html(string $quote, $marks, $style = 'highlight'): string
 {
     [$open, $close] = OTAKU_MARKS[otaku_marks($marks)];
-    return '<mark class="otaku-hl">'.otaku_e($open.$quote.$close).'</mark>';
+    $text = otaku_e($open.$quote.$close);
+    return match (otaku_qstyle($style)) {
+        'plain' => '<span class="otaku-q">'.$text.'</span>',
+        'bubble' => '<span class="otaku-bubble">'.$text.'</span>',
+        default => '<mark class="otaku-hl">'.$text.'</mark>',
+    };
 }
 
 /** 지향색: #rrggbb만 받는다(그 밖의 값은 빈 문자열). */

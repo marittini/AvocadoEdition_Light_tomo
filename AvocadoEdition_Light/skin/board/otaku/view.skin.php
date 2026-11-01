@@ -130,7 +130,7 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 							<div class="otaku-id-text">
 								<h2 class="otaku-name"><?=otaku_name_html($p)?></h2>
 								<?php if ($p['line'] !== '') { ?><p class="otaku-line"><?=otaku_e($p['line'])?></p><?php } ?>
-								<?php if ($p['quote'] !== '') { ?><p class="otaku-quote"><?=otaku_quote_html($p['quote'], $data['marks'])?></p><?php } ?>
+								<?php if ($p['quote'] !== '') { ?><p class="otaku-quote is-<?=otaku_qstyle($data['qstyle'] ?? '')?>"><?=otaku_quote_html($p['quote'], $data['marks'], $data['qstyle'] ?? '')?></p><?php } ?>
 							</div>
 						</div>
 						<?php if ($p['facts']) { ?>

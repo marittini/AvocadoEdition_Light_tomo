@@ -128,14 +128,17 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 				<?=$otaku_pick(OTAKU_SLOTS['cover'], '썸네일', 'is-cover')?>
 				<div class="otaku-cover-fields">
 					<label class="otaku-f"><span>페어 이름 <small>선택</small></span><input type="text" name="otaku_title" class="frm_input" value="<?=otaku_e($otaku['title'])?>" maxlength="60" placeholder="비우면 두 사람 이름"></label>
-					<fieldset class="otaku-f otaku-marks"><legend><span>한마디 따옴표</span></legend>
+					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 모양</legend><span class="otaku-marks-title" aria-hidden="true">한마디 모양</span>
+						<?php foreach (OTAKU_QSTYLES as $qk => $qv) { ?><label><input type="radio" name="otaku_qstyle" value="<?=$qk?>"<?=otaku_qstyle($otaku['qstyle'] ?? '') === $qk ? ' checked' : ''?>> <?=otaku_e($qv)?></label><?php } ?>
+					</fieldset>
+					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 따옴표</legend><span class="otaku-marks-title" aria-hidden="true">한마디 따옴표</span>
 						<?php foreach (OTAKU_MARKS as $mk => $mv) { ?><label><input type="radio" name="otaku_marks" value="<?=$mk?>"<?=otaku_marks($otaku['marks'] ?? '') === $mk ? ' checked' : ''?>> <?=otaku_e($mv[2])?></label><?php } ?>
 					</fieldset>
 					<p class="otaku-help">썸네일은 가로 그림(16:9 정도)이 잘 맞습니다. 미니 캐릭터는 각 인물 칸에서 올리면 썸네일 아래 선 위에 나란히 섭니다.</p>
 				</div>
 				</div>
 			</fieldset>
-			<?php } else { ?><input type="hidden" name="otaku_title" value="<?=otaku_e($otaku['title'])?>"><input type="hidden" name="otaku_marks" value="<?=otaku_e(otaku_marks($otaku['marks'] ?? ''))?>"><?php } ?>
+			<?php } else { ?><input type="hidden" name="otaku_title" value="<?=otaku_e($otaku['title'])?>"><input type="hidden" name="otaku_marks" value="<?=otaku_e(otaku_marks($otaku['marks'] ?? ''))?>"><input type="hidden" name="otaku_qstyle" value="<?=otaku_e(otaku_qstyle($otaku['qstyle'] ?? ''))?>"><?php } ?>
 			<div class="otaku-duo">
 			<?php foreach ($otaku['people'] as $i => $p) { ?>
 				<fieldset class="otaku-person-edit">

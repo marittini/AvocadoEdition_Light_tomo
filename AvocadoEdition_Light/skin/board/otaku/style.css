@@ -70,9 +70,20 @@
 @supports (color: color-mix(in srgb, red 10%, transparent)) {
 	.otaku-hl { background: linear-gradient(transparent 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 92%, transparent 92%); }
 }
+/* 한마디: 말풍선. 지향색 바탕 + 읽히는 글자색, 없으면 옅은 회색 바탕. 꼬리는 위(이름 쪽)를 가리킨다. */
+.otaku-quote.is-bubble { margin-top: 16px; }
+.otaku-bubble {
+	position: relative; display: inline-block; max-width: 100%; box-sizing: border-box;
+	padding: 8px 13px; border-radius: 12px; line-height: 1.6;
+	background: var(--otaku-person, rgba(128, 128, 128, .14)); color: var(--otaku-person-text, inherit);
+}
+.otaku-bubble::before {
+	content: ''; position: absolute; left: 16px; top: -7px; border: 7px solid transparent; border-top: 0;
+	border-bottom-color: var(--otaku-person, rgba(128, 128, 128, .14));
+}
 .otaku-marks { margin: 0 0 10px; padding: 0; border: 0; }
-.otaku-marks legend { padding: 0; }
-.otaku-marks legend span { display: block; margin-bottom: 4px; font-size: 12px; opacity: .62; }
+/* 사이트 공통 규칙이 legend를 감추므로, 보이는 제목은 따로 둔다(legend는 화면 읽기용) */
+.otaku-marks-title { display: block; margin-bottom: 4px; font-size: 12px; opacity: .62; }
 .otaku-marks label { display: inline-flex; align-items: center; gap: 4px; margin-right: 14px; font-size: 13px; cursor: pointer; }
 
 .otaku-facts { display: grid; grid-template-columns: 88px minmax(0, 1fr); margin: 0 0 22px; border-top: 1px solid var(--otaku-line); font-size: 13px; font-variant-numeric: tabular-nums; }

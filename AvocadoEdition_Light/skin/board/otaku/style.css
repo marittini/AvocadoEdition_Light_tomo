@@ -70,17 +70,22 @@
 @supports (color: color-mix(in srgb, red 10%, transparent)) {
 	.otaku-hl { background: linear-gradient(transparent 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 92%, transparent 92%); }
 }
-/* 한마디: 말풍선. 지향색 바탕 + 읽히는 글자색, 없으면 옅은 회색 바탕. 꼬리는 위(이름 쪽)를 가리킨다. */
-.otaku-quote.is-bubble { margin-top: 16px; }
+/* 한마디: 말풍선. 지향색 바탕 + 읽히는 글자색, 없으면 옅은 회색 바탕. 꼬리는 왼쪽(인물 사진 쪽)을 가리킨다. */
+.otaku-quote.is-bubble { margin-left: 7px; }
 .otaku-bubble {
 	position: relative; display: inline-block; max-width: 100%; box-sizing: border-box;
 	padding: 8px 13px; border-radius: 12px; line-height: 1.6;
 	background: var(--otaku-person, rgba(128, 128, 128, .14)); color: var(--otaku-person-text, inherit);
 }
 .otaku-bubble::before {
-	content: ''; position: absolute; left: 16px; top: -7px; border: 7px solid transparent; border-top: 0;
-	border-bottom-color: var(--otaku-person, rgba(128, 128, 128, .14));
+	content: ''; position: absolute; left: -7px; top: 50%; margin-top: -7px; border: 7px solid transparent; border-left: 0;
+	border-right-color: var(--otaku-person, rgba(128, 128, 128, .14));
 }
+/* 사진이 없으면 가리킬 곳이 없으니 꼬리 없이 */
+.otaku-id:not(:has(.otaku-photo)) .otaku-bubble::before { display: none; }
+.otaku-id:not(:has(.otaku-photo)) .otaku-quote.is-bubble { margin-left: 0; }
+/* 한마디를 이름 위에 둘 때 */
+.otaku-quote.is-top { margin-top: 0; margin-bottom: 12px; }
 .otaku-marks { margin: 0 0 10px; padding: 0; border: 0; }
 /* 사이트 공통 규칙이 legend를 감추므로, 보이는 제목은 따로 둔다(legend는 화면 읽기용) */
 .otaku-marks-title { display: block; margin-bottom: 4px; font-size: 12px; opacity: .62; }

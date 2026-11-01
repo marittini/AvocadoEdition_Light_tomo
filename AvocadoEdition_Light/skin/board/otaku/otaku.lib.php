@@ -52,7 +52,7 @@ function otaku_blank_person(): array
 
 function otaku_blank(): array
 {
-    return ['title' => '', 'marks' => 'double', 'qstyle' => 'highlight', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
+    return ['title' => '', 'marks' => 'double', 'qstyle' => 'highlight', 'qpos' => 'bottom', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
 }
 
 function otaku_load(string $bo_table, int $wr_id): array
@@ -128,6 +128,14 @@ const OTAKU_QSTYLES = ['plain' => '없음', 'highlight' => '하이라이트', 'b
 function otaku_qstyle($value): string
 {
     return isset(OTAKU_QSTYLES[$value]) ? (string)$value : 'highlight';
+}
+
+/** 한마디 자리: top 이름 위 / bottom 한 줄 소개 아래(기본). */
+const OTAKU_QPOS = ['top' => '이름 위', 'bottom' => '한 줄 소개 아래'];
+
+function otaku_qpos($value): string
+{
+    return isset(OTAKU_QPOS[$value]) ? (string)$value : 'bottom';
 }
 
 /** 한마디: 따옴표 + 고른 모양(형광펜 · 말풍선은 지향색, 없으면 포인트 색 · 옅은 회색). */

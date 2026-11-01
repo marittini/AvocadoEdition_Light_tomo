@@ -75,7 +75,8 @@ The page layer used to resize to every image, so its width jumped between pages.
   quote highlighter. Bubble text is black or white, whichever reads better on that colour.
 - **Quote style** (chosen per post in the write form, `qstyle`): 없음 (plain text), 하이라이트 (default: a highlighter
   stroke on the lower half of the text, per line, in the 지향색 or the point colour) or 말풍선 (a speech bubble filled with
-  the 지향색 with readable text colour, light grey when no colour, tail pointing up to the name).
+  the 지향색 with readable text colour, light grey when no colour, tail pointing left to the photo; no tail without a photo).
+- **Quote position** (per post, `qpos`): above the name, or below the one-line intro (default).
   The quote marks are chosen per post in the write form: “ ” (default), 「 」 or none (`marks` in the profile data;
   AU posts keep the original's choice).
 - **Mini bubble**: hovering a mini character on the list shows that person's 한마디.

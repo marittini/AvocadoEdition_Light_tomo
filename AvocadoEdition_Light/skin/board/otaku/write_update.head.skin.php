@@ -16,6 +16,7 @@ $otaku_data = otaku_blank();
 $otaku_data['title'] = otaku_clean($_POST['otaku_title'] ?? '', 60);
 $otaku_data['marks'] = otaku_marks($_POST['otaku_marks'] ?? '');
 $otaku_data['qstyle'] = otaku_qstyle($_POST['otaku_qstyle'] ?? '');
+$otaku_data['qpos'] = otaku_qpos($_POST['otaku_qpos'] ?? '');
 foreach ($otaku_data['people'] as $i => $blank) {
     $src = $_POST['p'][$i] ?? [];
     $person = [

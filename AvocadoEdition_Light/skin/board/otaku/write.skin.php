@@ -131,6 +131,9 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 모양</legend><span class="otaku-marks-title" aria-hidden="true">한마디 모양</span>
 						<?php foreach (OTAKU_QSTYLES as $qk => $qv) { ?><label><input type="radio" name="otaku_qstyle" value="<?=$qk?>"<?=otaku_qstyle($otaku['qstyle'] ?? '') === $qk ? ' checked' : ''?>> <?=otaku_e($qv)?></label><?php } ?>
 					</fieldset>
+					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 자리</legend><span class="otaku-marks-title" aria-hidden="true">한마디 자리</span>
+						<?php foreach (OTAKU_QPOS as $pk => $pv) { ?><label><input type="radio" name="otaku_qpos" value="<?=$pk?>"<?=otaku_qpos($otaku['qpos'] ?? '') === $pk ? ' checked' : ''?>> <?=otaku_e($pv)?></label><?php } ?>
+					</fieldset>
 					<fieldset class="otaku-f otaku-marks"><legend class="sound_only">한마디 따옴표</legend><span class="otaku-marks-title" aria-hidden="true">한마디 따옴표</span>
 						<?php foreach (OTAKU_MARKS as $mk => $mv) { ?><label><input type="radio" name="otaku_marks" value="<?=$mk?>"<?=otaku_marks($otaku['marks'] ?? '') === $mk ? ' checked' : ''?>> <?=otaku_e($mv[2])?></label><?php } ?>
 					</fieldset>
@@ -138,7 +141,7 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 				</div>
 				</div>
 			</fieldset>
-			<?php } else { ?><input type="hidden" name="otaku_title" value="<?=otaku_e($otaku['title'])?>"><input type="hidden" name="otaku_marks" value="<?=otaku_e(otaku_marks($otaku['marks'] ?? ''))?>"><input type="hidden" name="otaku_qstyle" value="<?=otaku_e(otaku_qstyle($otaku['qstyle'] ?? ''))?>"><?php } ?>
+			<?php } else { ?><input type="hidden" name="otaku_title" value="<?=otaku_e($otaku['title'])?>"><input type="hidden" name="otaku_marks" value="<?=otaku_e(otaku_marks($otaku['marks'] ?? ''))?>"><input type="hidden" name="otaku_qstyle" value="<?=otaku_e(otaku_qstyle($otaku['qstyle'] ?? ''))?>"><input type="hidden" name="otaku_qpos" value="<?=otaku_e(otaku_qpos($otaku['qpos'] ?? ''))?>"><?php } ?>
 			<div class="otaku-duo">
 			<?php foreach ($otaku['people'] as $i => $p) { ?>
 				<fieldset class="otaku-person-edit">

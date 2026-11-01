@@ -128,9 +128,11 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 						<div class="otaku-id">
 							<?php if ($photo) { ?><span class="otaku-photo"><img src="<?=otaku_thumb($bo_table, $photo, 480, 600)?>" alt="<?=otaku_e($p['name'])?>" draggable="false"></span><?php } ?>
 							<div class="otaku-id-text">
+								<?php $qpos = otaku_qpos($data['qpos'] ?? ''); $quote = $p['quote'] !== '' ? '<p class="otaku-quote is-'.otaku_qstyle($data['qstyle'] ?? '').' is-'.$qpos.'">'.otaku_quote_html($p['quote'], $data['marks'], $data['qstyle'] ?? '').'</p>' : ''; ?>
+								<?=$qpos === 'top' ? $quote : ''?>
 								<h2 class="otaku-name"><?=otaku_name_html($p)?></h2>
 								<?php if ($p['line'] !== '') { ?><p class="otaku-line"><?=otaku_e($p['line'])?></p><?php } ?>
-								<?php if ($p['quote'] !== '') { ?><p class="otaku-quote is-<?=otaku_qstyle($data['qstyle'] ?? '')?>"><?=otaku_quote_html($p['quote'], $data['marks'], $data['qstyle'] ?? '')?></p><?php } ?>
+								<?=$qpos === 'bottom' ? $quote : ''?>
 							</div>
 						</div>
 						<?php if ($p['facts']) { ?>

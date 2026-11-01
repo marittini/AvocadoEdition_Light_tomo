@@ -78,10 +78,18 @@ const { chromium } = require("playwright"),
   assert.deepEqual(await qBubble.evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color, getComputedStyle(e, "::before").content]),
     ["rgb(42, 77, 143)", "rgb(255, 255, 255)", '""'], "말풍선은 지향색 바탕 · 흰 글자 · 꼬리");
   assert.equal(await p.locator(".otaku-person").nth(1).locator(".otaku-bubble").count(), 1, "지향색이 없어도 말풍선");
+  // 꼬리는 사진 쪽(왼쪽)을 가리킨다
+  const tail = await qBubble.evaluate((e) => { const s = getComputedStyle(e, "::before"); return [parseFloat(s.left) < 0, s.borderRightColor]; });
+  assert.deepEqual(tail, [true, "rgb(42, 77, 143)"], "말풍선 꼬리는 사진 쪽");
+  const order = () => p.locator(".otaku-person").first().locator(".otaku-id-text > *").evaluateAll((els) => els.map((e) => e.className.split(" ")[0]));
+  assert.deepEqual(await order(), ["otaku-name", "otaku-quote"], "기본: 한마디는 소개 아래");
   await p.goto(base + `/bbs/write.php?w=u&bo_table=${id}&wr_id=${friend}`);
   assert.equal(await p.locator("[name=otaku_qstyle][value=bubble]").isChecked(), true, "수정 화면에 고른 모양");
+  assert.equal(await p.locator("[name=otaku_qpos][value=bottom]").isChecked(), true, "한마디 자리 기본은 소개 아래");
   await p.locator("[name=otaku_qstyle][value=plain]").check();
+  await p.locator("[name=otaku_qpos][value=top]").check();
   await save();
+  assert.deepEqual(await order(), ["otaku-quote", "otaku-name"], "한마디를 이름 위로");
   assert.equal(await p.locator(".otaku-quote.is-plain .otaku-q").first().textContent(), "“오늘은 맑음.”", "아무것도 없음");
   assert.equal(await p.locator(".otaku-hl, .otaku-bubble").count(), 0, "없음: 형광펜 · 말풍선 없음");
 

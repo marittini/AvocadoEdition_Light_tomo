@@ -88,8 +88,10 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 			<div>
 				<?php foreach ($otaku_versions as $v) { $hidden = $v['id'] === $otaku_current ? '' : ' hidden'; ?>
 				<div data-version-title="<?=$v['id']?>"<?=$hidden?>>
-					<span class="otaku-label"><?php if (($view['ca_name'] ?? '') !== '') { ?><a href="<?=otaku_url($bo_table, ['sca' => $view['ca_name']])?>" class="otaku-cat-chip"><?=otaku_e($view['ca_name'])?></a><?php } ?><?=$v['data']['title'] !== '' ? $otaku_names($v['data']) : '페어'?><?=$v['id'] ? ' · '.otaku_e($v['label']) : ''?></span>
+					<?php // 순서: 분류 / 페어 이름 / A • B (페어 이름이 없으면 두 사람 이름이 제목) · AU 이름 ?>
+					<?php if (($view['ca_name'] ?? '') !== '') { ?><a href="<?=otaku_url($bo_table, ['sca' => $view['ca_name']])?>" class="otaku-cat-chip"><?=otaku_e($view['ca_name'])?></a><?php } ?>
 					<h1 class="otaku-title"><?=otaku_e(otaku_title($v['data']))?></h1>
+					<?php $sub = ($v['data']['title'] !== '' ? otaku_names_html($v['data']['people'], '•') : '').($v['id'] ? ($v['data']['title'] !== '' ? ' · ' : '').otaku_e($v['label']) : ''); if ($sub !== '') { ?><span class="otaku-label otaku-names"><?=$sub?></span><?php } ?>
 				</div>
 				<?php } ?>
 			</div>

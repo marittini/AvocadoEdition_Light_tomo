@@ -88,7 +88,18 @@ function check_site_auth(){
 	// 사이트가 비공개 설정일 시, 로그인 페이지를 제외한 모든 페이지에서 외부인 접근 시
 	// 로그인 페이지로 이동 시킨다.
 	if(!$config['cf_open']) {
-		if(!$is_member && !$is_page_login && !(basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === 'register_result.php' && get_session('ss_mb_reg'))) { goto_url(G5_BBS_URL.'/login.php'); }
+		// 비공개 사이트여도 계정 관련 화면은 열어 둔다(가입 승인제로 받는 경우 등).
+		// 가입은 관리자가 가입을 허용했을 때만, 비밀번호 찾기 · 메일 인증 · 자동등록방지 그림은 항상.
+		global $is_add_register;
+		$tomo_script = basename((string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+		$tomo_in_bbs = dirname((string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+		$tomo_account_pages = ['password_lost.php', 'password_lost2.php', 'password_lost_certify.php', 'email_certify.php', 'register_email.php', 'register_email_update.php'];
+		if (!empty($is_add_register)) $tomo_account_pages = array_merge($tomo_account_pages, ['register.php', 'register_form.php', 'register_form_update.php', 'ajax.mb_id.php', 'ajax.mb_nick.php', 'ajax.mb_email.php', 'ajax.mb_hp.php', 'ajax.mb_recommend.php']);
+		$tomo_open_page = (str_ends_with($tomo_in_bbs, '/'.G5_BBS_DIR) && in_array($tomo_script, $tomo_account_pages, true))
+			|| str_ends_with($tomo_in_bbs, '/'.G5_PLUGIN_DIR.'/'.G5_CAPTCHA_DIR)
+			|| ($tomo_script === 'register_result.php' && get_session('ss_mb_reg'));
+		if (defined('TOMO_PUBLIC_ASSET')) $tomo_open_page = true; // 공개 그림(링크 게시판의 내 배너 그림 등)
+		if(!$is_member && !$is_page_login && !$tomo_open_page) { goto_url(G5_BBS_URL.'/login.php'); }
 	}
 
 }

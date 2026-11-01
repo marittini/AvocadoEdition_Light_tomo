@@ -31,6 +31,17 @@
     });
   });
 
+  /* ---------- 지향색 없는 말풍선: 종이(테마 상자) 바탕에 글자색을 12% 섞은 불투명 회색 ---------- */
+  (() => {
+    const rgb = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+    let el = root.querySelector(".otaku-paper"), bg = null;
+    while (el) { const c = rgb(getComputedStyle(el).backgroundColor); if (c.length >= 3 && (c.length < 4 || c[3] > 0)) { bg = c; break; } el = el.parentElement; }
+    const fg = rgb(getComputedStyle(root).color);
+    if (!bg || fg.length < 3) return;
+    const a = bg.length > 3 ? bg[3] : 1, base = bg.slice(0, 3).map((v) => v * a + 255 * (1 - a)); // 반투명 종이는 흰 바탕 위로 본다
+    root.style.setProperty("--otaku-bubble-plain", "rgb(" + base.map((v, i) => Math.round(v * 0.88 + fg[i] * 0.12)).join(",") + ")");
+  })();
+
   /* ---------- 좁은 화면: 인물 한 명씩(프로필 · 관계가 같이 바뀐다) ---------- */
   function showPerson(version, i) {
     version.querySelectorAll(".otaku-person-tabs").forEach((group) => {

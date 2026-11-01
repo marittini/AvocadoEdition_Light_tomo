@@ -46,6 +46,11 @@ if($logo)		$logo_data .= "<img src='".$logo."' />";
 						<input type="checkbox" name="auto_login" id="login_auto_login" value="1">
 						<span>자동로그인</span>
 					</label>
+					<?php global $is_add_register; ?>
+					<p class="login-links">
+						<?php if (!empty($is_add_register)) { ?><a href="<?=G5_BBS_URL?>/register.php">회원가입</a><?php } ?>
+						<a href="<?=G5_BBS_URL?>/password_lost.php" target="_blank" id="login_password_lost">아이디 · 비밀번호 찾기</a>
+					</p>
 				</form>
 			</div>
 		</div>

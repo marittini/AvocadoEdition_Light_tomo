@@ -8,3 +8,25 @@
 }
 
 .thread_content p:empty { min-height:1.5em; min-height:1lh; }
+
+/* ---- Editor blocks (2026-11): image group, quote styles, divider styles ----
+   Colours come from the text colour (currentColor) so they suit any theme. */
+.tomo-grid { display: grid; gap: 8px; margin: 1em 0; align-items: start; }
+.tomo-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tomo-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tomo-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tomo-grid > img, .tomo-grid > a, .tomo-grid > a > img { display: block; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 !important; }
+@media (max-width: 640px) {
+  /* 휴대폰: 한 줄에 하나씩, 원래 순서대로 */
+  .tomo-grid-2, .tomo-grid-3, .tomo-grid-4 { grid-template-columns: minmax(0, 1fr); }
+}
+blockquote.tomo-quote-box { padding: .8em 1em; border: 1px solid rgba(128, 128, 128, .35); border-radius: 8px; }
+blockquote.tomo-quote-fill { padding: .8em 1em; border-left: 3px solid currentColor; border-radius: 0 8px 8px 0; background: rgba(128, 128, 128, .1); }
+blockquote.tomo-quote-bubble { position: relative; padding: .8em 1em; border-radius: 12px; background: rgba(128, 128, 128, .12); }
+blockquote.tomo-quote-bubble::after { content: ""; position: absolute; left: 22px; top: 100%; border: 8px solid transparent; border-top-color: rgba(128, 128, 128, .12); border-bottom: 0; }
+blockquote.tomo-quote-mark { position: relative; padding: .4em 1em .4em 2.2em; border: 0; font-style: italic; }
+blockquote.tomo-quote-mark::before { content: "“"; position: absolute; left: .1em; top: -.15em; font-size: 2.6em; line-height: 1; opacity: .35; font-style: normal; }
+hr.tomo-hr-dotted { border: 0; border-top: 2px dotted currentColor; opacity: .5; }
+hr.tomo-hr-double { border: 0; border-top: 3px double currentColor; opacity: .5; }
+hr.tomo-hr-short { width: 64px; margin-left: auto; margin-right: auto; border: 0; border-top: 2px solid currentColor; opacity: .55; }
+hr.tomo-hr-thick { border: 0; border-top: 4px solid currentColor; opacity: .4; }

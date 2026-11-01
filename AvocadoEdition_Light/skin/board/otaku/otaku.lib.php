@@ -200,10 +200,10 @@ function otaku_name_html(array $person): string
 }
 
 /** 여러 이름을 이어 붙이되, 한 사람의 이름은 중간에서 줄이 바뀌지 않게 묶는다. */
-function otaku_names_html(array $people): string
+function otaku_names_html(array $people, string $sep = '·'): string
 {
     $names = array_filter(array_map(static fn($p) => otaku_e($p['name'] ?? ''), $people), static fn($n) => $n !== '');
-    return implode(' <span class="otaku-sep">·</span> ', array_map(static fn($n) => '<span class="otaku-nm">'.$n.'</span>', $names));
+    return implode(' <span class="otaku-sep">'.otaku_e($sep).'</span> ', array_map(static fn($n) => '<span class="otaku-nm">'.$n.'</span>', $names));
 }
 
 /** 페어 표시 이름: 페어 이름이 있으면 그것, 없으면 두 사람 이름. */

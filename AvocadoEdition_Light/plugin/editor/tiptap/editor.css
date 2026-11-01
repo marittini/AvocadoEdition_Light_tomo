@@ -850,3 +850,159 @@
   .tomo-editor-tool-group:first-of-type {
   flex: 1 1 300px;
 }
+
+/* =====================================================================
+   2026-11 layout: mode tabs · one grouped toolbar · popovers · contextual bar
+   (BearEditor-like: everything on one row, rare tools in popovers)
+   ===================================================================== */
+.tomo-editor .tomo-editor-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 0 8px; border-bottom: 1px solid var(--editor-border); background: #fff;
+}
+.tomo-editor .tomo-editor-modes { display: flex; gap: 2px; }
+.tomo-editor .tomo-editor-modes [role="tab"] {
+  height: 34px; padding: 0 14px; border: 0; background: none; color: var(--editor-muted);
+  font-size: 12px; box-shadow: inset 0 -2px 0 transparent;
+}
+.tomo-editor .tomo-editor-modes [role="tab"][aria-selected="true"] { color: var(--editor-text); box-shadow: inset 0 -2px 0 var(--editor-accent); font-weight: 600; }
+.tomo-editor .tomo-editor-wide { width: 30px; height: 30px; border: 0; background: none; }
+
+.tomo-editor .tomo-editor-toolbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0;
+  padding: 6px 6px; background: var(--editor-surface); border-bottom: 1px solid var(--editor-border);
+}
+.tomo-editor.is-expanded .tomo-editor-toolbar { top: -1px; }
+.tomo-editor .tomo-editor-toolbar.is-disabled { opacity: .5; }
+.tomo-editor .tomo-tb-group { display: flex; align-items: center; gap: 2px; padding: 0 6px; }
+.tomo-editor .tomo-tb-group + .tomo-tb-group { border-left: 1px solid var(--editor-border); }
+.tomo-editor .tomo-tb-group button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; padding: 0; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; color: var(--editor-text);
+}
+.tomo-editor .tomo-tb-group button:hover,
+.tomo-editor .tomo-tb-group button[aria-expanded="true"] { background: #fff; border-color: var(--editor-border); }
+.tomo-editor .tomo-tb-group button[aria-pressed="true"] { background: var(--editor-selected); border-color: #d8a3ac; }
+.tomo-editor .tomo-tb-group select {
+  height: 30px; max-width: 128px; padding: 0 6px; border: 1px solid var(--editor-border); border-radius: 6px;
+  background: #fff; color: var(--editor-text); font-size: 12px;
+}
+.tomo-editor .tomo-tb-group select[aria-label="문단 스타일"] { width: 86px; }
+.tomo-editor .tomo-tb-group select[aria-label="글꼴"] { width: 118px; }
+.tomo-editor .tomo-tb-group select[aria-label="글자 크기"] { width: 94px; }
+.tomo-editor .tomo-tb-group select[aria-label="줄 간격"] { width: 86px; }
+.tomo-editor .tomo-tb-group select[aria-label="자간"] { width: 72px; }
+
+/* Popovers (one open at a time) */
+.tomo-editor .tomo-editor-pops { position: relative; z-index: 4; }
+.tomo-editor .tomo-editor-pop {
+  display: grid; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--editor-border);
+  background: #fff; font-size: 12px;
+}
+.tomo-editor .tomo-editor-pop-title { margin: 0; font-size: 12px; font-weight: 600; }
+.tomo-editor .tomo-editor-pop-subtitle { margin: 6px 0 0; font-size: 12px; font-weight: 600; }
+.tomo-editor .tomo-editor-help { margin: 0; color: var(--editor-muted); font-size: 12px; line-height: 1.6; }
+.tomo-editor .tomo-editor-pop-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tomo-editor .tomo-editor-pop button,
+.tomo-editor .tomo-editor-ctx button:not(.tomo-editor-icon-button),
+.tomo-editor .tomo-editor-sourcebox button {
+  min-height: 30px; padding: 0 12px; border: 1px solid var(--editor-border); border-radius: 6px;
+  background: #fff; color: var(--editor-text); font-size: 12px;
+}
+.tomo-editor .tomo-editor-pop button:hover, .tomo-editor .tomo-editor-ctx button:hover { border-color: #d8a3ac; }
+.tomo-editor button.tomo-editor-primary { background: var(--editor-accent); border-color: var(--editor-accent); color: #fff; }
+.tomo-editor button.tomo-editor-plain { border-color: transparent; background: none; color: var(--editor-muted); }
+.tomo-editor .tomo-editor-field { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+.tomo-editor .tomo-editor-field > span { color: var(--editor-muted); white-space: nowrap; }
+.tomo-editor .tomo-editor-field input:not([type=checkbox]):not([type=color]):not([type=file]),
+.tomo-editor .tomo-editor-field select {
+  height: 30px; min-width: 0; padding: 0 8px; border: 1px solid var(--editor-border); border-radius: 6px; background: #fff; color: var(--editor-text);
+}
+.tomo-editor .tomo-editor-pop .tomo-editor-field { display: grid; gap: 4px; }
+.tomo-editor .tomo-editor-pop .tomo-editor-field input:not([type=file]) { width: 100%; max-width: 420px; }
+.tomo-editor .tomo-editor-upload input[type=file] { font-size: 12px; }
+.tomo-editor .tomo-editor-drop { margin: 0; padding: 10px 12px; border: 1px dashed var(--editor-border); border-radius: 8px; color: var(--editor-muted); }
+
+/* Color palette */
+.tomo-editor .tomo-editor-swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tomo-editor .tomo-editor-swatch-title { min-width: 64px; color: var(--editor-muted); }
+.tomo-editor .tomo-editor-pop .tomo-editor-swatch {
+  width: 22px; min-height: 22px; height: 22px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, .15);
+}
+.tomo-editor .tomo-editor-swatches input[type=color] { width: 26px; height: 26px; padding: 0; border: 0; background: none; }
+
+/* Quote and divider choices show a small preview */
+.tomo-editor .tomo-editor-choices { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+.tomo-editor .tomo-editor-pop .tomo-editor-choice { min-width: 76px; }
+.tomo-editor .tomo-editor-pop .tomo-quote-sample { margin: 0; text-align: left; }
+.tomo-editor .tomo-editor-hr-choice { display: inline-grid; justify-items: center; gap: 2px; min-width: 70px; padding: 6px 10px; }
+.tomo-editor .tomo-editor-hr-choice hr { width: 48px; margin: 4px 0; }
+.tomo-editor .tomo-editor-choices .tomo-editor-icon-button { width: 30px; height: 30px; padding: 0; }
+
+/* Contextual bar: image / table / image group */
+.tomo-editor .tomo-editor-context { border-bottom: 1px solid var(--editor-border); background: #fffafb; }
+.tomo-editor .tomo-editor-ctx { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 10px; font-size: 12px; }
+.tomo-editor .tomo-editor-ctx-title { margin-right: 4px; padding: 2px 8px; border-radius: 999px; background: var(--editor-selected); font-weight: 600; }
+.tomo-editor .tomo-editor-ctx .tomo-editor-icon-button {
+  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0;
+  border: 1px solid transparent; border-radius: 6px; background: none; color: var(--editor-text);
+}
+.tomo-editor .tomo-editor-ctx .tomo-editor-icon-button:hover { border-color: var(--editor-border); background: #fff; }
+.tomo-editor .tomo-editor-ctx [aria-pressed="true"] { background: var(--editor-selected); border-color: #d8a3ac; }
+.tomo-editor .tomo-editor-ctx .tomo-editor-field input[type=number] { width: 78px; }
+.tomo-editor .tomo-editor-ctx .tomo-editor-field input[type=text] { width: 140px; }
+.tomo-editor .tomo-editor-ctx input[type=color] { width: 28px; height: 28px; padding: 0; border: 0; background: none; }
+.tomo-editor .tomo-editor-ctx .tomo-editor-danger { color: #a0384b; }
+
+/* HTML mode */
+.tomo-editor .tomo-editor-sourcebox { display: grid; gap: 8px; padding: 12px; }
+.tomo-editor .tomo-editor-sourcebox .tomo-editor-source { width: 100%; min-height: 320px; box-sizing: border-box; font: 12px/1.6 monospace; }
+
+/* Image group, quote and divider styles inside the editor (read pages use css/editor-content.css) */
+.tomo-editor .tiptap .tomo-grid { display: grid; gap: 8px; margin: 12px 0; padding: 6px; border: 1px dashed var(--editor-border); border-radius: 8px; align-items: start; }
+.tomo-editor .tiptap .tomo-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tomo-editor .tiptap .tomo-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tomo-editor .tiptap .tomo-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tomo-editor .tiptap .tomo-grid img,
+.tomo-editor .tiptap .tomo-grid [data-resize-container],
+.tomo-editor .tiptap .tomo-grid [data-resize-wrapper] { width: 100% !important; height: auto !important; max-width: 100%; margin: 0 !important; }
+.tomo-editor .tiptap .tomo-grid.ProseMirror-selectednode { outline: 2px solid #d8a3ac; }
+
+@media (max-width: 600px) {
+  /* 휴대폰: 묶음 구분 없이 버튼을 이어서 채운다(줄 수를 줄인다) */
+  .tomo-editor .tomo-editor-toolbar { gap: 2px; padding: 6px; }
+  .tomo-editor .tomo-tb-group { display: contents; }
+  .tomo-editor .tomo-editor-footer .tomo-editor-hint { display: none; }
+  .tomo-editor .tomo-tb-group select[aria-label="문단 스타일"],
+  .tomo-editor .tomo-tb-group select[aria-label="글자 크기"],
+  .tomo-editor .tomo-tb-group select[aria-label="줄 간격"],
+  .tomo-editor .tomo-tb-group select[aria-label="자간"] { width: calc(25% - 2px); max-width: none; }
+  .tomo-editor .tomo-tb-group { padding: 0 3px; }
+  .tomo-editor .tomo-tb-group button { width: 40px; height: 44px; } /* 손가락으로 누르기 쉬운 높이(44px) */
+  .tomo-editor .tomo-tb-group select { height: 44px; }
+  .tomo-editor .tomo-tb-group select[aria-label="글꼴"] { width: calc(50% - 2px); max-width: none; }
+  .tomo-editor .tomo-editor-ctx .tomo-editor-field { width: 100%; }
+  .tomo-editor .tomo-editor-ctx .tomo-editor-field input { flex: 1; }
+}
+
+/* 인용 · 구분선 모양(본문 · 고르기 미리보기). 읽는 화면은 css/editor-content.css */
+.tomo-editor .tiptap blockquote.tomo-quote-box { padding: .8em 1em; border: 1px solid rgba(128, 128, 128, .35); border-radius: 8px; }
+.tomo-editor .tiptap blockquote.tomo-quote-fill { padding: .8em 1em; border-left: 3px solid currentColor; border-radius: 0 8px 8px 0; background: rgba(128, 128, 128, .1); }
+.tomo-editor .tiptap blockquote.tomo-quote-bubble { position: relative; padding: .8em 1em; border-radius: 12px; background: rgba(128, 128, 128, .12); }
+.tomo-editor .tiptap blockquote.tomo-quote-bubble::after { content: ""; position: absolute; left: 22px; top: 100%; border: 8px solid transparent; border-top-color: rgba(128, 128, 128, .12); border-bottom: 0; }
+.tomo-editor .tiptap blockquote.tomo-quote-mark { position: relative; padding: .4em 1em .4em 2.2em; border: 0; font-style: italic; }
+.tomo-editor .tiptap blockquote.tomo-quote-mark::before { content: "“"; position: absolute; left: .1em; top: -.15em; font-size: 2.6em; line-height: 1; opacity: .35; font-style: normal; }
+.tomo-editor .tiptap hr.tomo-hr-dotted { border: 0; border-top: 2px dotted currentColor; opacity: .5; }
+.tomo-editor .tiptap hr.tomo-hr-double { border: 0; border-top: 3px double currentColor; opacity: .5; }
+.tomo-editor .tiptap hr.tomo-hr-short { width: 64px; margin-left: auto; margin-right: auto; border: 0; border-top: 2px solid currentColor; opacity: .55; }
+.tomo-editor .tiptap hr.tomo-hr-thick { border: 0; border-top: 4px solid currentColor; opacity: .4; }
+.tomo-editor .tomo-editor-pop hr.tomo-hr-dotted { border: 0; border-top: 2px dotted currentColor; opacity: .5; }
+.tomo-editor .tomo-editor-pop hr.tomo-hr-double { border: 0; border-top: 3px double currentColor; opacity: .5; }
+.tomo-editor .tomo-editor-pop hr.tomo-hr-short { width: 64px; margin-left: auto; margin-right: auto; border: 0; border-top: 2px solid currentColor; opacity: .55; }
+.tomo-editor .tomo-editor-pop hr.tomo-hr-thick { border: 0; border-top: 4px solid currentColor; opacity: .4; }
+.tomo-editor .tomo-editor-pop button.tomo-quote-box { padding: .8em 1em; border: 1px solid rgba(128, 128, 128, .35); border-radius: 8px; }
+.tomo-editor .tomo-editor-pop button.tomo-quote-fill { padding: .8em 1em; border-left: 3px solid currentColor; border-radius: 0 8px 8px 0; background: rgba(128, 128, 128, .1); }
+.tomo-editor .tomo-editor-pop button.tomo-quote-bubble { position: relative; padding: .8em 1em; border-radius: 12px; background: rgba(128, 128, 128, .12); }
+.tomo-editor .tomo-editor-pop button.tomo-quote-mark { position: relative; padding: .4em 1em .4em 2.2em; border: 0; font-style: italic; }

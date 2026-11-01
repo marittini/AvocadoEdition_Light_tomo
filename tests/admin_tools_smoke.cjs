@@ -86,10 +86,9 @@ const fs = require("fs");
     .getByRole("combobox", { name: "글자 크기", exact: true })
     .selectOption("24px");
   assert((await p.locator(".tiptap p").first().innerHTML()).includes("24px"));
+  const alignName = { left: "왼쪽 정렬", center: "가운데 정렬", right: "오른쪽 정렬" };
   for (const align of ["center", "left", "right", "center"]) {
-    await p
-      .getByRole("combobox", { name: "정렬", exact: true })
-      .selectOption(align);
+    await p.getByRole("button", { name: alignName[align], exact: true }).click();
     assert.equal(
       await p
         .locator(".tiptap p")
@@ -100,11 +99,7 @@ const fs = require("fs");
   }
   await p.locator(".tiptap p").nth(1).click();
   await p.waitForFunction(
-    () => document.querySelector('select[aria-label="정렬"]').value === "right",
-  );
-  assert.equal(
-    await p.getByRole("combobox", { name: "정렬", exact: true }).inputValue(),
-    "right",
+    () => document.querySelector('button[aria-label="오른쪽 정렬"]').getAttribute("aria-pressed") === "true",
   );
   assert.equal(
     await p.getByRole("combobox", { name: "글꼴", exact: true }).inputValue(),

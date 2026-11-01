@@ -772,3 +772,7 @@ a.px-series-step:hover { outline: 1px solid var(--px-line); }
 }
 .px-categories a.ui-btn { min-height: 32px; padding: 5px 14px; }
 .px-tags a.ui-btn { min-height: 24px; padding: 3px 9px; }
+
+/* 분류 두 줄: [전체 · 시리즈] / [일러스트 · 만화 · 소설] */
+.px-categories { row-gap: 10px; }
+.px-categories .px-cat-break { flex-basis: 100%; height: 0; margin: 0; padding: 0; }

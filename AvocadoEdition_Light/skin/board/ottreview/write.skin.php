@@ -14,7 +14,7 @@ $action_url = https_url(G5_BBS_DIR)."/write_update.php";
 $is_notice = true;
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v=20260721_ott_write_autogrow_v8">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css?v='.substr(md5_file(__DIR__.'/style.css'), 0, 10).'">', 0);
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/txtggu/textggu.css?v=2">', 0);
 
 $prefiles = array();

@@ -43,7 +43,7 @@ const fs = require("node:fs");
       .editor.commands.setContent("<p><strong>漢字</strong>と 비밀 이야기</p>"),
   );
   await selectText("漢字");
-  await p.getByRole("button", { name: "루비·스포일러", exact: true }).click();
+  await p.getByRole("button", { name: "루비", exact: true }).click();
   await p
     .getByRole("textbox", { name: "루비 발음·설명", exact: true })
     .fill("かんじ");
@@ -54,19 +54,13 @@ const fs = require("node:fs");
   await p.getByRole("button", { name: "스포일러 블러", exact: true }).click();
   assert.equal(await p.locator(".tiptap .tomo-spoiler").textContent(), "비밀");
   await selectText("이야기");
-  await p.getByRole("button", { name: "추가 서식", exact: true }).click();
-  await p
-    .getByRole("spinbutton", { name: "자간(px)", exact: true })
-    .fill("1.5");
-  await p
-    .getByRole("spinbutton", { name: "자간(px)", exact: true })
-    .dispatchEvent("change");
+  await p.getByRole("combobox", { name: "자간", exact: true }).selectOption("1.5");
   assert.match(
     await p.locator("[name=main_content]").inputValue(),
     /letter-spacing: 1.5px/,
   );
   // HTML round trip preserves ruby base exactly once and treats annotation text literally.
-  await p.getByRole("button", { name: "HTML", exact: true }).click();
+  await p.getByRole("tab", { name: "HTML", exact: true }).click();
   await p.getByRole("button", { name: "HTML 적용", exact: true }).click();
   assert.equal(
     await p.locator(".tiptap ruby .tomo-ruby-base").textContent(),
@@ -75,7 +69,7 @@ const fs = require("node:fs");
   assert.equal(await p.locator(".tiptap ruby rt").textContent(), "かんじ");
   assert.equal(await p.locator(".tiptap ruby strong").textContent(), "漢字");
   // Staged gallery upload must not insert until requested; filenames are text nodes.
-  await p.getByRole("button", { name: "이미지 관리", exact: true }).click();
+  await p.getByRole("button", { name: "이미지", exact: true }).click();
   const img = fs.readFileSync(process.env.TEST_IMAGE);
   await p
     .getByLabel("관리창 이미지 업로드", { exact: true })
@@ -149,19 +143,19 @@ const fs = require("node:fs");
   // Icon menus retain accessible names, a focus hint, and 44px mobile targets.
   for (const width of [320, 390, 768, 1440]) {
     await p.setViewportSize({ width, height: 1000 });
-    await p.getByRole("button", { name: "루비·스포일러", exact: true }).click();
+    await p.getByRole("button", { name: "루비", exact: true }).click();
     assert(
       await p.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     );
-    const toggle = p.getByRole("button", { name: "이미지 관리", exact: true });
+    const toggle = p.getByRole("button", { name: "이미지", exact: true });
     assert.equal(await toggle.locator("svg").count(), 1);
-    assert.equal(await toggle.getAttribute("title"), "이미지 관리");
+    assert.equal(await toggle.getAttribute("title"), "이미지");
     await toggle.focus();
     assert.equal(
       await p.locator(".tomo-editor-hint").textContent(),
-      "이미지 관리",
+      "이미지",
     );
     if (width <= 390) assert((await toggle.boundingBox()).height >= 44);
     if (process.env.SCREENSHOT_DIR) {

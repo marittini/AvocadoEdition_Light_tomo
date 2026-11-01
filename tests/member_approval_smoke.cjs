@@ -107,6 +107,11 @@ const assert = require("node:assert/strict");
     await p.locator('input[name="member_ids[]"][value="' + id + '"]').count(),
     1,
   );
+  // 승인 대기가 있으면 관리자 메뉴에 인원 표시
+  assert.match(
+    await p.locator("a[href*='member_approval.php']").first().innerText(),
+    /가입 승인 \(\d+\)/,
+  );
   await admin.request.post(base + "/adm/member_approval.php", {
     form: { token: "forged", approval_action: "approve", "member_ids[]": id },
   });

@@ -17,7 +17,7 @@ $colspan = 8;
 	<p><strong>주의!</strong> 메뉴설정 작업 후 반드시 <strong>확인</strong>을 누르셔야 저장됩니다.</p>
 </div>
 <div class="local_desc01 local_desc">
-	<p>아이콘 항목에 사용할 구글 아이콘 이름을 입력해주세요. ( ex. <span style="color:red">&lt;span class="material-icons"&gt;<strong>home</strong>&lt;/span&gt;</span> ▶ <strong>home</strong> 만 입력하기 )</p>
+	<p>아이콘 항목에 사용할 구글 아이콘 이름을 입력해주세요. ( ex. <span style="color:red">&lt;span class="material-icons"&gt;<strong>home</strong>&lt;/span&gt;</span> ▶ <strong>home</strong> 만 입력하기 )<br>아이콘 칸 옆 <strong>선택</strong> 버튼을 누르면 목록에서 찾아 고를 수 있습니다.</p>
 </div>
 
 <form name="fmenulist" id="fmenulist" method="post" action="./menu_list_update.php" onsubmit="return fmenulist_submit(this);" enctype="multipart/form-data">
@@ -185,6 +185,11 @@ function fmenulist_submit(f)
 }
 </script>
 
+<?php // 아이콘 선택창
+$icon_picker_v = static fn($f) => substr((string)@md5_file(G5_ADMIN_PATH.'/'.$f), 0, 10); ?>
+<link rel="stylesheet" href="<?php echo G5_ADMIN_URL ?>/css/icon-picker.css?v=<?php echo $icon_picker_v('css/icon-picker.css') ?>">
+<script src="<?php echo G5_ADMIN_URL ?>/js/icon-names.js?v=<?php echo $icon_picker_v('js/icon-names.js') ?>"></script>
+<script src="<?php echo G5_ADMIN_URL ?>/js/icon-picker.js?v=<?php echo $icon_picker_v('js/icon-picker.js') ?>"></script>
 <?php
 include_once ('./admin.tail.php');
 ?>

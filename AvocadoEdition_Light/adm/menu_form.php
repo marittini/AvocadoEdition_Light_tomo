@@ -89,7 +89,7 @@ function add_menu_list(name, link, code)
 	list += "	<input type=\"hidden\" name=\"me_level[]\" value=\"\" />";
 	list += "	<input type=\"text\" name=\"me_name[]\" value=\""+name+"\" id=\"me_name_"+ms+"\" required class=\"required frm_input full_input\" />";
 	list += "</td>";
-	list += "<td></td>"; 
+	list += "<td><i class=\"material-icons\"></i></td>"; // 아이콘 미리보기(선택창이 채움)
 	list += "<td>"; 
 	list += "	<input type=\"text\" name=\"me_icon[]\" class=\"frm_input full_input\" />";
 	list += "</td>";

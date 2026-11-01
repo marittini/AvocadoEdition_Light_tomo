@@ -148,7 +148,15 @@
       btn.title = "이모티콘 목록 창 열기";
       btn.innerHTML = '<i class="material-icons" aria-hidden="true">mood</i> 이모티콘';
       bar.append(btn);
-      area.after(bar);
+      // 글상자가 [글상자 | 등록 버튼] 같은 가로 줄 안에 있으면 그 줄 아래에 둔다(줄 안에 넣으면 버튼 높이가 늘어난다)
+      let spot = area;
+      while (spot.parentElement && spot.parentElement !== form) {
+        const cs = getComputedStyle(spot.parentElement);
+        const row = (cs.display.includes("flex") && !cs.flexDirection.startsWith("column")) || cs.display.includes("grid") || cs.position === "relative" && [...spot.parentElement.children].some((c) => getComputedStyle(c).position === "absolute");
+        if (!row) break;
+        spot = spot.parentElement;
+      }
+      spot.after(bar);
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", autoButtons); else autoButtons();

@@ -70,7 +70,7 @@ $otaku_who = static function (string $who, array $data): string {
 	if ($who === 'all') return implode(' · ', array_map(static fn($p) => otaku_e($p['name']), $data['people']));
 	return $who !== '' && isset($data['people'][(int)$who]) ? otaku_e($data['people'][(int)$who]['name']) : '';
 };
-$otaku_back = otaku_url($bo_table, ['page' => (int)$page]);
+$otaku_back = otaku_url($bo_table, ['sca' => (string)$sca, 'page' => (int)$page]);
 /** 좁은 화면에서 두 사람을 한 명씩 보는 탭(넓은 화면에서는 숨김). 두 명 이상일 때만. */
 $otaku_person_tabs = static function (array $people, array $which): string {
 	if (count($which) < 2) return '';
@@ -88,7 +88,7 @@ $otaku_width = (int)($board['bo_table_width'] ?? 0);
 			<div>
 				<?php foreach ($otaku_versions as $v) { $hidden = $v['id'] === $otaku_current ? '' : ' hidden'; ?>
 				<div data-version-title="<?=$v['id']?>"<?=$hidden?>>
-					<span class="otaku-label"><?=$v['data']['title'] !== '' ? $otaku_names($v['data']) : '페어'?><?=$v['id'] ? ' · '.otaku_e($v['label']) : ''?></span>
+					<span class="otaku-label"><?php if (($view['ca_name'] ?? '') !== '') { ?><a href="<?=otaku_url($bo_table, ['sca' => $view['ca_name']])?>" class="otaku-cat-chip"><?=otaku_e($view['ca_name'])?></a><?php } ?><?=$v['data']['title'] !== '' ? $otaku_names($v['data']) : '페어'?><?=$v['id'] ? ' · '.otaku_e($v['label']) : ''?></span>
 					<h1 class="otaku-title"><?=otaku_e(otaku_title($v['data']))?></h1>
 				</div>
 				<?php } ?>

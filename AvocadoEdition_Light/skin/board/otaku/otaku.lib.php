@@ -114,6 +114,19 @@ function otaku_rows($source, string $prefix, array $fields, int $limit): array
     return $rows;
 }
 
+/**
+ * 분류(모아 보기). 게시판 설정에서 분류를 켜고 목록을 적었으면 그것을, 아니면 기본 '자캐 · 드림'.
+ * 분류는 원본 글의 ca_name에 저장하고, AU는 원본 분류를 따른다.
+ */
+function otaku_categories(array $board): array
+{
+    if (!empty($board['bo_use_category']) && trim((string)($board['bo_category_list'] ?? '')) !== '') {
+        $list = array_values(array_filter(array_map('trim', explode('|', $board['bo_category_list'])), static fn($c) => $c !== '' && $c !== '공지'));
+        if ($list) return $list;
+    }
+    return ['자캐', '드림'];
+}
+
 /** 한마디를 감싸는 따옴표: double “ ” / corner 「 」 / none. */
 const OTAKU_MARKS = ['double' => ['“', '”', '“ ”'], 'corner' => ['「', '」', '「 」'], 'none' => ['', '', '없음']];
 

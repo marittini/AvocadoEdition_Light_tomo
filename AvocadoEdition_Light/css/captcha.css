@@ -1,0 +1,50 @@
+@charset "utf-8";
+/*
+ * 자동등록방지(kcaptcha): 그림 + 듣기 · 새로고침 아이콘, 입력칸, 안내 한 줄.
+ * 색은 지정하지 않는다(글자색을 옅게 섞은 선). 버튼 모양은 아이콘 동그라미.
+ */
+#captcha {
+	--cap-line: rgba(128, 128, 128, .35);
+	display: grid; grid-template-columns: auto auto auto minmax(0, 150px); justify-content: start; align-items: center; gap: 6px 8px;
+	max-width: 100%; min-width: 0; margin: 10px 0; padding: 0; border: 0; box-sizing: border-box;
+}
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+	#captcha { --cap-line: color-mix(in srgb, currentColor 22%, transparent); }
+}
+#captcha legend { display: none; }
+#captcha #captcha_img {
+	display: block; width: auto; height: 44px; max-width: 100%;
+	border-radius: 8px; box-shadow: 0 0 0 1px var(--cap-line);
+}
+#captcha #captcha_mp3, #captcha #captcha_reload {
+	display: inline-flex; align-items: center; justify-content: center; flex: none;
+	width: 34px; height: 34px; margin: 0; padding: 0; overflow: hidden;
+	border: 1px solid var(--cap-line); border-radius: 50%; background: transparent; color: inherit;
+	font-size: 0; cursor: pointer; /* 글자는 화면 읽기용으로 남기고 아이콘만 보인다 */
+}
+#captcha #captcha_mp3 span, #captcha #captcha_reload span { display: none; }
+#captcha #captcha_mp3::before, #captcha #captcha_reload::before {
+	font-family: 'Material Icons'; font-size: 18px; line-height: 1; font-weight: normal; font-style: normal;
+	font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; text-transform: none; letter-spacing: normal;
+}
+#captcha #captcha_mp3::before { content: 'volume_up'; }
+#captcha #captcha_reload::before { content: 'refresh'; }
+#captcha #captcha_mp3:hover, #captcha #captcha_reload:hover { border-color: currentColor; }
+#captcha #captcha_mp3:focus-visible, #captcha #captcha_reload:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+#captcha #captcha_key {
+	width: 100%; height: 38px; margin: 0; padding: 0 12px; box-sizing: border-box;
+	border: 1px solid var(--cap-line); border-radius: 8px; background: transparent; color: inherit;
+	font-size: 16px; letter-spacing: .25em; text-align: center; font-variant-numeric: tabular-nums;
+}
+#captcha #captcha_key::placeholder { letter-spacing: normal; font-size: 13px; opacity: .55; }
+#captcha #captcha_key:focus { outline: none; border-color: currentColor; }
+#captcha #captcha_info { grid-column: 1 / -1; font-size: 12px; line-height: 1.5; opacity: .65; }
+#captcha #captcha_audio { grid-column: 1 / -1; width: 100%; max-width: 320px; height: 34px; }
+
+/* 좁은 곳(휴대폰 · 좁은 댓글 칸): 그림과 아이콘 한 줄, 입력칸은 아래 한 줄 전체 */
+@media (max-width: 640px) {
+	#captcha { grid-template-columns: auto auto auto 1fr; } /* fr 칸이 있으면 나머지 칸은 늘어나지 않는다 */
+	#captcha #captcha_key { grid-column: 1 / -1; max-width: none; }
+}
+#captcha.m_captcha { grid-template-columns: auto auto 1fr; }
+#captcha.m_captcha #captcha_key { grid-column: 1 / -1; }

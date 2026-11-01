@@ -75,7 +75,7 @@ if (defined('G5_IS_ADMIN')) {
 	echo '<link rel="stylesheet" href="'.G5_ADMIN_URL.'/css/admin.layout.css" type="text/css">'.PHP_EOL;
 } else {
 	echo '<link rel="stylesheet" href="'.G5_CSS_URL.'/default.css" type="text/css">'.PHP_EOL;
-	echo '<link rel="stylesheet" href="'.G5_CSS_URL.'/style.css" type="text/css">'.PHP_EOL;
+	echo '<link rel="stylesheet" href="'.G5_CSS_URL.'/style.css?v='.substr((string)@md5_file(G5_PATH.'/'.G5_CSS_DIR.'/style.css'), 0, 10).'" type="text/css">'.PHP_EOL; // 고친 내용이 캐시에 막히지 않게
 	echo '<link rel="stylesheet" href="'.G5_DATA_URL.'/css/_design.config.css?v='.$config['cf_css_version'].'" type="text/css" />';
 }
 ?>

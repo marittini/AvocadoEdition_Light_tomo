@@ -108,6 +108,25 @@ const { chromium } = require("playwright"),
     assert.equal(await emo.count(), 1, "댓글에 이모티콘 그림");
     assert.equal(Math.round((await emo.boundingBox()).height), 30, "표시 크기 30px");
 
+    // 다이어리 본문(#bo_v_con 그림 규칙이 height:auto !important를 거는 곳)에서도 표시 크기를 따른다
+    const dy = "ed" + Date.now().toString().slice(-7);
+    await p.goto(base + "/adm/board_form.php");
+    await p.locator("[name=gr_id]").selectOption({ index: 1 });
+    await p.locator("[name=bo_table]").fill(dy);
+    await p.locator("[name=bo_subject]").fill("이모티콘 다이어리");
+    await p.locator("[role=tab][aria-controls=anc_004]").click();
+    await p.locator("[name=bo_skin]").selectOption("diary");
+    await p.locator("input[type=submit]").first().click();
+    await p.waitForTimeout(600);
+    await p.goto(base + "/bbs/write.php?bo_table=" + dy);
+    await p.locator("#wr_subject").fill("크기 확인");
+    await p.locator(".ProseMirror").first().click();
+    await p.keyboard.insertText("오늘 " + renamed);
+    await p.locator("#btn_submit").click();
+    await p.waitForLoadState("load");
+    const body = p.locator("#bo_v_con img.emoticon").first();
+    assert.equal(Math.round((await body.boundingBox()).height), 30, "다이어리 본문 이모티콘도 30px");
+
     // 일반 회원은 들어올 수 없음
     const member = await open(process.env.TEST_MEMBER);
     await member.goto(base + "/adm/emoticon_list.php");

@@ -83,7 +83,8 @@ function emoticon_size_style(): string
 {
     $size = emoticon_size();
     if (!$size) return '';
-    return '<style id="emoticon-size">img.emoticon{width:auto!important;height:'.$size.'px!important;max-width:none!important;max-height:none!important;vertical-align:middle}</style>';
+    // :not(#…) 두 번은 아무것도 거르지 않고 우선순위만 ID 두 개만큼 올린다. 본문 그림 규칙(#bo_v_con img { height:auto !important } 등)보다 앞서게.
+    return '<style id="emoticon-size">img.emoticon:not(#tomo-emo-a):not(#tomo-emo-b){width:auto!important;height:'.$size.'px!important;max-width:none!important;max-height:none!important;vertical-align:middle}</style>';
 }
 
 /** 댓글 폼(write_comment_update.php로 보내는 폼)에 이모티콘 버튼을 자동으로 붙이는 스크립트. */

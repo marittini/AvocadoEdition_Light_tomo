@@ -98,6 +98,8 @@ const { chromium } = require("playwright"),
   await p.locator("[name=otaku_title]").fill("GEAS");
   assert.equal(await p.locator("[name=otaku_marks][value=double]").isChecked(), true, "따옴표 기본은 “ ”");
   await p.locator("[name=otaku_marks][value=corner]").check();
+  assert.equal(await p.locator("[name=ca_name][value=자캐]").isChecked(), true, "분류 기본은 첫 번째(자캐)");
+  await p.locator("[name=ca_name][value=드림]").check();
   for (const slot of [0, 1, 2, 3, 4]) await p.locator(`input[name='bf_file[${slot}]']`).setInputFiles(image);
   assert.ok(await p.locator("[data-preview='2'] img").count(), "썸네일 미리보기");
   await p.locator("[name='p[0][name]']").fill("윤서하");
@@ -198,6 +200,16 @@ const { chromium } = require("playwright"),
   // 6. 목록: 원본만 카드로, 썸네일·미니 (AU 수는 표시하지 않음)
   await p.goto(board);
   assert.equal(await p.locator(".otaku-card").count(), 2, "AU는 카드로 나오지 않음");
+  // 분류 탭: 전체 2 · 자캐 1 · 드림 1, 누르면 그 분류만
+  assert.deepEqual((await p.locator(".otaku-cats a").allInnerTexts()).map((t) => t.replace(/\s+/g, " ").trim()), ["전체 2", "자캐 1", "드림 1"], "분류 탭과 개수");
+  await p.locator(".otaku-cats a", { hasText: "드림" }).click();
+  await p.waitForLoadState();
+  assert.equal(await p.locator(".otaku-card").count(), 1, "드림만 모아 보기");
+  assert.equal(await p.locator(`.otaku-card[href*='wr_id=${main}']`).count(), 1, "드림 분류의 페어");
+  await p.locator(`.otaku-card[href*='wr_id=${main}']`).click();
+  await p.waitForLoadState();
+  assert.equal((await p.locator("[data-version-title='0'] .otaku-cat-chip").innerText()).trim(), "드림", "읽기 화면에 분류");
+  await p.goto(board);
   const card = p.locator(`.otaku-card[href*='wr_id=${main}']`);
   assert.equal(await card.locator(".otaku-card-minis img").count(), 2, "미니 캐릭터 2명");
   assert.match(await card.innerText(), /GEAS[\s\S]*윤서하 · 강이안/);

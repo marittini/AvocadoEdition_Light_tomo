@@ -9,7 +9,7 @@ function tomo_settings_upgrade(): void
     $columns = [];
     $result = sql_query("SHOW COLUMNS FROM `{$g5['config_table']}`");
     while ($row = sql_fetch_array($result)) $columns[$row['Field']] = true;
-    foreach (['cf_tomo_require_approval'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'cf_tomo_fonts'=>'TEXT NULL', 'cf_tomo_webp_quality'=>'TINYINT UNSIGNED NOT NULL DEFAULT 95', 'cf_tomo_protection'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0'] as $name=>$definition) {
+    foreach (['cf_tomo_require_approval'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'cf_tomo_fonts'=>'TEXT NULL', 'cf_tomo_webp_quality'=>'TINYINT UNSIGNED NOT NULL DEFAULT 95', 'cf_tomo_protection'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'cf_tomo_emoticon_size'=>'SMALLINT UNSIGNED NOT NULL DEFAULT 0'] as $name=>$definition) {
         if (!isset($columns[$name])) {
             // Another administrator may have opened the page concurrently.
             if (!sql_query("ALTER TABLE `{$g5['config_table']}` ADD `$name` $definition", false)) {

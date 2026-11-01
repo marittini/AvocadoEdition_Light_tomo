@@ -80,7 +80,7 @@ if (defined('G5_IS_ADMIN')) {
 }
 ?>
 
-<?php if (!defined("G5_IS_ADMIN") || !G5_IS_ADMIN) { ?><link rel="stylesheet" href="<?=G5_CSS_URL?>/archive-responsive.css?v=3"><link rel="stylesheet" href="<?=G5_CSS_URL?>/editor-content.css?v=1"><?php } ?>
+<?php if (!defined("G5_IS_ADMIN") || !G5_IS_ADMIN) { ?><link rel="stylesheet" href="<?=G5_CSS_URL?>/archive-responsive.css?v=4"><link rel="stylesheet" href="<?=G5_CSS_URL?>/editor-content.css?v=1"><?php } ?>
 <?php  if($config['cf_favicon']) { ?>
 <link rel="shortcut icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">
 <link rel="icon" href="<?=$config['cf_favicon']?>" type="image/x-icon">
@@ -148,5 +148,6 @@ if(!parent || parent==this) $('html').addClass('single');
 <script defer src="<?=G5_JS_URL?>/tomo-protection.js?v=3" data-tomo-protection="<?=$tomo_mask?>"></script>
 <?php } } ?>
 <script defer src="<?php echo G5_JS_URL ?>/tomo-rich-content.js?v=1"></script>
+<?php if (!defined('G5_IS_ADMIN') || !G5_IS_ADMIN) { include_once G5_LIB_PATH.'/emoticon.lib.php'; echo emoticon_size_style(); } ?>
 </head>
 <body>

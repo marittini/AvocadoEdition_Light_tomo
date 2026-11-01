@@ -2,7 +2,7 @@
 
 ## 1. pixiv: 소설 글자 수
 
-`custom_skin/pixiv` list cards and series episode thumbnails show the character count of novel works (spaces excluded,
+`pixiv` list cards and series episode thumbnails show the character count of novel works (spaces excluded,
 HTML tags and entities stripped) in the bottom-right thumbnail badge, the same place and style as `2장` on image works,
 e.g. `10,000자`. Secret works do not show it.
 
@@ -68,9 +68,16 @@ Used in:
 
 | Skin | Where |
 | --- | --- |
-| `custom_skin/guestbook` | post and comment forms; entries and comments |
-| `custom_skin/pixiv` | comment form; comments |
-| `custom_skin/diary` | under the editor in the write page; post body |
+| `guestbook` | post and comment forms; entries and comments |
+| `pixiv` | comment form; comments |
+| `diary` | under the editor in the write page; post body |
 
 Test: `tests/emoticon_skins_smoke.cjs` (registers an emoticon, opens the list window and posts it in all three skins,
 then checks the in-page fallback when the window is blocked).
+
+## 표시 크기 · 모든 게시판 댓글 (추가 수정)
+
+- 이모티콘관리 화면 위쪽의 **표시 크기**(px, 0 = 원래 크기)를 저장하면 사이트 어디서나 이모티콘(`img.emoticon`)이 같은 높이로 보입니다.
+- 어느 스킨이든 댓글 칸이 보이면 아래에 **이모티콘** 버튼이 저절로 붙고(이미 버튼이 있는 스킨은 그대로), 댓글의 코드가 그림으로 바뀝니다.
+- 이모티콘이 보였다 안 보였다 하던 문제(다이어리 등): 본문 그림 크기 맞춤 스크립트가 아직 안 불러온 그림에 `width="0"`을 붙이던 것을 고쳤습니다.
+- 자세한 내용: `docs/SKIN-MOVE-POLISH-UPDATE.md`.

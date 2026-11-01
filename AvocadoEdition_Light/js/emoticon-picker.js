@@ -128,6 +128,31 @@
     if (e.target.closest(".emoticon-pop-close")) return close(true);
     if (!pop.contains(e.target)) close(false);
   });
+  // 댓글 폼에 버튼 자동으로 붙이기(bbs/view_comment.php가 window.tomoEmoticonAuto를 켠다)
+  function autoButtons() {
+    const url = window.tomoEmoticonAuto;
+    if (!url) return;
+    document.querySelectorAll('form[action*="write_comment_update"]').forEach((form) => {
+      if (form.querySelector("[data-emoticon-open]")) return;
+      const area = form.querySelector("textarea[name=wr_content]");
+      if (!area) return;
+      const bar = document.createElement("div");
+      bar.className = "emoticon-auto-bar";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ui-btn small etc emoticon-open";
+      btn.dataset.emoticonOpen = "textarea";
+      btn.dataset.emoticonUrl = url;
+      btn.setAttribute("aria-haspopup", "dialog");
+      btn.setAttribute("aria-expanded", "false");
+      btn.title = "이모티콘 목록 창 열기";
+      btn.innerHTML = '<i class="material-icons" aria-hidden="true">mood</i> 이모티콘';
+      bar.append(btn);
+      area.after(bar);
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", autoButtons); else autoButtons();
+
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(true); });
   window.addEventListener("resize", () => { if (pop && !pop.hidden) place(); });
   window.addEventListener("scroll", () => { if (pop && !pop.hidden) place(); }, { passive: true });

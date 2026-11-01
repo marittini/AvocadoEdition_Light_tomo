@@ -1,10 +1,10 @@
 # 말머리 BBS 게시판 (bbscategory)
 
-뀰님의 「[아보카도 에디션] 말머리 BBS 게시판」([배포글](https://www.postype.com/@kkyoul/post/19291007), `bbs_custum_category.zip`)을 아보카도 에디션 라이트 TOMO와 PHP 8.4에 맞게 이식했습니다. 원본은 사도세자님의 bbs_2를 바탕으로 지비님 데코 BBS·잉님 갠꾸팁을 참고했으며, 아보카도 퍼스널·PHP 5.5 기준입니다. 스킨 위치는 `skin/board/custom_skin/bbscategory/`입니다.
+뀰님의 「[아보카도 에디션] 말머리 BBS 게시판」([배포글](https://www.postype.com/@kkyoul/post/19291007), `bbs_custum_category.zip`)을 아보카도 에디션 라이트 TOMO와 PHP 8.4에 맞게 이식했습니다. 원본은 사도세자님의 bbs_2를 바탕으로 지비님 데코 BBS·잉님 갠꾸팁을 참고했으며, 아보카도 퍼스널·PHP 5.5 기준입니다. 스킨 위치는 `skin/board/bbscategory/`입니다.
 
 ## 설치
 
-1. 관리자 > 게시판 관리에서 스킨을 `custom_skin/bbscategory`로 고릅니다.
+1. 관리자 > 게시판 관리에서 스킨을 `bbscategory`로 고릅니다.
 2. 게시판의 **분류 사용은 끕니다.** 말머리가 자동으로 카테고리가 됩니다. 켜 두면 글 저장 시 안내가 나옵니다.
 3. 보호글을 쓰려면 최고관리자가 그 게시판의 글쓰기 화면을 한 번 엽니다. 보호글 비밀번호 칸(`wr_protect`)을 게시판 테이블에 추가합니다(OTT 스킨과 같은 방식).
 

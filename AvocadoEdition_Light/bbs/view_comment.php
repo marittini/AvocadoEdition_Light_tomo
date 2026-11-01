@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once(G5_LIB_PATH.'/emoticon.lib.php'); // 댓글 이모티콘(관리자 > 이모티콘관리)
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 $captcha_html = "";
@@ -44,6 +45,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
         $list[$i]['content1'] = $row['wr_content'];
         $list[$i]['content'] = conv_content($row['wr_content'], 0, 'wr_content');
         $list[$i]['content'] = search_font($stx, $list[$i]['content']);
+        $list[$i]['content'] = emoticon_html($list[$i]['content']); // 이모티콘 코드 → 이미지
     } else {
         $ss_name = 'ss_secret_comment_'.$bo_table.'_'.$list[$i]['wr_id'];
 
@@ -119,6 +121,9 @@ else
 }
 
 include_once($board_skin_path.'/view_comment.skin.php');
+
+// 댓글 쓰기 칸에 이모티콘 버튼을 붙인다(스킨에 버튼이 없을 때). 등록된 이모티콘이 없으면 아무것도 하지 않는다.
+if ($is_comment_write && emoticon_items()) echo emoticon_auto_assets();
 
 if (!$member['mb_id']) // 비회원일 경우에만
     echo '<script src="'.G5_JS_URL.'/md5.js"></script>'."\n";

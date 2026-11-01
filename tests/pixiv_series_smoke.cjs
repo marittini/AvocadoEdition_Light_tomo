@@ -35,7 +35,7 @@ const { chromium } = require("playwright"),
   await p.locator("[name=bo_table]").fill(id);
   await p.locator("[name=bo_subject]").fill("시리즈 테스트");
   await p.locator("[role=tab][aria-controls=anc_004]").click();
-  await p.locator("[name=bo_skin]").selectOption("custom_skin/pixiv");
+  await p.locator("[name=bo_skin]").selectOption("pixiv");
   await p.locator("[role=tab][aria-controls=anc_003]").click();
   await p.locator("[name=bo_upload_count]").fill("5");
   await p.locator("[name=bo_use_secret]").selectOption("1");
@@ -115,7 +115,7 @@ const { chromium } = require("playwright"),
   assert.equal(await v.locator("text=시리즈 편집").count(), 0);
   await v.goto(seriesHref + "&px_edit=1");
   assert.equal(await v.locator("#px-series-form").count(), 0);
-  const forged = await v.context().request.post(base + "/skin/board/custom_skin/pixiv/series_update.php", {
+  const forged = await v.context().request.post(base + "/skin/board/pixiv/series_update.php", {
     form: { bo_table: id, ps_id: ps, token: "forged", mode: "delete" },
   });
   assert((await forged.text()).includes("편집 인증이 만료"));

@@ -32,6 +32,9 @@ def main():
     revision = git('rev-parse', '--verify', args.revision+'^{commit}').decode().strip()
     paths = sorted(set(git('diff', '--name-only', '--diff-filter=ACMRT', base, revision).decode().splitlines()))
     deleted = [p for p in git('diff', '--name-only', '--diff-filter=D', base, revision).decode().splitlines() if allowed(p)]
+    # Skins moved from skin/board/custom_skin/<name> to skin/board/<name>: a small file rewritten during the move is
+    # not detected as a rename, but it is a move (the new file ships, the old folder is removed by hand), not a deletion.
+    deleted = [p for p in deleted if p.replace('/skin/board/custom_skin/', '/skin/board/', 1) not in paths]
     if deleted:
         raise SystemExit('Program deletions require a separate reviewed procedure: '+', '.join(deleted))
     timestamp = int(git('show', '-s', '--format=%ct', revision).decode())

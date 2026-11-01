@@ -106,7 +106,7 @@ if ($admin_href)
     echo '<div class="faq_admin"><a href="'.$admin_href.'" class="btn_admin">FAQ 수정</a></div>';
 ?>
 
-<script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
+<script src="<?php echo G5_JS_URL; ?>/viewimageresize.js?v=2"></script>
 <script>
 $(function() {
     $(".closer_btn").on("click", function() {

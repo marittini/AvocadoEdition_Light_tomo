@@ -30,7 +30,7 @@ Fixed along the way (behaviour unchanged):
 | `adm/board_form.php`, `adm/board_form_update.php` | New-board defaults for every column; unchecked checkboxes as empty values; `$reaonly` typo |
 | `extend/community.config.php` | `get_site_content()` with no stored content |
 | `index.php`, `skin/member/basic/login.skin.php`, `skin/member/basic/password.skin.php` | Undefined `$index_url`, null `$url`, undefined `$comment_id` |
-| `skin/board/custom_skin/pixiv/view_comment.skin.php` | Undefined `$c_id`, `$c_wr_content` (now escaped) |
+| `skin/board/pixiv/view_comment.skin.php` | Undefined `$c_id`, `$c_wr_content` (now escaped) |
 
 Other core files (`common.php`, `bbs/write_update.php`, `bbs/view.php`, `head.sub.php`, `adm/admin.lib.php`, …) still log
 PHP 8 warnings such as undefined variables. They are not fatal, they affect every board, and they were not part of these

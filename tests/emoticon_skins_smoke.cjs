@@ -1,4 +1,5 @@
-// 이모티콘 고르기 · 목록 팝업 · 표시: 방명록(글 · 댓글), pixiv(댓글), 다이어리(본문 편집기).
+// 이모티콘 고르기 · 목록 팝업 · 표시: 방명록(글 · 댓글), pixiv(댓글), 다이어리(본문 편집기), OTT 리뷰(본문 · 댓글).
+// OTT 리뷰는 목록 썸네일에 보일 부분(초점) 고르기도 확인한다.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_IMAGE(png/jpg), TEST_SQL(예: "mysql -uroot g5").
 const { chromium, devices } = require("playwright"),
   assert = require("node:assert/strict"),
@@ -40,7 +41,7 @@ const { chromium, devices } = require("playwright"),
       await p.locator("[name=bo_table]").fill(id);
       await p.locator("[name=bo_subject]").fill("이모티콘 " + skin);
       await p.locator("[role=tab][aria-controls=anc_004]").click();
-      await p.locator("[name=bo_skin]").selectOption("custom_skin/" + skin);
+      await p.locator("[name=bo_skin]").selectOption(skin);
       await p.locator("[role=tab][aria-controls=anc_003]").click();
       await p.locator("[name=bo_upload_count]").fill("2");
       await p.locator("input[type=submit]").first().click();
@@ -104,6 +105,39 @@ const { chromium, devices } = require("playwright"),
     await p.locator("#btn_submit").click();
     await p.waitForLoadState();
     assert.equal(await p.locator("#bo_v_con img.emoticon").count(), 1, "다이어리 본문에 이모티콘 이미지");
+    await p.waitForLoadState("load");
+    const emo = await p.locator("#bo_v_con img.emoticon").evaluate((e) => [e.getAttribute("width"), e.getBoundingClientRect().width > 0]);
+    assert.deepEqual(emo, [null, true], "본문 그림 크기 맞춤이 이모티콘을 0으로 만들지 않음");
+
+    // 4. OTT 리뷰: 본문(편집기) · 댓글, 목록 썸네일에 보일 부분
+    const ot = await board("ottreview", "bo_comment_level=1");
+    await p.goto(base + "/bbs/write.php?bo_table=" + ot);
+    assert.equal(await p.locator("#ott_focus").isHidden(), true, "그림이 없으면 보일 부분 고르기 숨김");
+    await p.locator("#image-input").setInputFiles(process.env.TEST_IMAGE);
+    await p.locator("#ott_focus_img").waitFor();
+    const stage = await p.locator("#ott_focus_img").boundingBox();
+    await p.mouse.click(stage.x + stage.width * 0.2, stage.y + stage.height * 0.8);
+    assert.equal(await p.locator("#ott-focus").inputValue(), "20,80", "누른 곳이 초점");
+    await p.locator("#ott_focus_stage").press("ArrowRight");
+    assert.equal(await p.locator("#ott-focus").inputValue(), "25,80", "방향키로 옮기기");
+    await p.locator("#wr_subject").fill("이모티콘 리뷰");
+    await p.locator(".ProseMirror").first().click();
+    await p.keyboard.insertText("재밌다 ");
+    await pick(p.locator(".ott_w_emoticon"), new Function("code", "return (document.querySelector('.ProseMirror')?.innerText || '').includes(code);"));
+    await p.locator("#btn_submit").click();
+    await p.waitForLoadState();
+    await p.goto(base + "/bbs/board.php?bo_table=" + ot);
+    assert.match(await p.locator(".list_thumb img").first().getAttribute("style"), /object-position:\s*25% 80%/, "목록 썸네일에 고른 부분");
+    await p.locator(".list-box a").first().click();
+    await p.waitForLoadState();
+    assert.equal(await p.locator(".thread_content img.emoticon").count(), 1, "OTT 리뷰 본문에 이모티콘 이미지");
+    await p.evaluate(() => document.querySelector("[onclick*=openReplyComment]")?.click());
+    const ottArea = p.locator("textarea[name=wr_content]:visible").first(), ottForm = p.locator("form", { has: ottArea });
+    await ottArea.fill("좋아요 ");
+    await pick(ottForm, new Function("code", "return [...document.querySelectorAll('textarea[name=wr_content]')].some((t) => t.value.includes(code));"));
+    await ottForm.locator("button[type=submit]").click();
+    await p.waitForLoadState();
+    assert.ok((await p.locator(".item img.emoticon").count()) >= 1, "OTT 리뷰 댓글에 이모티콘 이미지");
 
     // 새 창이 막히면 페이지 안 팝업으로
     await p.goto(base + "/bbs/board.php?bo_table=" + gb);
@@ -143,7 +177,7 @@ const { chromium, devices } = require("playwright"),
     await mc.close();
 
     assert.deepEqual(errors, [], "자바스크립트 오류 없음");
-    console.log("emoticon skins smoke ok", gb, px, dy);
+    console.log("emoticon skins smoke ok", gb, px, dy, ot);
   } finally {
     sql(`UPDATE ${prefix}config SET cf_delay_sec=${Number(delay) || 0};`);
     await b.close();

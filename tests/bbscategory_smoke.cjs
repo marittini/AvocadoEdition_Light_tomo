@@ -1,4 +1,4 @@
-// 말머리 BBS 게시판(custom_skin/bbscategory): 말머리 카테고리, 공통 에디터, 공개 범위, 보호글, 위조 요청.
+// 말머리 BBS 게시판(bbscategory): 말머리 카테고리, 공통 에디터, 공개 범위, 보호글, 위조 요청.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD; 회원 "tomo_viewer"는 같은 TEST_PASSWORD 사용.
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict");
@@ -33,7 +33,7 @@ const { chromium } = require("playwright"),
   await p.locator("[name=bo_table]").fill(id);
   await p.locator("[name=bo_subject]").fill("말머리 테스트");
   await p.locator("[role=tab][aria-controls=anc_004]").click();
-  await p.locator("[name=bo_skin]").selectOption("custom_skin/bbscategory");
+  await p.locator("[name=bo_skin]").selectOption("bbscategory");
   await p.locator("[role=tab][aria-controls=anc_003]").click();
   await p.locator("[name=bo_use_secret]").selectOption("1");
   await p.locator("input[type=submit]").first().click();

@@ -58,17 +58,31 @@
     layer.style.backgroundColor = pick(layer) || pick(document.body) || "#fff";
   }
 
-  // Size the page layer to the image so the controls hug the artwork, as on pixiv.
+  // Size the page layer once for the whole work (the largest page decides), so the width does not jump between
+  // pages; each page is then scaled inside it. Page sizes are read from the same image files (cached).
   const CHROME = 52 + 56; // header + footer
+  const sizes = images.map(() => null);
+  images.forEach((img, i) => {
+    const probe = new Image();
+    probe.onload = () => { sizes[i] = [probe.naturalWidth, probe.naturalHeight]; fitComic(); };
+    probe.src = img.currentSrc || img.src;
+  });
+  function scaled([nw, nh], maxW, maxH) {
+    const scale = Math.min((maxW - 112) / nw, (maxH - CHROME - 16) / nh, 2);
+    return [Math.max(1, Math.round(nw * scale)), Math.max(1, Math.round(nh * scale))];
+  }
   function fitComic() {
     if (comic.hidden || !pic.naturalWidth) return;
     const maxW = Math.min(1200, window.innerWidth - 24),
       maxH = window.innerHeight - 24;
-    const scale = Math.min((maxW - 112) / pic.naturalWidth, (maxH - CHROME - 16) / pic.naturalHeight, 2);
-    const w = Math.max(1, Math.round(pic.naturalWidth * scale)),
-      h = Math.max(1, Math.round(pic.naturalHeight * scale));
-    comic.style.width = Math.min(maxW, Math.max(320, w + 112)) + "px";
-    comic.style.height = Math.min(maxH, Math.max(320, h + CHROME + 16)) + "px";
+    const known = sizes.filter(Boolean).concat([[pic.naturalWidth, pic.naturalHeight]]);
+    let boxW = 0, boxH = 0;
+    known.forEach((d) => { const [w, h] = scaled(d, maxW, maxH); boxW = Math.max(boxW, w); boxH = Math.max(boxH, h); });
+    if (known.length <= sizes.length && sizes.some((d) => !d)) { boxW = maxW - 112; boxH = maxH - CHROME - 16; } // until every page size is known
+    const layerW = Math.min(maxW, Math.max(320, boxW + 112)), layerH = Math.min(maxH, Math.max(320, boxH + CHROME + 16));
+    comic.style.width = layerW + "px";
+    comic.style.height = layerH + "px";
+    const [w, h] = scaled([pic.naturalWidth, pic.naturalHeight], layerW, layerH);
     pic.style.width = w + "px";
     pic.style.height = h + "px";
   }

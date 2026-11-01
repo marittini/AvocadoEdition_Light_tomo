@@ -14,6 +14,7 @@ if ($w === 'r' && ($wr['wr_reply'] ?? '') !== '') alert('AU는 원본 글에만 
 $otaku_entries = otaku_entries($write_table);
 $otaku_data = otaku_blank();
 $otaku_data['title'] = otaku_clean($_POST['otaku_title'] ?? '', 60);
+$otaku_data['marks'] = otaku_marks($_POST['otaku_marks'] ?? '');
 foreach ($otaku_data['people'] as $i => $blank) {
     $src = $_POST['p'][$i] ?? [];
     $person = [

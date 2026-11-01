@@ -56,11 +56,26 @@ On narrow screens the main page content is centred vertically like on PC (`css/a
 - Icons without a sub-menu (홈, 로그인, …) show their name as a speech bubble with a tail, like the sub-menus.
   Colour, font, size and corners still come from 디자인 설정 > 메뉴 툴팁; the tail takes the same background.
 
+## 6-1. Mobile menu size
+
+디자인 설정 > 메뉴 디자인 > 아이콘 줄에 **모바일 메뉴 글자 크기**(px, 10–40)를 추가했습니다. 휴대폰 · 태블릿에서 펼치는
+메뉴(`#mo_header`)의 글자가 그 크기로 나오고 아이콘도 같은 비율로 따라갑니다. 비우면 예전처럼 아이콘 크기의 1.2배입니다.
+Stored in `menu_icon.cs_etc_14`; drawn by `adm/design_form_css.php`. Test: `tests/mobile_menu_size_smoke.cjs`.
+
+## 6-2. pixiv: one page at a time on PC
+
+The page layer used to resize to every image, so its width jumped between pages. It is now sized once for the whole work
+(the largest page, scaled to the screen decides) and each page is scaled inside it. `skin/board/pixiv/viewer.js`;
+`tests/pixiv_board_smoke.cjs` now uses a tall and a wide page and checks the width stays the same.
+
 ## 7. otaku (pair profiles)
 
 - **Name reading (ruby)**: optional 이름 읽는 법 per person, shown small above the name.
-- **지향색** per person (colour picker or `#rrggbb`, can be cleared). Used for the mini character speech bubble and a
-  thin line beside the quote. Bubble text is black or white, whichever reads better on that colour.
+- **지향색** per person (colour picker or `#rrggbb`, can be cleared). Used for the mini character speech bubble and the
+  quote highlighter. Bubble text is black or white, whichever reads better on that colour.
+- **Quote**: a highlighter stroke (lower half of the text, per line) in the 지향색, or the point colour when none is set.
+  The quote marks are chosen per post in the write form: “ ” (default), 「 」 or none (`marks` in the profile data;
+  AU posts keep the original's choice).
 - **Mini bubble**: hovering a mini character on the list shows that person's 한마디.
 - **Intro text** is justified.
 - **Mobile**: profile and relation tabs show one person at a time, with name buttons; the choice is shared between

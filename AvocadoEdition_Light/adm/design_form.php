@@ -443,6 +443,9 @@ th a + a {margin-top:3px;}
 							<option value="circle" <?=$de['menu_icon']['cs_etc_13'] == 'circle' ? "selected" : ""?>>원형</option>
 							<option value="square" <?=$de['menu_icon']['cs_etc_13'] == 'square' ? "selected" : ""?>>사각형</option>
 						</select>
+						<br>
+						<label for="menu_mobile_size">모바일 메뉴 글자 크기</label>&nbsp;&nbsp; <input type="number" name="cs_etc_14[<?=$css_index?>]" id="menu_mobile_size" value="<?=(int)$de['menu_icon']['cs_etc_14'] ?: ''?>" min="10" max="40" step="1" placeholder="기본" style="width:70px;"/> px
+						<span class="frm_info" style="display:inline">휴대폰 · 태블릿에서 펼치는 메뉴의 글자 크기(아이콘도 같은 비율). 비우면 위 '크기'의 1.2배.</span>
 					</td>
 				</tr <?php  $css_index++; ?>>
 			</tbody>

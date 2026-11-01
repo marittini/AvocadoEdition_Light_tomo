@@ -54,9 +54,10 @@ const { chromium } = require("playwright"),
       buffer: fs.readFileSync(process.env.TEST_IMAGE),
     },
     {
+      // 가로로 긴 두 번째 장(화면 캡처): 한 장씩 보기에서 장마다 폭이 바뀌지 않는지 본다
       name: "second.png",
       mimeType: "image/png",
-      buffer: fs.readFileSync(process.env.TEST_IMAGE),
+      buffer: await (async () => { await p.setViewportSize({ width: 1280, height: 900 }); return p.screenshot({ type: "png", clip: { x: 0, y: 0, width: 900, height: 300 } }); })(),
     },
   ]);
   assert.equal(await p.locator("#pixiv-file-list li").count(), 2);
@@ -115,14 +116,25 @@ const { chromium } = require("playwright"),
     coverPath.includes(selectedPath.replace(/\.[^.]+$/, "")),
     "cover matches selected second image",
   );
+  await p.setViewportSize({ width: 1280, height: 900 }); // PC 화면에서 한 장씩 보기
   await p.locator(".px-images button").first().click();
   assert.equal(
     await p.locator("#px-comic").evaluate((e) => getComputedStyle(e).position),
     "fixed",
   );
   assert.equal(await p.locator("[data-comic-progress]").innerText(), "1 / 2");
+  await p.waitForTimeout(400);
+  const layerWidth = () => p.locator("#px-comic").evaluate((e) => Math.round(e.getBoundingClientRect().width));
+  const w1 = await layerWidth();
   await p.locator("[data-comic=next]").click();
   assert.equal(await p.locator("[data-comic-progress]").innerText(), "2 / 2");
+  await p.waitForTimeout(400);
+  assert.equal(await layerWidth(), w1, "한 장씩 보기: 장마다 폭이 같음");
+  const pic = await p.locator(".px-comic-image").evaluate((e) => { const r = e.getBoundingClientRect(), b = e.closest("#px-comic").getBoundingClientRect(); return r.left >= b.left && r.right <= b.right && r.width > 0; });
+  assert.equal(pic, true, "그림은 틀 안에 들어감");
+  await p.locator("[data-comic=prev]").click();
+  await p.waitForTimeout(200);
+  assert.equal(await layerWidth(), w1, "앞 장으로 돌아가도 같은 폭");
   await p.setViewportSize({ width: 390, height: 844 });
   await p.goto(base + "/bbs/board.php?bo_table=" + id);
   await p.setViewportSize({ width: 1280, height: 900 });

@@ -61,8 +61,19 @@
 .otaku-sep { opacity: .62; }
 .otaku-line { margin: 2px 0 0; font-size: 13px; opacity: .62; }
 .otaku-quote { margin: 12px 0 0; font-size: 14px; line-height: 1.7; text-wrap: balance; }
-/* 지향색이 있으면 한마디 왼쪽에 가는 색 선 */
-.otaku-person[style] .otaku-quote { padding-left: 10px; box-shadow: inset 2px 0 0 var(--otaku-person); }
+/* 한마디: 형광펜. 지향색이 있으면 그 색, 없으면 포인트 색. 글자 아래쪽 절반쯤만 칠한다(줄이 바뀌어도 줄마다). */
+.otaku-hl {
+	--otaku-hl: var(--otaku-person, var(--otaku-accent));
+	padding: 0 .15em; color: inherit; background: linear-gradient(transparent 50%, rgba(128, 128, 128, .3) 50%, rgba(128, 128, 128, .3) 92%, transparent 92%);
+	-webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+	.otaku-hl { background: linear-gradient(transparent 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 50%, color-mix(in srgb, var(--otaku-hl) 36%, transparent) 92%, transparent 92%); }
+}
+.otaku-marks { margin: 0 0 10px; padding: 0; border: 0; }
+.otaku-marks legend { padding: 0; }
+.otaku-marks legend span { display: block; margin-bottom: 4px; font-size: 12px; opacity: .62; }
+.otaku-marks label { display: inline-flex; align-items: center; gap: 4px; margin-right: 14px; font-size: 13px; cursor: pointer; }
 
 .otaku-facts { display: grid; grid-template-columns: 88px minmax(0, 1fr); margin: 0 0 22px; border-top: 1px solid var(--otaku-line); font-size: 13px; font-variant-numeric: tabular-nums; }
 .otaku-facts dt, .otaku-facts dd { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--otaku-line); }

@@ -52,7 +52,7 @@ function otaku_blank_person(): array
 
 function otaku_blank(): array
 {
-    return ['title' => '', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
+    return ['title' => '', 'marks' => 'double', 'people' => array_fill(0, 2, otaku_blank_person()), 'bond' => '', 'timeline' => []];
 }
 
 function otaku_load(string $bo_table, int $wr_id): array
@@ -112,6 +112,21 @@ function otaku_rows($source, string $prefix, array $fields, int $limit): array
         if ($filled) $rows[] = $row;
     }
     return $rows;
+}
+
+/** 한마디를 감싸는 따옴표: double “ ” / corner 「 」 / none. */
+const OTAKU_MARKS = ['double' => ['“', '”', '“ ”'], 'corner' => ['「', '」', '「 」'], 'none' => ['', '', '없음']];
+
+function otaku_marks($value): string
+{
+    return isset(OTAKU_MARKS[$value]) ? (string)$value : 'double';
+}
+
+/** 한마디: 따옴표 + 형광펜(지향색, 없으면 포인트 색). */
+function otaku_quote_html(string $quote, $marks): string
+{
+    [$open, $close] = OTAKU_MARKS[otaku_marks($marks)];
+    return '<mark class="otaku-hl">'.otaku_e($open.$quote.$close).'</mark>';
 }
 
 /** 지향색: #rrggbb만 받는다(그 밖의 값은 빈 문자열). */

@@ -34,7 +34,7 @@ The site's global `* {transition: all .3s}` is turned off on the tabs so the und
 
 - Each person has an optional **이름 읽는 법** (ruby above the name) and a **지향색** (`#rrggbb`, optional).
 - List: hovering a mini character shows that person's 한마디 in a speech bubble filled with the 지향색; the text is black or
-  white by contrast. No colour = a dark grey bubble. View: the quote gets a thin line in the 지향색.
+  white by contrast. No colour = a dark grey bubble. View: the quote gets a highlighter stroke in the 지향색 (point colour when none). Quote marks per post: “ ”, 「 」 or none.
 - Intro text is justified. Profile photos are not links any more (the full-size file in a new tab bypassed the right-click protection).
 - Mobile: the profile and relation tabs show one person at a time with name buttons; the choice is shared by both tabs.
 - List names never break inside one person's name; the space for the minis is kept on the title line only. Quotes use balanced lines.

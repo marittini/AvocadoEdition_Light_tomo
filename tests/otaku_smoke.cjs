@@ -71,6 +71,8 @@ const { chromium } = require("playwright"),
   // 2. 본 페어: 페어 이름, 사진·썸네일·미니, 정보·소개, 관계, 연표
   await p.goto(base + "/bbs/write.php?bo_table=" + id);
   await p.locator("[name=otaku_title]").fill("GEAS");
+  assert.equal(await p.locator("[name=otaku_marks][value=double]").isChecked(), true, "따옴표 기본은 “ ”");
+  await p.locator("[name=otaku_marks][value=corner]").check();
   for (const slot of [0, 1, 2, 3, 4]) await p.locator(`input[name='bf_file[${slot}]']`).setInputFiles(image);
   assert.ok(await p.locator("[data-preview='2'] img").count(), "썸네일 미리보기");
   await p.locator("[name='p[0][name]']").fill("윤서하");
@@ -112,6 +114,10 @@ const { chromium } = require("playwright"),
   assert.equal(await v0.locator(".otaku-photo img").count(), 2, "인물 사진 2장");
   assert.equal(await v0.locator(".otaku-photo").evaluateAll((els) => els.filter((e) => e.closest("a")).length), 0, "사진 크게 보기 링크 없음");
   assert.equal(await v0.locator(".otaku-name rt").first().textContent(), "ユン・ソハ", "이름 루비");
+  const hl = v0.locator(".otaku-quote .otaku-hl").first();
+  assert.equal(await hl.textContent(), "「말로 하면 사라질 것 같아서.」", "고른 따옴표 「 」");
+  assert.match(await hl.evaluate((e) => getComputedStyle(e).backgroundImage), /linear-gradient/, "한마디는 형광펜");
+  assert.match(await hl.evaluate((e) => getComputedStyle(e).backgroundImage), /42, 77, 143|0\.1647\d* 0\.3019\d* 0\.5607\d*/, "형광펜은 지향색");
   assert.equal(await v0.locator(".otaku-text").first().evaluate((e) => getComputedStyle(e).textAlign), "justify", "소개 양쪽 정렬");
   assert.equal(await v0.locator(".otaku-person-tabs").first().isVisible(), false, "PC에서는 인물 탭 없음");
   await p.setViewportSize({ width: 390, height: 800 });

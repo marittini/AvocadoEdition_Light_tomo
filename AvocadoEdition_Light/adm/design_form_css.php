@@ -321,6 +321,10 @@ a, .txt-point, .sch_word { <?php
 	#mo_header .gnbWrap a { <?php
 		if($css['menu_tooltip'][2]) echo "color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}
+	<?php $mo_menu_size = max(0, min(40, (int)($css['menu_icon'][14] ?? 0))); if ($mo_menu_size >= 10) { // 모바일 메뉴 글자 크기(아이콘도 같은 비율) ?>
+	#mo_header .gnbWrap { font-size:<?=$mo_menu_size?>px; }
+	#mo_header .gnbWrap li { font-size:1em; }
+	<?php } ?>
 	#mo_header .gnbWrap li.line { <?php
 		if($css['menu_tooltip'][2]) echo "background-color:".hex2rgba($css['menu_tooltip'][2], $css['menu_tooltip'][3])."; ";
 	?>}

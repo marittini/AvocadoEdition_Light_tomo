@@ -82,7 +82,7 @@ $px_href = static fn($row) => $px_base.'&amp;wr_id='.(int)$row['wr_id'];
 		$px_files = $px_secret ? [] : pixiv_files($bo_table, (int)$px_w['wr_id'], $px_w['wr_3']);
 		$px_c = pixiv_cover_file($px_files, $px_w['wr_3']); ?>
 		<li><a class="px-episode" href="<?=$px_href($px_w)?>">
-			<span class="px-episode-thumb"><?php if ($px_c) { ?><img src="<?=pixiv_cover_url($bo_table,$px_c)?>" alt="" loading="lazy"><?php } else { ?><span class="px-placeholder"><?=$px_secret?'🔒':($px_w['wr_1']==='pixiv:novel'?'소설':'')?></span><?php } ?><?php if (count($px_files)>1) { ?><span class="px-count"><?=count($px_files)?>장</span><?php } ?></span>
+			<span class="px-episode-thumb"><?php if ($px_c) { ?><img src="<?=pixiv_cover_url($bo_table,$px_c)?>" alt="" loading="lazy"><?php } else { ?><span class="px-placeholder"><?=$px_secret?'🔒':($px_w['wr_1']==='pixiv:novel'?'소설':'')?></span><?php } ?><?php if ($px_w['wr_1']==='pixiv:novel') { if (!$px_secret) { ?><span class="px-count px-chars"><?=number_format(pixiv_char_count((string)$px_w['wr_content']))?>자</span><?php } } elseif (count($px_files)>1) { ?><span class="px-count"><?=count($px_files)?>장</span><?php } ?></span>
 			<span class="px-episode-body">
 				<span class="px-episode-no">#<?=(int)$px_w['px_no']?></span>
 				<strong class="px-episode-name"><?php if ($px_secret) { ?><span class="px-lock" aria-label="비밀글">🔒</span><?php } ?><?=pixiv_escape($px_w['wr_subject'])?></strong>

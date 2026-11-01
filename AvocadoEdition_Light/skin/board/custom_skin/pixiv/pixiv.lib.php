@@ -32,6 +32,12 @@ function pixiv_files($board_id, $post_id, $order) {
 }
 function pixiv_escape($value) { return htmlspecialchars((string)$value, ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8'); }
 
+/** 소설 글자 수(공백 제외). 본문 HTML의 태그와 문자 참조를 걷어 낸 뒤 센다. */
+function pixiv_char_count(string $content): int {
+    $text = html_entity_decode(strip_tags(preg_replace('~<(br|/p|/div)\b[^>]*>~i', "\n", $content)), ENT_QUOTES|ENT_HTML5, 'UTF-8');
+    return mb_strlen(preg_replace('/\s+/u', '', $text));
+}
+
 function pixiv_cover_url($board_id, $entry) {
     include_once G5_LIB_PATH.'/thumbnail.lib.php';
     $filename=basename($entry['file']);
@@ -150,7 +156,7 @@ function pixiv_series_options(string $bo_table, string $owner): array {
 function pixiv_series_works(string $bo_table, string $write_table, int $ps_id): array {
     $t = pixiv_series_tables();
     if (!$t) return [];
-    $res = sql_query("SELECT w.wr_id, w.wr_subject, w.wr_datetime, w.wr_option, w.mb_id, w.wr_1, w.wr_2, w.wr_3, w.wr_4,
+    $res = sql_query("SELECT w.wr_id, w.wr_subject, w.wr_content, w.wr_datetime, w.wr_option, w.mb_id, w.wr_1, w.wr_2, w.wr_3, w.wr_4,
             (".pixiv_visible_sql('w').") AS px_visible
         FROM `{$t['works']}` s JOIN `{$write_table}` w ON w.wr_id=s.wr_id AND w.wr_is_comment=0
         WHERE s.bo_table='".sql_real_escape_string($bo_table)."' AND s.ps_id={$ps_id}

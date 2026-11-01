@@ -6,7 +6,7 @@ otaku_assets($board_skin_url);
 // 원본 글(페어)만 카드로. AU(답글)는 목록에 나오지 않는다.
 $otaku_where = "wr_is_comment = 0 AND wr_reply = ''";
 $otaku_total = (int)(sql_fetch("SELECT COUNT(*) AS n FROM `{$write_table}` WHERE {$otaku_where}")['n'] ?? 0);
-$otaku_rows = max(1, (int)(G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page_rows']) ?: 12);
+$otaku_rows = get_board_page_rows($board);
 $otaku_pages = max(1, (int)ceil($otaku_total / $otaku_rows));
 $otaku_page = min($otaku_pages, max(1, (int)($_GET['page'] ?? 1)));
 $res = sql_query("SELECT wr_id, wr_num, wr_subject, wr_option, mb_id

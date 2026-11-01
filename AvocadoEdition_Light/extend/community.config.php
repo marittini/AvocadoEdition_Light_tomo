@@ -135,6 +135,7 @@ function get_site_content($co_id) {
 
 	$result = "";
 	$co = sql_fetch( " select * from {$g5['content_table']} where co_id = '{$co_id}' ");
+	if (!is_array($co) || empty($co['co_id'])) return $result; // 등록되지 않은 화면
 
 	$pc_str = conv_content($co['co_content'], $co['co_html'], $co['co_tag_filter_use']);
 	$mo_str = conv_content($co['co_mobile_content'], $co['co_html'], $co['co_tag_filter_use']);
@@ -240,6 +241,9 @@ function get_site_content($co_id) {
 	return $result;
 }
 
+
+// 이모티콘 테이블: 이전 설치본의 data/dbconfig.php에는 이 줄이 없어서 여기서 채운다.
+if (empty($g5['emoticon_table'])) $g5['emoticon_table'] = G5_TABLE_PREFIX.'emoticon';
 
 function emote_ev($comment) {
 	global $g5;

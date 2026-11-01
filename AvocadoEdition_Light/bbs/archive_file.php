@@ -25,7 +25,7 @@ $can_read = static function ($b, $post) use ($g5, $member, $is_admin, $config) {
         if (empty($member['mb_id']) || ($cert === 'cert' && empty($member['mb_certify'])) || ($cert === 'adult' && empty($member['mb_adult'])) || ($cert === 'hp-cert' && ($member['mb_certify'] ?? '') !== 'hp') || ($cert === 'hp-adult' && (empty($member['mb_adult']) || ($member['mb_certify'] ?? '') !== 'hp'))) return false;
     }
     // Skins whose wr_secret means "members only" and wr_protect means "password protected".
-    $privacy_skins = ['custom_skin/ottreview', 'custom_skin/bbscategory'];
+    $privacy_skins = ['custom_skin/ottreview', 'custom_skin/bbscategory', 'custom_skin/gallery'];
     $ott = in_array($b['bo_skin'] ?? '', $privacy_skins, true) || in_array($b['bo_mobile_skin'] ?? '', $privacy_skins, true);
     $privacy = static function ($item) use ($ott, $admin, $member, $b) {
         $owner = !empty($member['mb_id']) && $item['mb_id'] === $member['mb_id'];

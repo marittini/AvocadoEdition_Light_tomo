@@ -1,6 +1,7 @@
 <?php
 include_once('./_common.php');
 define('_INDEX_', true);
+$index_url = '';
 
 $enter = get_style('intro_use');
 $enter = $enter['cs_value'];
@@ -66,6 +67,8 @@ if(!$is_member && !$config['cf_open']) {
 </script>
 
 <?php
+	// 클릭 효과(원 + 효과음): 바깥 틀(메뉴)에서 누를 때도 나오게
+	include_once(G5_PATH.'/tail.click_effect.php');
 	include_once(G5_PATH.'/tail.sub.php');
 }
 ?>

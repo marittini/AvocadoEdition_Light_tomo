@@ -346,6 +346,16 @@ function get_dirsize($dir)
 
 
 // 게시물 정보($write_row)를 출력하기 위하여 $list로 가공된 정보를 복사 및 가공
+/**
+ * 게시판 한 페이지 글 수. 모바일은 '모바일 페이지당 목록 수'를 쓰고, 비어 있거나 0이면 PC 값을 따른다.
+ */
+function get_board_page_rows($board)
+{
+    $rows = (int)($board['bo_page_rows'] ?? 0);
+    if (G5_IS_MOBILE && (int)($board['bo_mobile_page_rows'] ?? 0) > 0) $rows = (int)$board['bo_mobile_page_rows'];
+    return max(1, $rows ?: 15);
+}
+
 function get_list($write_row, $board, $skin_url, $subject_len=40)
 {
 	global $g5, $config, $is_admin;
@@ -1193,6 +1203,8 @@ function delete_point($mb_id, $rel_table, $rel_id, $rel_action)
 					  and po_rel_id = '$rel_id'
 					  and po_rel_action = '$rel_action' ";
 		$row = sql_fetch($sql);
+		// 포인트 내역이 없으면 0으로 본다(이전과 같은 결과, PHP 8 경고 방지)
+		if (!is_array($row) || !$row) $row = array('mb_id' => $mb_id, 'po_id' => 0, 'po_point' => 0, 'po_use_point' => 0);
 
 		if($row['po_point'] < 0) {
 			$mb_id = $row['mb_id'];
@@ -1442,7 +1454,7 @@ function hsc($str)
 // &nbsp; &amp; &middot; 등을 정상으로 출력
 function html_symbol($str)
 {
-	return preg_replace("/\&([a-z0-9]{1,20}|\#[0-9]{0,3});/i", "&#038;\\1;", $str);
+	return preg_replace("/\&([a-z0-9]{1,20}|\#[0-9]{0,3});/i", "&#038;\\1;", (string)$str);
 }
 
 
@@ -2126,7 +2138,7 @@ function get_uniqid()
 	sql_query(" LOCK TABLE {$g5['uniqid_table']} WRITE ");
 	while (1) {
 		// 년월일시분초에 100분의 1초 두자리를 추가함 (1/100 초 앞에 자리가 모자르면 0으로 채움)
-		$key = date('ymdHis', time()) . str_pad((int)(microtime()*100), 2, "0", STR_PAD_LEFT);
+		$key = date('ymdHis', time()) . str_pad((int)((float)microtime()*100), 2, "0", STR_PAD_LEFT);
 
 		$result = sql_query(" insert into {$g5['uniqid_table']} set uq_id = '$key', uq_ip = '{$_SERVER['REMOTE_ADDR']}' ", false);
 		if ($result) break; // 쿼리가 정상이면 빠진다.
@@ -2886,7 +2898,7 @@ function get_search_string($stx)
 // XSS 관련 태그 제거
 function clean_xss_tags($str)
 {
-	$str = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $str);
+	$str = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', (string)$str);
 
 	return $str;
 }
@@ -2951,9 +2963,9 @@ function member_delete($mb_id)
 // 이메일 주소 추출
 function get_email_address($email)
 {
-	preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", $email, $matches);
+	preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", (string)$email, $matches);
 
-	return $matches[0];
+	return $matches[0] ?? '';
 }
 
 // 파일명에서 특수문자 제거
@@ -2971,7 +2983,8 @@ function replace_filename($name)
 	@session_start();
 	$ss_id = session_id();
 	$usec = get_microtime();
-	$ext = array_pop(explode('.', $name));
+	$name_parts = explode('.', (string)$name);
+	$ext = array_pop($name_parts);
 
 	return sha1($ss_id.$_SERVER['REMOTE_ADDR'].$usec).'.'.$ext;
 }
@@ -3060,6 +3073,7 @@ function check_url_host($url, $msg='', $return_url=G5_URL)
 	if(!$msg)
 		$msg = 'url에 타 도메인을 지정할 수 없습니다.';
 
+	$url = (string)$url;
 	$p = @parse_url($url);
 	$host = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
 
@@ -3249,7 +3263,8 @@ function check_vaild_callback($callback){
 class str_encrypt
 {
 	var $salt;
-	var $lenght;
+	var $lenght; // 예전 이름(오타) 호환
+	var $length; // PHP 8.2+ 동적 속성 경고 방지
 
 	function __construct($salt='')
 	{

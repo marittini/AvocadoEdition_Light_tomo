@@ -19,7 +19,11 @@ body {height:100%;}
 
 .login-logo {margin-top:-50px;}
 .login-form-box {position:relative; box-sizing:border-box; max-width:280px; margin:0 auto; padding:5px;}
-.login-form-box .inner {display:block; position:relative; padding-right:80px;}
+.login-form-box .inner {display:block; position:relative;}
+.login-form-box .login-fields {position:relative; padding-right:80px;}
 .login-form-box button {display:block; position:absolute; right:0; top:0; width:75px; bottom:0; height:100%;}
+/* 자동로그인: 입력칸 아래 작은 체크 한 줄 (색·글꼴은 디자인 설정을 따름) */
+.login-form-box .login-auto {display:flex; align-items:center; gap:5px; margin-top:6px; font-size:12px; text-align:left; cursor:pointer; opacity:.8;}
+.login-form-box .login-auto input {width:auto; margin:0;}
 .login-form-box fieldset + fieldset {margin-top:5px;}
 .login-form-box input {width:100%;}

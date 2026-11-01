@@ -3,7 +3,7 @@ $sub_menu = "300100";
 include_once('./_common.php');
 include_once(G5_EDITOR_LIB);
 
-auth_check($auth[$sub_menu], 'w');
+auth_check($auth[$sub_menu] ?? '', 'w');
 
 $sql = " select count(*) as cnt from {$g5['group_table']} ";
 $row = sql_fetch($sql);
@@ -78,7 +78,15 @@ if (!isset($board['bo_mobile_subject'])) {
 
 $required = "";
 $readonly = "";
+$required_valid = "";
+$sound_only = "";
 if ($w == '') {
+	// 새 게시판: 게시판 테이블의 모든 칸을 빈 값으로 먼저 채운다(PHP 8 경고 방지). 아래에서 기본값을 덮어쓴다.
+	$board = is_array($board ?? null) ? $board : [];
+	$board_columns = sql_query(" SHOW COLUMNS FROM `{$g5['board_table']}` ", false);
+	while ($board_columns && $board_column = sql_fetch_array($board_columns)) {
+		if (!isset($board[$board_column['Field']])) $board[$board_column['Field']] = '';
+	}
 
 	$html_title .= ' 생성';
 
@@ -196,7 +204,7 @@ $pg_anchor = '<ul class="anchor">
 		<tr>
 			<th scope="row"><label for="bo_table">TABLE<?php echo $sound_only ?></label></th>
 			<td colspan="2">
-				<input type="text" name="bo_table" value="<?php echo $board['bo_table'] ?>" id="bo_table" <?php echo $required ?> <?php echo $readonly ?> class="frm_input <?php echo $reaonly ?> <?php echo $required ?> <?php echo $required_valid ?>" maxlength="20">
+				<input type="text" name="bo_table" value="<?php echo $board['bo_table'] ?>" id="bo_table" <?php echo $required ?> <?php echo $readonly ?> class="frm_input <?php echo $readonly ?> <?php echo $required ?> <?php echo $required_valid ?>" maxlength="20">
 				<?php if ($w == '') { ?>
 					영문자, 숫자, _ 만 가능 (공백없이 20자 이내)
 				<?php } else { ?>
@@ -512,6 +520,20 @@ $pg_anchor = '<ul class="anchor">
 				<label for="chk_grp_page_rows">그룹적용</label>
 				<input type="checkbox" name="chk_all_page_rows" value="1" id="chk_all_page_rows">
 				<label for="chk_all_page_rows">전체적용</label>
+			</td>
+		</tr>
+
+		<tr>
+			<th scope="row"><label for="bo_mobile_page_rows">모바일 페이지당 목록 수</label></th>
+			<td>
+				<?php echo help('모바일에서 한 페이지에 보여 줄 글 수입니다. 0이면 PC 값을 따릅니다.') ?>
+				<input type="text" name="bo_mobile_page_rows" value="<?php echo (int)$board['bo_mobile_page_rows'] ?>" id="bo_mobile_page_rows" class="numeric frm_input" size="4">
+			</td>
+			<td class="td_grpset">
+				<input type="checkbox" name="chk_grp_mobile_page_rows" value="1" id="chk_grp_mobile_page_rows">
+				<label for="chk_grp_mobile_page_rows">그룹적용</label>
+				<input type="checkbox" name="chk_all_mobile_page_rows" value="1" id="chk_all_mobile_page_rows">
+				<label for="chk_all_mobile_page_rows">전체적용</label>
 			</td>
 		</tr>
 		

@@ -18,7 +18,7 @@ $diary_older = $diary_pos !== false && isset($diary_years[$diary_pos + 1]) ? $di
 [$diary_from, $diary_to] = diary_range($diary_year, $diary_month);
 $diary_where = "wr_is_comment = 0 AND wr_datetime >= '{$diary_from}' AND wr_datetime < '{$diary_to}'";
 $diary_total = (int)(sql_fetch("SELECT COUNT(*) AS n FROM `{$write_table}` WHERE {$diary_where}")['n'] ?? 0);
-$diary_rows = max(1, (int)(G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page_rows']) ?: 20);
+$diary_rows = get_board_page_rows($board);
 $diary_pages = max(1, (int)ceil($diary_total / $diary_rows));
 $diary_page = min($diary_pages, max(1, (int)($_GET['page'] ?? 1)));
 $diary_res = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_option, wr_comment FROM `{$write_table}`

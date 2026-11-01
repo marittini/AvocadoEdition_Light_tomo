@@ -44,3 +44,9 @@
 @media (prefers-reduced-motion:reduce) {
   *,*:before,*:after {transition:none!important;animation:none!important;scroll-behavior:auto!important}
 }
+@media (max-width:1024px) {
+  /* 홈(메인) 화면: 모바일에서도 PC처럼 화면 가운데에 놓는다 */
+  #body:has(#main_body) {display:flex;flex-direction:column}
+  #body:has(#main_body)>.fix-layout {display:flex;flex-direction:column;justify-content:center;flex:1 0 auto;height:auto}
+  #body:has(#main_body)>.fix-layout>.mid-layout {display:block;width:auto}
+}

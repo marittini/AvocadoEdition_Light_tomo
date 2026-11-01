@@ -8,7 +8,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 
 
-<script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
+<script src="<?php echo G5_JS_URL; ?>/viewimageresize.js?v=2"></script>
 <article id="bo_v">
 
 	<?php  if($board['bo_content_head']) { ?>

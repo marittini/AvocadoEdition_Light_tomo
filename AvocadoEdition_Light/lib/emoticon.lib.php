@@ -33,7 +33,7 @@ function emoticon_html($html): string
     if (!$items || $html === '') return $html;
     $map = [];
     foreach ($items as $item) {
-        $img = '<img src="'.htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8').'" alt="'.htmlspecialchars($item['code'], ENT_QUOTES, 'UTF-8').'" class="emoticon" loading="lazy">';
+        $img = '<img src="'.htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8').'" alt="'.htmlspecialchars($item['code'], ENT_QUOTES, 'UTF-8').'" class="emoticon">'; // 작은 그림이라 바로 불러온다(늦게 불러오면 본문 그림 크기 맞춤에 0으로 잡힌다)
         $map[htmlspecialchars($item['code'], ENT_NOQUOTES, 'UTF-8')] = $img; // 본문에 들어간 모양(이스케이프된 글자)
         $map[$item['code']] = $img;
     }
@@ -69,4 +69,25 @@ function emoticon_assets(): string
     return '<link rel="stylesheet" href="'.G5_CSS_URL.'/emoticon-picker.css?v='.substr((string)@md5_file($css), 0, 10).'">'
         .'<script>window.tomoEmoticons='.$data.';</script>'
         .'<script src="'.G5_JS_URL.'/emoticon-picker.js?v='.substr((string)@md5_file($js), 0, 10).'" defer></script>';
+}
+
+/** 관리자 > 이모티콘관리의 표시 크기(높이 px, 0 = 원래 크기). */
+function emoticon_size(): int
+{
+    global $config;
+    return max(0, min(400, (int)($config['cf_tomo_emoticon_size'] ?? 0)));
+}
+
+/** 사이트 어디서나 이모티콘(img.emoticon)을 같은 크기로(공통 head에서 출력). */
+function emoticon_size_style(): string
+{
+    $size = emoticon_size();
+    if (!$size) return '';
+    return '<style id="emoticon-size">img.emoticon{width:auto!important;height:'.$size.'px!important;max-width:none!important;max-height:none!important;vertical-align:middle}</style>';
+}
+
+/** 댓글 폼(write_comment_update.php로 보내는 폼)에 이모티콘 버튼을 자동으로 붙이는 스크립트. */
+function emoticon_auto_assets(): string
+{
+    return '<script>window.tomoEmoticonAuto='.json_encode(G5_BBS_URL.'/emoticon.php').';</script>'.emoticon_assets();
 }

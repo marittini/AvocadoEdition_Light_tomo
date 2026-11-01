@@ -1,4 +1,4 @@
-// 방명록(custom_skin/guestbook): 목록에서 쓰기 · 공지 · #해시태그 · 자동 링크(수정해도 늘지 않음, 꾸미기 없음),
+// 방명록(guestbook): 목록에서 쓰기 · 공지 · #해시태그 · 자동 링크(수정해도 늘지 않음, 꾸미기 없음),
 // 회원 수정 · 댓글(펼친 채로 돌아옴, 몇 쪽인지 계산) · 댓글 수정 · 삭제, 비밀글(비회원 비밀번호 확인), 위조 요청 거부.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_MEMBER(일반 회원, 같은 비밀번호), TEST_SQL(예: "mysql -uroot g5").
 //      TEST_SESSION_DIR(선택): PHP 세션 폴더. 있으면 비회원 글(자동등록방지 숫자를 세션에서 읽음)까지 확인한다.
@@ -46,7 +46,7 @@ const { chromium } = require("playwright"),
     await admin.locator("[name=bo_table]").fill(id);
     await admin.locator("[name=bo_subject]").fill("방명록 테스트");
     await admin.locator("[role=tab][aria-controls=anc_004]").click();
-    await admin.locator("[name=bo_skin]").selectOption("custom_skin/guestbook");
+    await admin.locator("[name=bo_skin]").selectOption("guestbook");
     await admin.locator("[role=tab][aria-controls=anc_003]").click();
     await admin.locator("[name=bo_use_secret]").selectOption("1");
     await admin.locator("input[type=submit]").first().click();

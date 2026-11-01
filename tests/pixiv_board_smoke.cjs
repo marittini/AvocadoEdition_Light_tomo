@@ -34,7 +34,7 @@ const { chromium } = require("playwright"),
   await p.locator("[name=bo_table]").fill(id);
   await p.locator("[name=bo_subject]").fill("픽시브 테스트");
   await p.locator("[role=tab][aria-controls=anc_004]").click();
-  await p.locator("[name=bo_skin]").selectOption("custom_skin/pixiv");
+  await p.locator("[name=bo_skin]").selectOption("pixiv");
   await p.locator("[role=tab][aria-controls=anc_003]").click();
   await p.locator("[name=bo_upload_count]").fill("5");
   await p.locator("[name=bo_use_secret]").selectOption("1");

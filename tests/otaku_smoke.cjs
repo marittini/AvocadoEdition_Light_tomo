@@ -1,5 +1,6 @@
-// 페어 프로필(custom_skin/otaku): 페어 작성(사진·썸네일·미니), 반복 행, 관계 연결, AU(답글) 전환·사진 대체,
-// AU 주소 이동, 목록 카드, 위조 요청, 삭제 정리.
+// 페어 프로필(otaku): 페어 작성(사진·썸네일·미니), 반복 행, 관계 연결, AU(답글) 전환·사진 대체,
+// AU 주소 이동, 목록 카드, 위조 요청, 삭제 정리. 이름 루비, 지향색(미니 말풍선 한마디), 사진 크게 보기 없음,
+// 좁은 화면의 인물 탭, 긴 이름 줄바꿈.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_IMAGE(jpg/png 아무 이미지), TEST_SQL(예: "mysql -uroot g5").
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
@@ -35,7 +36,7 @@ const { chromium } = require("playwright"),
   await p.locator("[name=bo_table]").fill(id);
   await p.locator("[name=bo_subject]").fill("페어 테스트");
   await p.locator("[role=tab][aria-controls=anc_004]").click();
-  await p.locator("[name=bo_skin]").selectOption("custom_skin/otaku");
+  await p.locator("[name=bo_skin]").selectOption("otaku");
   await p.locator("[role=tab][aria-controls=anc_003]").click();
   await p.locator("[name=bo_upload_count]").fill("5");
   await p.locator("input[type=submit]").first().click();
@@ -75,6 +76,12 @@ const { chromium } = require("playwright"),
   await p.locator("[name='p[0][name]']").fill("윤서하");
   await p.locator("[name='p[1][name]']").fill("강이안");
   await p.locator("[name='p[0][quote]']").fill("말로 하면 사라질 것 같아서.");
+  await p.locator("[name='p[0][ruby]']").fill("ユン・ソハ");
+  await p.locator("[name='p[0][color]']").fill("#2a4d8f");
+  assert.equal(await p.locator(".otaku-person-edit").first().locator("[data-color-pick]").inputValue(), "#2a4d8f", "글자 칸 → 색 고르기");
+  await p.locator(".otaku-person-edit").nth(1).locator("[data-color-pick]").fill("#f3d6e4");
+  assert.equal(await p.locator("[name='p[1][color]']").inputValue(), "#f3d6e4", "색 고르기 → 글자 칸");
+  await p.locator("[name='p[1][quote]']").fill("오늘도 창가 자리.");
   const first = p.locator(".otaku-person-edit").first();
   await addRow(first.locator("[data-list]").nth(0), [null, "3월 14일"], "생일");
   await addRow(first.locator("[data-list]").nth(0), [null, "163 cm"], "키");
@@ -103,6 +110,22 @@ const { chromium } = require("playwright"),
   assert.match(await v0.locator(".otaku-facts").first().innerText(), /키\s+163 cm\s+생일\s+3월 14일/, "행 순서 바꾸기 반영");
   assert.equal(await v0.locator(".otaku-person").first().locator(".otaku-text").count(), 1, "지운 행은 저장 안 됨");
   assert.equal(await v0.locator(".otaku-photo img").count(), 2, "인물 사진 2장");
+  assert.equal(await v0.locator(".otaku-photo").evaluateAll((els) => els.filter((e) => e.closest("a")).length), 0, "사진 크게 보기 링크 없음");
+  assert.equal(await v0.locator(".otaku-name rt").first().textContent(), "ユン・ソハ", "이름 루비");
+  assert.equal(await v0.locator(".otaku-text").first().evaluate((e) => getComputedStyle(e).textAlign), "justify", "소개 양쪽 정렬");
+  assert.equal(await v0.locator(".otaku-person-tabs").first().isVisible(), false, "PC에서는 인물 탭 없음");
+  await p.setViewportSize({ width: 390, height: 800 });
+  assert.equal(await v0.locator("[data-panel=profile] .otaku-person-tabs").isVisible(), true, "모바일 인물 탭");
+  assert.equal(await v0.locator(".otaku-duo > .otaku-person:visible").count(), 1, "한 명씩");
+  await v0.locator("[data-panel=profile] [data-person-tab='1']").click();
+  assert.match(await v0.locator(".otaku-duo > .otaku-person:visible .otaku-name").innerText(), /강이안/, "두 번째 인물");
+  await v0.locator("[data-tab=relation]").click();
+  assert.match(await v0.locator(".otaku-groups > div:visible").innerText(), /강이안의 관계/, "관계도 같은 인물");
+  await v0.locator("[data-panel=relation] [data-person-tab='0']").click();
+  assert.match(await v0.locator(".otaku-groups > div:visible").innerText(), /윤서하의 관계/);
+  await v0.locator("[data-tab=profile]").click();
+  await p.setViewportSize({ width: 1280, height: 800 });
+  assert.equal(await v0.locator(".otaku-duo > .otaku-person:visible").count(), 2, "PC는 두 사람 나란히");
   await v0.locator("[data-tab=relation]").click();
   assert.equal(await v0.locator("[data-panel=relation]").isVisible(), true);
   assert.equal(await v0.locator(`.otaku-rels a[href*='wr_id=${friend}']`).count(), 1, "이어진 글 링크");
@@ -148,6 +171,18 @@ const { chromium } = require("playwright"),
   assert.equal(await card.locator(".otaku-card-minis img").count(), 2, "미니 캐릭터 2명");
   assert.match(await card.innerText(), /GEAS[\s\S]*윤서하 · 강이안/);
   assert.doesNotMatch(await card.innerText(), /AU/, "AU 수 표시 안 함");
+  // 미니에 마우스: 한마디 말풍선, 지향색 배경 + 읽히는 글자색
+  const mini = card.locator(".otaku-mini").first(), bubble = mini.locator(".otaku-mini-quote");
+  assert.equal(await bubble.isVisible(), false, "말풍선은 처음엔 숨김");
+  await mini.hover();
+  await p.waitForTimeout(250);
+  assert.equal(await bubble.isVisible(), true, "미니에 마우스를 올리면 말풍선");
+  assert.equal(await bubble.textContent(), "말로 하면 사라질 것 같아서.");
+  assert.deepEqual(await bubble.evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color]), ["rgb(42, 77, 143)", "rgb(255, 255, 255)"], "어두운 지향색 → 흰 글자");
+  assert.equal(await card.locator(".otaku-mini").nth(1).locator(".otaku-mini-quote").evaluate((e) => getComputedStyle(e).color), "rgb(34, 34, 34)", "밝은 지향색 → 검은 글자");
+  // 이름 줄은 미니 자리를 비우지 않고, 한 사람의 이름은 묶여 있다
+  assert.equal(await card.locator(".otaku-card-text small .otaku-nm").count(), 2, "이름 묶음");
+  assert.equal(await card.locator(".otaku-card-text small").evaluate((e) => getComputedStyle(e).paddingRight), "0px", "이름 줄은 끝까지");
   assert.equal(await p.locator(`.otaku-card[href*='wr_id=${friend}'] .otaku-card-pics img`).count(), 1, "썸네일 없으면 인물 사진");
   await p.setViewportSize({ width: 390, height: 800 });
   const cols = await p.evaluate(() => getComputedStyle(document.querySelector(".otaku-cards")).gridTemplateColumns.split(" ").length);

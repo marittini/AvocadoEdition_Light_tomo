@@ -1,4 +1,4 @@
-# 방명록 (`custom_skin/guestbook`)
+# 방명록 (`guestbook`)
 
 Rewrite of the Avocado Light guestbook skin `new_memo_l1` (by 사도세자, based on 늘's new_memo) for PHP 8.4 / Light TOMO,
 restyled to the calm, slim look used by the other custom skins.

@@ -1,4 +1,4 @@
-// 다이어리(custom_skin/diary): 공통 에디터 작성, 목록에 본문 미노출, 연도(여러 해)·월 탐색, 페이지, 위조 요청.
+// 다이어리(diary): 공통 에디터 작성, 목록에 본문 미노출, 연도(여러 해)·월 탐색, 페이지, 위조 요청.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD. 글 날짜를 여러 해로 옮기기 위해 TEST_SQL(예: "mysql -uroot g5")이 필요하다.
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
@@ -32,7 +32,7 @@ const { chromium } = require("playwright"),
   await p.locator("[name=bo_table]").fill(id);
   await p.locator("[name=bo_subject]").fill("다이어리 테스트");
   await p.locator("[role=tab][aria-controls=anc_004]").click();
-  await p.locator("[name=bo_skin]").selectOption("custom_skin/diary");
+  await p.locator("[name=bo_skin]").selectOption("diary");
   await p.locator("[role=tab][aria-controls=anc_003]").click();
   await p.locator("[name=bo_use_secret]").selectOption("1");
   await p.locator("input[type=submit]").first().click();

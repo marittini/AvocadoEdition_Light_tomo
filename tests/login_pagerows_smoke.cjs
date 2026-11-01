@@ -85,7 +85,7 @@ const CK_ID = md5("ck_mb_id"), CK_AUTO = md5("ck_auto");
     await admin.locator("[name=bo_table]").fill(id);
     await admin.locator("[name=bo_subject]").fill("목록 수 테스트");
     await admin.locator("[role=tab][aria-controls=anc_004]").click();
-    await admin.locator("[name=bo_skin]").selectOption("custom_skin/guestbook");
+    await admin.locator("[name=bo_skin]").selectOption("guestbook");
     await admin.locator("[name=bo_page_rows]").fill("3"); // 스킨과 같은 탭
     assert.equal(await admin.locator("[name=bo_mobile_page_rows]").count(), 1, "관리자 화면에 모바일 목록 수 칸");
     await admin.locator("[name=bo_mobile_page_rows]").fill("2");

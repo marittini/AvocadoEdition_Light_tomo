@@ -1,5 +1,5 @@
-// 갤러리 · 글 보관함(custom_skin/gallery): 분류 폴더(펼침 기억), 그림 · 글 카드, 본문 팝업(주소 · 뒤로 가기 · Esc),
-// 이미지만 있는 글, 이전 · 다음 글, 공개 범위(멤버공개 · 보호글 · 비밀글)와 보호 파일, 댓글, 위조 요청 거부.
+// 갤러리 · 글 보관함(gallery): 분류 폴더(펼침 기억), 그림 · 글 카드, 본문 팝업(주소 · 뒤로 가기 · Esc),
+// 이미지만 있는 글, 이전 · 다음 글, 가운데 제목, 글을 여는 동안 뒤 목록 감춤, 공개 범위(멤버공개 · 보호글 · 비밀글)와 보호 파일, 댓글, 위조 요청 거부.
 // Env: TEST_URL, TEST_USER(최고관리자), TEST_PASSWORD, TEST_MEMBER(일반 회원, 같은 비밀번호), TEST_IMAGE(이미지 파일),
 //      TEST_SQL(예: "mysql --default-character-set=utf8mb4 -uroot g5").
 const { chromium } = require("playwright"),
@@ -43,7 +43,7 @@ const { chromium } = require("playwright"),
     await admin.locator("[name=bo_table]").fill(id);
     await admin.locator("[name=bo_subject]").fill("갤러리 테스트");
     await admin.locator("[role=tab][aria-controls=anc_004]").click();
-    await admin.locator("[name=bo_skin]").selectOption("custom_skin/gallery");
+    await admin.locator("[name=bo_skin]").selectOption("gallery");
     await admin.locator("[role=tab][aria-controls=anc_003]").click();
     await admin.locator("[name=bo_upload_count]").fill("2");
     await admin.locator("[name=bo_use_secret]").selectOption("1");
@@ -92,6 +92,7 @@ const { chromium } = require("playwright"),
     assert.ok(await artFolder.locator(".gl-thumb img").first().getAttribute("src").then((s) => s.includes("archive_file.php")), "썸네일은 보호 경로");
     const novel = member.locator('[data-gl-folder="Novel"]');
     assert.match(await novel.locator(`.gl-card[href*="wr_id=${ch1}"] .gl-count`).innerText(), /\d+자/, "글 카드 글자 수");
+    assert.equal(await artFolder.locator(".gl-cap").first().evaluate((e) => getComputedStyle(e).justifyContent), "center", "제목은 그림 기준 가운데");
     assert.equal(await novel.locator(`.gl-card[href*="wr_id=${pro}"].is-locked`).count(), 1, "보호글은 잠긴 카드");
 
     // 3. 팝업: 주소 바뀜 · 이전/다음 · Esc · 뒤로 가기
@@ -99,6 +100,7 @@ const { chromium } = require("playwright"),
     await member.waitForSelector(".gl-modal-body [data-gl-view]");
     assert.equal(new URL(member.url()).searchParams.get("wr_id"), ch1, "팝업 주소");
     assert.match(await member.locator(".gl-modal-body .gl-v-title").innerText(), /1화/);
+    assert.equal(await member.locator(".gl-folders").evaluate((e) => getComputedStyle(e).opacity), "0", "글을 여는 동안 뒤의 목록 상자는 감춤");
     await member.locator(".gl-modal-body .gl-v-nav .is-next").click();
     await member.waitForFunction((t) => document.querySelector(".gl-modal-body .gl-v-title")?.textContent.includes(t), "2화");
     assert.equal(new URL(member.url()).searchParams.get("wr_id"), ch2, "다음 글");

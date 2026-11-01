@@ -252,7 +252,8 @@ function emote_ev($comment) {
 	$str = $comment;
 
 	for($i=0; $row=sql_fetch_array($emo_result); $i++) {
-		$str = str_replace($row['me_text'], "<img src=\"".G5_URL.$row["me_img"]."\">" ,$str);
+		// class="emoticon": 관리자 > 이모티콘관리의 표시 크기를 따른다
+		$str = str_replace($row['me_text'], "<img src=\"".G5_URL.$row["me_img"]."\" class=\"emoticon\">" ,$str);
 	}
 	return $str;
 }

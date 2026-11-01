@@ -30,7 +30,8 @@ function get_skin_select($skin_gubun, $id, $name, $selected='', $event='')
     if ($skin_gubun === 'board') {
         $nested = G5_SKIN_PATH.'/board/custom_skin';
         foreach (get_skin_dir('board/custom_skin') ?: [] as $subdir) {
-            if (preg_match('/^[a-zA-Z0-9_-]+$/D', $subdir) && is_file($nested.'/'.$subdir.'/list.skin.php'))
+            // 같은 이름의 스킨이 skin/board/ 바로 아래로 옮겨졌으면 예전 위치는 목록에서 뺀다
+            if (preg_match('/^[a-zA-Z0-9_-]+$/D', $subdir) && is_file($nested.'/'.$subdir.'/list.skin.php') && !is_file(G5_SKIN_PATH.'/board/'.$subdir.'/list.skin.php'))
                 $skins[] = 'custom_skin/'.$subdir;
         }
         $skins = array_values(array_filter($skins, static fn($skin) => $skin !== 'custom_skin' || is_file($nested.'/list.skin.php')));

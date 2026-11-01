@@ -1,4 +1,4 @@
-# 갤러리 · 글 보관함 (`custom_skin/gallery`)
+# 갤러리 · 글 보관함 (`gallery`)
 
 Rewrite of 사도세자's `gallery_thumb_mac 2.1` (갤러리_mac_os, based on 대하's thumbnail gallery) for PHP 8.4 / Light TOMO,
 restyled to the calm look of the other custom skins, and extended so novels can be archived next to art.
@@ -17,9 +17,12 @@ Source: https://www.postype.com/@sasasasado/post/14563010
   measure and larger line height.
 - **Privacy**: 전체공개 / 멤버공개 (`wr_secret=1`) / 보호글 (`wr_protect`, bcrypt) / 비밀글 (`wr_option` secret).
   Protected posts open through `protect.php`. Old plaintext passwords from the original skin still work.
-- **Files**: attachment thumbnails are served through `bbs/archive_file.php`. `custom_skin/gallery` is added to its
+- **Files**: attachment thumbnails are served through `bbs/archive_file.php`. `gallery` is added to its
   privacy-skin list so member-only and protected rules apply to attachments too.
 - **Write**: type, category, privacy, title, source (`wr_1`), site editor, images. Art posts may have no text.
+- **Titles** are centred under the card image.
+- While a post is open, the list behind it and the site menu (also the menu in the outer frame on PC) are hidden, so the
+  semi-transparent paper shows nothing through it and the close button never sits under the menu.
 
 ## Changes from the original
 

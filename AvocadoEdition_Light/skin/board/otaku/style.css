@@ -1,0 +1,232 @@
+@charset "utf-8";
+/*
+ * 페어 프로필 게시판 (otaku)
+ * 여백·정렬·가는 선·작은 라벨. 강조는 포인트 색 하나(현재 탭 밑줄, 썸네일 아래 선, 링크).
+ * 색과 글꼴은 지정하지 않는다. 관리자 > 디자인 설정을 그대로 따른다.
+ *   - 종이: .theme-box / 버튼: .ui-btn, .ui-btn.point, .ui-btn.etc
+ *   - 포인트 색: --otaku-point (디자인 설정의 포인트 색에서 자동으로 채움)
+ *   - 선: 글자색을 옅게 섞어 쓴다(밝은 테마·어두운 테마 모두).
+ */
+.otaku {
+	--otaku-line: rgba(128, 128, 128, .28);
+	--otaku-accent: var(--otaku-point, currentColor);
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 24px 0 40px;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+}
+@supports (color: color-mix(in srgb, red 10%, transparent)) {
+	.otaku { --otaku-line: color-mix(in srgb, currentColor 16%, transparent); }
+}
+.otaku p, .otaku dd, .otaku li { word-break: keep-all; }
+.otaku .material-icons { font-size: 1em; line-height: 1; vertical-align: -0.125em; }
+.otaku .board-notice-box { margin-bottom: 16px; }
+.otaku [hidden] { display: none !important; }
+
+/* 종이: 사이트 공통 .theme-box·#bo_v 여백보다 우선한다 */
+.otaku .otaku-paper, .otaku #bo_v.otaku-paper { padding: 36px 40px 40px; box-sizing: border-box; }
+
+.otaku-label { display: block; margin: 0; font-size: 12px; font-weight: normal; opacity: .62; }
+.otaku-help { margin: 10px 0 0; font-size: 12px; line-height: 1.6; opacity: .62; text-wrap: pretty; }
+
+/* ---------- 머리: 이름 + 원본/AU ---------- */
+.otaku-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.otaku-title { margin: 4px 0 0; font-size: 26px; font-weight: normal; line-height: 1.3; text-wrap: balance; }
+.otaku-versions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.otaku-versions .ui-btn { display: inline-flex; align-items: center; gap: 2px; }
+
+/* ---------- 탭: 글자 + 포인트 색 밑줄 ---------- */
+.otaku-tabs { display: flex; gap: 24px; margin: 22px 0 28px; border-bottom: 1px solid var(--otaku-line); }
+.otaku-tabs button { margin: 0; padding: 0 0 10px; border: 0; background: none; color: inherit; font: inherit; font-size: 14px; cursor: pointer; opacity: .55; transition: none; }
+.otaku-tabs button:hover { opacity: .85; }
+.otaku-tabs button[aria-selected="true"] { opacity: 1; box-shadow: inset 0 -2px 0 var(--otaku-accent); }
+.otaku-tabs button:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+
+/* ---------- 프로필: 같은 형식의 칸 두 개 ---------- */
+.otaku-duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.otaku .otaku-duo > * { min-width: 0; padding: 0 32px 4px 0; }
+.otaku .otaku-duo > * + * { padding: 0 0 4px 32px; border-left: 1px solid var(--otaku-line); }
+
+.otaku-id { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 18px; align-items: end; margin-bottom: 20px; }
+.otaku-id:not(:has(.otaku-photo)) { grid-template-columns: minmax(0, 1fr); }
+.otaku-photo { display: block; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.otaku-photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.otaku-name { margin: 0; font-size: 20px; font-weight: normal; line-height: 1.35; }
+/* 이름 루비(읽는 법): 이름 위에 작게 */
+.otaku-name ruby { ruby-position: over; }
+.otaku-name rt { font-size: 11px; font-weight: normal; letter-spacing: .02em; opacity: .62; }
+/* 여러 이름: 한 사람의 이름은 가능하면 한 줄에 */
+.otaku-nm { display: inline-block; max-width: 100%; }
+.otaku-sep { opacity: .62; }
+.otaku-line { margin: 2px 0 0; font-size: 13px; opacity: .62; }
+.otaku-quote { margin: 12px 0 0; font-size: 14px; line-height: 1.7; text-wrap: balance; }
+/* 지향색이 있으면 한마디 왼쪽에 가는 색 선 */
+.otaku-person[style] .otaku-quote { padding-left: 10px; box-shadow: inset 2px 0 0 var(--otaku-person); }
+
+.otaku-facts { display: grid; grid-template-columns: 88px minmax(0, 1fr); margin: 0 0 22px; border-top: 1px solid var(--otaku-line); font-size: 13px; font-variant-numeric: tabular-nums; }
+.otaku-facts dt, .otaku-facts dd { margin: 0; padding: 7px 0; border-bottom: 1px solid var(--otaku-line); }
+.otaku-facts dt { padding-right: 10px; opacity: .62; }
+.otaku-person h3.otaku-label { margin: 0 0 4px; }
+.otaku-text { margin: 0 0 18px; font-size: 14px; line-height: 1.8; text-align: justify; text-wrap: pretty; }
+
+/* 좁은 화면에서만 쓰는 인물 탭 */
+.otaku-person-tabs { display: none; }
+
+/* ---------- 관계 ---------- */
+.otaku-bond { margin: 0 0 30px; }
+.otaku-bond p { margin: 4px 0 0; max-width: 640px; line-height: 1.8; text-wrap: pretty; }
+.otaku-groups { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 32px; }
+.otaku-groups h3.otaku-label { margin: 0 0 6px; }
+.otaku-rels { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--otaku-line); }
+.otaku-rels li { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--otaku-line); }
+.otaku-avatar { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; box-shadow: inset 0 0 0 1px var(--otaku-line); font-size: 13px; opacity: .9; }
+.otaku-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.otaku-rel-text { display: block; min-width: 0; color: inherit; text-decoration: none; }
+.otaku-rel-text b { font-weight: normal; }
+.otaku-rel-text span { margin-left: 6px; font-size: 12px; opacity: .62; }
+.otaku-rel-text p { margin: 1px 0 0; font-size: 13px; opacity: .62; }
+a.otaku-rel-text b { box-shadow: inset 0 -1px 0 var(--otaku-line); }
+a.otaku-rel-text:hover b, a.otaku-rel-text:focus-visible b { box-shadow: inset 0 -1px 0 var(--otaku-accent); }
+
+/* ---------- 연표 ---------- */
+.otaku-tl { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--otaku-line); }
+.otaku-tl li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--otaku-line); }
+.otaku-tl-date { font-size: 13px; opacity: .62; font-variant-numeric: tabular-nums; }
+.otaku-tl b { font-weight: normal; }
+.otaku-who { margin-left: 8px; font-size: 12px; opacity: .62; }
+.otaku-tl p { margin: 2px 0 0; font-size: 13px; line-height: 1.7; opacity: .75; }
+
+/* ---------- 아래 버튼 ---------- */
+.otaku-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.otaku-actions > div, .otaku-version-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- 목록: 썸네일 카드 ---------- */
+.otaku-list { max-width: 1100px; }
+.otaku-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 20px; margin: 0; padding: 0; list-style: none; }
+.otaku-card { display: block; color: inherit; text-decoration: none; }
+.otaku-card-art { position: relative; display: block; aspect-ratio: 16 / 9; border-bottom: 3px solid var(--otaku-accent); }
+.otaku-card-pics { position: absolute; inset: 0; display: flex; overflow: hidden; border-radius: 10px 10px 0 0; box-shadow: inset 0 0 0 1px var(--otaku-line); }
+.otaku-card-pics img { display: block; flex: 1 1 0; min-width: 0; width: 100%; height: 100%; object-fit: cover; }
+/* 미니 캐릭터: 선 위에 서서 발끝이 선 아래로 조금 내려온다. 원래 크기보다 키우지 않는다. */
+.otaku-card-minis { position: absolute; right: 12px; bottom: -18px; display: flex; align-items: flex-end; gap: 2px; pointer-events: none; }
+.otaku-card-minis img { display: block; width: auto; height: auto; max-height: 64px; max-width: 64px; }
+/* 미니에 마우스를 올리면 한마디가 지향색 말풍선으로 */
+.otaku-mini { position: relative; display: block; pointer-events: auto; }
+.otaku-mini-quote, .otaku-mini.has-quote::after { visibility: hidden; opacity: 0; transition: opacity .15s ease, visibility .15s; }
+.otaku-mini-quote {
+	position: absolute; right: -6px; bottom: calc(100% + 9px); z-index: 5;
+	width: max-content; max-width: 220px; padding: 7px 11px; border-radius: 8px;
+	background: var(--otaku-person, rgba(0, 0, 0, .78)); color: var(--otaku-person-text, #fff);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+	font-size: 12px; font-weight: normal; line-height: 1.55; text-align: left; white-space: normal; word-break: keep-all; text-wrap: balance;
+}
+.otaku-mini.has-quote::after {
+	content: ''; position: absolute; left: 50%; bottom: calc(100% + 3px); z-index: 5; margin-left: -6px;
+	border: 6px solid transparent; border-bottom: 0; border-top-color: var(--otaku-person, rgba(0, 0, 0, .78));
+}
+.otaku-mini:hover .otaku-mini-quote, .otaku-mini.has-quote:hover::after { visibility: visible; opacity: 1; }
+.otaku-card-text { display: block; padding: 10px 2px 0; }
+/* 미니 자리는 제목 줄에만 비워 둔다(이름 줄은 끝까지 쓴다) */
+.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text b { padding-right: 140px; }
+.otaku-card-text b { display: block; overflow: hidden; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
+.otaku-card-text b .material-icons { margin-right: 4px; opacity: .62; }
+.otaku-card-text small { display: block; min-height: 1.5em; font-size: 12px; opacity: .62; }
+.otaku-card:hover b, .otaku-card:focus-visible b { box-shadow: inset 0 -1px 0 var(--otaku-accent); }
+.otaku-card:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+.otaku-empty { text-align: center; }
+.otaku-empty p { margin: 0 0 14px; opacity: .62; }
+
+/* ---------- 글쓰기 ---------- */
+.otaku-write fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.otaku-write legend { padding: 0; }
+.otaku-f { display: block; margin: 0 0 10px; }
+.otaku-f > span { display: block; margin-bottom: 4px; font-size: 12px; opacity: .62; }
+.otaku-f small { font-size: 11px; }
+.otaku-f .frm_input, .otaku-f select, .otaku-f textarea { width: 100%; box-sizing: border-box; }
+.otaku-f select { height: 32px; }
+.otaku-f textarea { min-height: 60px; line-height: 1.6; resize: vertical; }
+.otaku-au-name { margin-top: 18px; max-width: 420px; }
+.otaku-id-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 150px); gap: 0 8px; }
+.otaku-color-row { display: flex; align-items: center; gap: 4px; }
+.otaku-color-row input[type="color"] { flex: none; width: 32px; height: 32px; padding: 0; border: 0; background: none; cursor: pointer; }
+.otaku-color-row input[type="color"].is-empty { opacity: .35; }
+.otaku-f .otaku-color-row .frm_input { width: auto; min-width: 0; flex: 1 1 auto; }
+.otaku-color-row .ui-btn { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
+
+.otaku-write .otaku-cover-edit { margin: 0 0 28px; padding: 0 0 24px; border-bottom: 1px solid var(--otaku-line); }
+.otaku-cover-edit > legend { margin-bottom: 8px; }
+.otaku-cover-grid { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+
+.otaku-person-edit > legend { display: block; margin-bottom: 12px; font-size: 12px; opacity: .62; }
+.otaku-id-edit { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; align-items: start; margin-bottom: 18px; }
+.otaku-picks { display: grid; gap: 12px; }
+.otaku-pick-preview { display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: inset 0 0 0 1px var(--otaku-line); }
+.otaku-pick-preview .material-icons { font-size: 26px; opacity: .4; }
+.otaku-pick-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.otaku-pick.is-photo .otaku-pick-preview { aspect-ratio: 4 / 5; }
+.otaku-pick.is-cover .otaku-pick-preview { aspect-ratio: 16 / 9; border-radius: 8px 8px 0 0; border-bottom: 3px solid var(--otaku-accent); }
+.otaku-pick.is-mini .otaku-pick-preview { width: 64px; height: 64px; }
+.otaku-pick.is-mini .otaku-pick-preview img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.otaku-pick-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 6px; }
+.otaku-pick-tools .ui-btn { cursor: pointer; }
+.otaku-check { font-size: 12px; opacity: .8; }
+
+.otaku-person-edit h3.otaku-label, .otaku-rel-edit h3.otaku-label { margin: 18px 0 6px; }
+.otaku-rows { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--otaku-line); }
+.otaku-rows:empty { border-top: 0; }
+.otaku-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--otaku-line); }
+.otaku-row-fields { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 0 8px; }
+.otaku-row-fields .otaku-f { margin: 0 0 6px; }
+.otaku-row-fields .otaku-f:last-child { margin-bottom: 0; }
+.otaku-row-fields .otaku-f > span { font-size: 11px; }
+/* 행 안의 긴 칸은 한 줄 전체 */
+.otaku-f-b, .otaku-f-text { grid-column: 1 / -1; }
+.otaku-rel-edit .otaku-row-fields { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, .8fr); }
+.otaku-f-who { order: 1; }
+.otaku-f-b, .otaku-f-text { order: 2; }
+.otaku-panel[data-panel="timeline"] .otaku-row-fields { grid-template-columns: 140px minmax(0, 1fr) 120px; }
+.otaku-row-tools { display: flex; gap: 2px; padding-top: 18px; }
+.otaku-row-tools .ui-btn { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; }
+.otaku-add { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.otaku-bond-edit { margin-bottom: 26px; }
+
+.otaku-guest { display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 0 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--otaku-line); }
+.otaku-options { display: flex; gap: 16px; margin-top: 18px; font-size: 13px; }
+.otaku-options:empty { display: none; }
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width: 900px) {
+	.otaku-cards { gap: 26px 14px; }
+	.otaku-card-minis img { max-height: 52px; max-width: 52px; }
+	.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text b { padding-right: 116px; }
+}
+@media (max-width: 680px) {
+	.otaku { padding: 12px 0 32px; }
+	.otaku .otaku-paper, .otaku #bo_v.otaku-paper { padding: 22px 16px 24px; }
+	.otaku-top { flex-direction: column; gap: 10px; }
+	.otaku-versions { justify-content: flex-start; }
+	.otaku-title { font-size: 22px; }
+	.otaku-tabs { gap: 22px; margin: 16px 0 20px; }
+	.otaku-duo, .otaku-groups { grid-template-columns: minmax(0, 1fr); }
+	.otaku .otaku-duo > * { padding: 0 0 8px; }
+	.otaku .otaku-duo > * + * { padding: 22px 0 0; border-left: 0; border-top: 1px solid var(--otaku-line); }
+	.otaku-groups { gap: 22px; }
+	/* 인물 탭: 한 명씩 */
+	.otaku-person-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; }
+	.otaku-person-tabs + [data-people] > .is-off { display: none; }
+	.otaku-person-tabs + .otaku-duo > * + * { padding-top: 0; border-top: 0; }
+	.otaku-id { grid-template-columns: 112px minmax(0, 1fr); gap: 14px; margin-bottom: 16px; }
+	.otaku-tl li { grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
+
+	.otaku-cards { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+	.otaku-card-minis img { max-height: 64px; max-width: 64px; }
+	.otaku-card-art:has(.otaku-card-minis) + .otaku-card-text b { padding-right: 140px; }
+
+	.otaku-cover-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+	.otaku-id-edit { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
+	.otaku-row-fields, .otaku-rel-edit .otaku-row-fields, .otaku-panel[data-panel="timeline"] .otaku-row-fields { grid-template-columns: minmax(0, 1fr); }
+	.otaku-row-tools { flex-direction: column; padding-top: 18px; }
+	.otaku-guest { grid-template-columns: minmax(0, 1fr); }
+	.otaku-id-pair { grid-template-columns: minmax(0, 1fr); }
+}

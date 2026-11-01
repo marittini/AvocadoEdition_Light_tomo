@@ -13,3 +13,26 @@
 .tomo-protection-options>label {display:block;margin:8px 0}
 .tomo-settings input:focus-visible,.tomo-settings textarea:focus-visible,.tomo-settings button:focus-visible,.tomo-font-choice select:focus-visible {outline:2px solid #895a5a;outline-offset:2px}
 @media(max-width:800px){.tomo-font-row{padding:10px}.tomo-font-row label{min-width:0;flex-basis:100%}.tomo-font-choice{width:100%}.tomo-font-choice select,.tomo-font-row input,.tomo-font-row textarea{width:100%;font-size:16px;min-height:36px}.tomo-settings button{min-height:40px}}
+/* 등록한 웹폰트: 한 줄씩 접는 목록 · 순서 이동 · 찾기 */
+.tomo-font-tools {display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 4px}
+.tomo-font-tools[hidden] {display:none}
+.tomo-font-count {font-size:12px;color:#895a5a;margin-right:auto}
+.tomo-font-filter input {width:220px;max-width:100%;height:32px;padding:0 8px;border:1px solid #d8c5c5}
+.tomo-font-item {margin:6px 0;border:1px solid #efeff1;background:#fafafa}
+.tomo-font-item[hidden] {display:none}
+.tomo-font-item > summary {display:flex;align-items:center;gap:12px;min-height:44px;padding:6px 10px 6px 14px;cursor:pointer;list-style:none}
+.tomo-font-item > summary::-webkit-details-marker {display:none}
+.tomo-font-item > summary::before {content:"chevron_right";font-family:'Material Icons';font-size:18px;color:#a68a8f;transition:none}
+.tomo-font-item[open] > summary::before {content:"expand_more"}
+.tomo-font-item[open] > summary {border-bottom:1px solid #efeff1}
+.tomo-font-sum-label {font-weight:600;color:#60464a;white-space:nowrap}
+.tomo-font-sum-family {font-size:12px;color:#8b7a7f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.tomo-font-sum-sample {flex:1;min-width:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#49393c}
+.tomo-font-used {flex:none;padding:2px 8px;font-size:11px;color:#fff;background:#d18686}
+.tomo-font-used[hidden] {display:none}
+.tomo-font-move {display:inline-flex;gap:2px;flex:none}
+.tomo-settings .tomo-font-move button {display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;overflow:hidden}
+.tomo-settings .tomo-font-move button:disabled {opacity:.35;cursor:default}
+.tomo-font-move .material-icons {font-size:18px}
+.tomo-font-item > .tomo-font-row {margin:0;border:0;background:none}
+@media(max-width:800px){.tomo-font-sum-family{display:none}.tomo-font-filter,.tomo-font-filter input{width:100%}}

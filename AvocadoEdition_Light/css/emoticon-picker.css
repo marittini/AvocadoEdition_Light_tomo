@@ -12,6 +12,7 @@
 .emoticon-pop-list img { display: block; width: 48px; height: 48px; object-fit: contain; }
 .emoticon-pop-list span { max-width: 100%; overflow: hidden; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; opacity: .7; }
 .emoticon-open { display: inline-flex; align-items: center; gap: 3px; }
+.emoticon-auto-bar { display: flex; justify-content: flex-end; margin: 6px 0; }
 .emoticon-open .material-icons { font-size: 1.1em; }
 img.emoticon { display: inline-block; max-width: 100%; max-height: 80px; margin: 0; padding: 0; border: 0; vertical-align: middle; }
 

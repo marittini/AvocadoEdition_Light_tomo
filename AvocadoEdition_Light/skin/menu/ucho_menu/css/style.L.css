@@ -168,6 +168,19 @@
     }
     .ucho-menu > li:hover .tooltips,
     .ucho-menu > li:focus-within .tooltips { display: block; opacity: 1; visibility: visible; z-index: 9999; }
+
+    /* 홈 · 로그인 등 하위 메뉴가 없는 아이콘의 이름표도 하위 메뉴처럼 꼬리 달린 말풍선으로.
+       색 · 글꼴 · 크기 · 모서리는 디자인 설정(메뉴 툴팁)을 그대로 쓰고, 꼬리는 같은 배경색을 물려받는다. */
+    #header .gnbWrap.ucho-menu .tooltips {
+        padding: 4px 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        line-height: 1.5;
+        white-space: nowrap;
+    }
+    #header .gnbWrap.ucho-menu .tooltips::before {
+        content: ''; position: absolute; top: -6px; left: 50%; width: 12px; height: 6px; margin-left: -6px;
+        background: inherit; -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%); clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
 }
 
 

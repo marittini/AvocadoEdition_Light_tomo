@@ -38,11 +38,12 @@
 #log_list .item	.ui-pic								{ position: relative; min-width: 300px; }
 #log_list .item	.ui-pic .pic-header					{ position: relative; line-height: 30px; padding: 0 10px; }
 
+/* 수정 · 삭제: 글자(M · X) 대신 펜 · 휴지통 아이콘 */
 #log_list .item	.ui-pic .pic-header .no				{ display: inline-block; vertical-align: middle; font-weight: bold; font-size: 14px; }
 #log_list .item	.ui-pic .pic-header .del			{ display: inline-block; vertical-align: middle; position: relative; width: 14px; height: 14px; line-height: 14px; overflow: hidden; text-indent: -999px; padding-left: 10px; }
-#log_list .item	.ui-pic .pic-header .del:before		{ content: 'X'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 14px; text-indent: 0; text-align: center; font-size: 11px; font-weight: bold;}
+#log_list .item	.ui-pic .pic-header .del:before		{ content: 'delete'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 14px; text-indent: 0; text-align: center; font-size: 15px; font-family: 'Material Icons'; font-weight: normal; font-style: normal; text-transform: none; letter-spacing: normal; white-space: nowrap; font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
 #log_list .item	.ui-pic .pic-header .mod			{ display: inline-block; float: right; vertical-align: middle; position: relative; width: 14px; height: 30px; line-height: 30px; overflow: hidden; text-indent: -999px; padding-left: 10px; }
-#log_list .item	.ui-pic .pic-header .mod:before		{ content: 'M'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 11px; font-weight: bold;}
+#log_list .item	.ui-pic .pic-header .mod:before		{ content: 'edit'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 15px; font-family: 'Material Icons'; font-weight: normal; font-style: normal; text-transform: none; letter-spacing: normal; white-space: nowrap; font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
 #log_list .item	.ui-pic .pic-header .fav			{ display: inline-block; float: right; vertical-align: middle; position: relative; width: 14px; height: 30px; line-height: 30px; overflow: hidden; text-indent: -999px; padding-left: 10px; }
 #log_list .item	.ui-pic .pic-header .fav:before		{ content: '\e9d9'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 11px; font-family: 'icon'; font-weight: bold;}
 #log_list .item	.ui-pic .pic-header .fav.on:before	{ color: yellow; }
@@ -92,9 +93,9 @@
 #log_list .item-comment .co-footer .date		{  }
 
 #log_list .item-comment .co-footer .del			{ display: inline-block; float: right; vertical-align: middle; position: relative; width: 14px; height: 30px; line-height: 30px; overflow: hidden; text-indent: -999px; padding-left: 10px; }
-#log_list .item-comment .co-footer .del:before	{ content: 'X'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 11px; font-weight: bold;}
+#log_list .item-comment .co-footer .del:before	{ content: 'delete'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 15px; font-family: 'Material Icons'; font-weight: normal; font-style: normal; text-transform: none; letter-spacing: normal; white-space: nowrap; font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
 #log_list .item-comment .co-footer .mod			{ display: inline-block; float: right; vertical-align: middle; position: relative; width: 14px; height: 30px; line-height: 30px; overflow: hidden; text-indent: -999px; padding-left: 10px; }
-#log_list .item-comment .co-footer .mod:before	{ content: 'M'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 11px; font-weight: bold; }
+#log_list .item-comment .co-footer .mod:before	{ content: 'edit'; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 30px; text-indent: 0; text-align: center; font-size: 15px; font-family: 'Material Icons'; font-weight: normal; font-style: normal; text-transform: none; letter-spacing: normal; white-space: nowrap; font-feature-settings: 'liga'; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
 
 #log_list .item-comment-form-box					{ padding: 15px 0 0; }
 #log_list .bo_vc_w									{ position: relative; padding-right: 70px; }

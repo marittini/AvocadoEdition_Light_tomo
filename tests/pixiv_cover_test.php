@@ -1,7 +1,7 @@
 <?php
 define('_GNUBOARD_', true); define('G5_BBS_URL', '/bbs');
 function get_file($board, $post) { return ['count'=>2, 0=>['file'=>'first.png','image_type'=>3], 1=>['file'=>'second.png','image_type'=>3]]; }
-require __DIR__.'/../AvocadoEdition_Light/skin/board/custom_skin/pixiv/pixiv.lib.php';
+require __DIR__.'/../AvocadoEdition_Light/skin/board/pixiv/pixiv.lib.php';
 function check($ok, $message) { if (!$ok) throw new RuntimeException($message); echo "PASS $message\n"; }
 $legacy=pixiv_files('test',1,'1,0');
 check(array_column($legacy,'index')===[1,0], 'old saved order is retained');

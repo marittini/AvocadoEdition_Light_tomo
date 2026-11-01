@@ -4,8 +4,8 @@ include_once __DIR__.'/menu.lib.php';
 (static function () use ($g5, $menu_skin_url, $is_member, $is_admin) {
     // $config is needed for the BGM playlist (cf_bgm); the closure does not see globals otherwise.
     global $is_add_register, $config;
-add_stylesheet('<link rel="stylesheet" href="'.$menu_skin_url.'/css/style.L.css?v=3">', 1);
-add_javascript('<script defer src="'.$menu_skin_url.'/menu.js?v=1"></script>', 1);
+add_stylesheet('<link rel="stylesheet" href="'.$menu_skin_url.'/css/style.L.css?v=6">', 1);
+add_javascript('<script defer src="'.$menu_skin_url.'/menu.js?v=3"></script>', 1);
 ?>
 
 <ul class="gnbWrap ucho-menu">

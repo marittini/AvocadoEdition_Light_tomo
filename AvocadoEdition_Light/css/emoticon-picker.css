@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* 이모티콘 목록 팝업(lib/emoticon.lib.php). 상자 색은 디자인 설정의 기본 박스(.theme-box)를 따른다. */
+.emoticon-pop { position: fixed; z-index: 2147482000; max-height: min(60vh, 360px); overflow: auto; padding: 8px 10px 10px; box-sizing: border-box; overscroll-behavior: contain; }
+.emoticon-pop[hidden] { display: none !important; }
+.emoticon-pop, .emoticon-pop * { transition: none; }
+.emoticon-pop-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 12px; opacity: .7; }
+.emoticon-pop-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.emoticon-pop-close .material-icons { font-size: 16px; }
+.emoticon-pop-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.emoticon-pop-list button { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; padding: 6px 2px; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.emoticon-pop-list button:hover, .emoticon-pop-list button:focus-visible { outline: 1px solid currentColor; outline-offset: -1px; }
+.emoticon-pop-list img { display: block; width: 48px; height: 48px; object-fit: contain; }
+.emoticon-pop-list span { max-width: 100%; overflow: hidden; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; opacity: .7; }
+.emoticon-open { display: inline-flex; align-items: center; gap: 3px; }
+.emoticon-open .material-icons { font-size: 1.1em; }
+img.emoticon { display: inline-block; max-width: 100%; max-height: 80px; margin: 0; padding: 0; border: 0; vertical-align: middle; }
+
+/* 휴대폰: 화면 아래에서 올라오는 목록 */
+.emoticon-pop.is-sheet { left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 50vh; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); border-radius: 12px 12px 0 0 !important; box-shadow: 0 -4px 20px rgba(0, 0, 0, .18); }
+.emoticon-pop.is-sheet .emoticon-pop-list { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); }
+.emoticon-pop.is-sheet .emoticon-pop-list button { padding: 8px 2px; }
+.emoticon-pop.is-sheet .emoticon-pop-close { width: 32px; height: 32px; }
+
+/* 이모티콘 목록 창(bbs/emoticon.php) */
+.emoticon-window { max-width: 480px; margin: 0 auto; padding: 16px 16px 20px; box-sizing: border-box; }
+.emoticon-window-head h1 { margin: 0; font-size: 15px; font-weight: normal; }
+.emoticon-window-head p { margin: 4px 0 12px; font-size: 12px; opacity: .65; }
+.emoticon-window .emoticon-pop-list { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+.emoticon-window-empty { padding: 40px 0; text-align: center; font-size: 13px; opacity: .65; }
+.emoticon-window-status { min-height: 1.5em; margin: 10px 0 0; font-size: 12px; text-align: center; opacity: .75; }
+.emoticon-window-foot { display: flex; justify-content: center; margin-top: 6px; }

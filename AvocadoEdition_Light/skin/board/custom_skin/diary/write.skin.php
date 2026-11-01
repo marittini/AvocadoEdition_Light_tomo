@@ -54,6 +54,7 @@ $diary_width = (int)($board['bo_table_width'] ?? 0);
 				<?php if ($write_min || $write_max) { ?><p id="char_count_desc">최소 <strong><?=(int)$write_min?></strong>글자 이상, 최대 <strong><?=(int)$write_max?></strong>글자 이하</p><?php } ?>
 				<label for="wr_content" class="sound_only">내용<strong>필수</strong></label>
 				<?=$editor_html?>
+				<?php if ($diary_emoticon = emoticon_button($is_dhtml_editor ? 'editor:wr_content' : 'textarea')) { ?><div class="diary-emoticon"><?=$diary_emoticon?></div><?php } ?>
 				<?php if ($write_min || $write_max) { ?><div id="char_count_wrap"><span id="char_count"></span>글자</div><?php } ?>
 			</div>
 

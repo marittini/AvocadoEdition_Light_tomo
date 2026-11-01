@@ -1,5 +1,6 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit;
+include_once G5_LIB_PATH.'/emoticon.lib.php'; // 이모티콘(관리자 > 이모티콘관리) // 개별 페이지 접근 불가
 $comment_action_url = https_url(G5_BBS_DIR)."/write_comment_update.php";
 ?>
 
@@ -17,7 +18,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 		$comment_id = $list[$i]['wr_id'];
 		$cmt_depth = ""; // 댓글단계
 		$cmt_depth = strlen($list[$i]['wr_comment_reply']) * 10;
-		$comment = $list[$i]['content'];
+		$comment = emoticon_html($list[$i]['content']); // 이모티콘 코드 → 이미지
 		/*
 		if (strstr($list[$i]['wr_option'], "secret")) {
 			$str = $str;
@@ -161,6 +162,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	</div>
 
 	<div class="btn_confirm">
+		<?=emoticon_button('textarea', 'ui-btn etc')?>
 		<button type="submit" id="btn_submit" class="ui-btn">댓글등록</button>
 	</div>
 

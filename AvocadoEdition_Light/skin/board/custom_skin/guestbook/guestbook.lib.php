@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
+include_once G5_LIB_PATH.'/emoticon.lib.php'; // 이모티콘(관리자 > 이모티콘관리)
 
 /*
  * 방명록 (custom_skin/guestbook)
@@ -36,7 +37,7 @@ function gb_format(string $raw, string $bo_table): string
         }, $part);
         $parts[$i] = $part;
     }
-    return implode('', $parts);
+    return emoticon_html(implode('', $parts)); // 이모티콘 코드 → 이미지(관리자 > 이모티콘관리)
 }
 
 /** 비밀글: 관리자 · 회원 본인 · 비밀번호를 확인한 사람(그누보드 기본 세션)만. */
@@ -148,6 +149,7 @@ function gb_form(array $o): string
         if ($is_admin) $h .= '<label class="gb-check"><input type="checkbox" name="notice" value="1"'.(!empty($o['notice']) ? ' checked' : '').'> 공지</label>';
     }
     $h .= '</div><div class="gb-form-btns">';
+    $h .= emoticon_button('textarea');
     if (!empty($o['cancel'])) $h .= '<button type="button" class="ui-btn small" data-gb-cancel>취소</button>';
     $h .= '<button type="submit" class="ui-btn small point">'.($is_new ? '남기기' : '저장').'</button>';
     $h .= '</div></div><div class="gb-slot" data-gb-slot></div></form>';

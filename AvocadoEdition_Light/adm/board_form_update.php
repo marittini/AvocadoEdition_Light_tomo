@@ -17,6 +17,10 @@ foreach (['bo_content_head','bo_content_tail','bo_mobile_content_head','bo_mobil
 
 
 if (!$_POST['gr_id']) { alert('그룹 ID는 반드시 선택하세요.'); }
+
+// 페이지당 목록 수: 숫자만. 모바일 값이 비어 있으면 0(= PC 값을 따름)으로 저장한다.
+$bo_page_rows = max(1, (int)($_POST['bo_page_rows'] ?? 0));
+$bo_mobile_page_rows = max(0, (int)($_POST['bo_mobile_page_rows'] ?? 0));
 if (!$bo_table) { alert('게시판 TABLE명은 반드시 입력하세요.'); }
 if (!preg_match("/^([A-Za-z0-9_]{1,20})$/", $bo_table)) { alert('게시판 TABLE명은 공백없이 영문자, 숫자, _ 만 사용 가능합니다. (20자 이내)'); }
 if (!$_POST['bo_subject']) { alert('게시판 제목을 입력하세요.'); }
@@ -110,8 +114,8 @@ $sql_common = " gr_id               = '{$_POST['gr_id']}',
 				bo_table_width      = '{$_POST['bo_table_width']}',
 				bo_subject_len      = '{$_POST['bo_subject_len']}',
 				bo_mobile_subject_len      = '{$_POST['bo_mobile_subject_len']}',
-				bo_page_rows        = '{$_POST['bo_page_rows']}',
-				bo_mobile_page_rows = '{$_POST['bo_mobile_page_rows']}',
+				bo_page_rows        = '{$bo_page_rows}',
+				bo_mobile_page_rows = '{$bo_mobile_page_rows}',
 				bo_new              = '{$_POST['bo_new']}',
 				bo_hot              = '{$_POST['bo_hot']}',
 				bo_image_width      = '{$_POST['bo_image_width']}',

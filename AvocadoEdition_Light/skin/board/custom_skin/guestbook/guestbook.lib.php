@@ -62,7 +62,7 @@ function gb_return(string $bo_table, string $write_table, int $wr_id, bool $open
     global $board;
     $wr = sql_fetch("SELECT wr_id, wr_num FROM `{$write_table}` WHERE wr_id = {$wr_id}");
     if (empty($wr['wr_id'])) goto_url(str_replace('&amp;', '&', gb_url($bo_table)));
-    $rows = (int)(G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page_rows']) ?: 15;
+    $rows = get_board_page_rows($board);
     $page = gb_page_of($write_table, $wr, $rows);
     goto_url(str_replace('&amp;', '&', gb_url($bo_table, ['page' => $page > 1 ? $page : 0], 'gb-'.$wr_id.($open ? '-c' : ''))));
 }

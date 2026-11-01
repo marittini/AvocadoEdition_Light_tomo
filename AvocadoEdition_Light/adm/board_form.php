@@ -514,6 +514,20 @@ $pg_anchor = '<ul class="anchor">
 				<label for="chk_all_page_rows">전체적용</label>
 			</td>
 		</tr>
+
+		<tr>
+			<th scope="row"><label for="bo_mobile_page_rows">모바일 페이지당 목록 수</label></th>
+			<td>
+				<?php echo help('모바일에서 한 페이지에 보여 줄 글 수입니다. 0이면 PC 값을 따릅니다.') ?>
+				<input type="text" name="bo_mobile_page_rows" value="<?php echo (int)$board['bo_mobile_page_rows'] ?>" id="bo_mobile_page_rows" class="numeric frm_input" size="4">
+			</td>
+			<td class="td_grpset">
+				<input type="checkbox" name="chk_grp_mobile_page_rows" value="1" id="chk_grp_mobile_page_rows">
+				<label for="chk_grp_mobile_page_rows">그룹적용</label>
+				<input type="checkbox" name="chk_all_mobile_page_rows" value="1" id="chk_all_mobile_page_rows">
+				<label for="chk_all_mobile_page_rows">전체적용</label>
+			</td>
+		</tr>
 		
 		<tr>
 			<th scope="row"><label for="bo_image_width">이미지 폭 크기<strong class="sound_only">필수</strong></label></th>

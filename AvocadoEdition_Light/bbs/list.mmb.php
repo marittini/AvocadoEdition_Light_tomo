@@ -59,13 +59,9 @@ if ($sca || $stx) {
 	$total_count = $board['bo_count_write'];
 }
 
-if(G5_IS_MOBILE) {
-	$page_rows = 5;
-	$list_page_rows = 5;
-} else {
-	$page_rows = $board['bo_page_rows'];
-	$list_page_rows = $board['bo_page_rows'];
-}
+// 모바일은 '모바일 페이지당 목록 수'를 쓴다(비어 있거나 0이면 PC 값).
+$page_rows = get_board_page_rows($board);
+$list_page_rows = $page_rows;
 
 if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
 

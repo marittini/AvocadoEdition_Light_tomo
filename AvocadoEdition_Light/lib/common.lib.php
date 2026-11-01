@@ -346,6 +346,16 @@ function get_dirsize($dir)
 
 
 // 게시물 정보($write_row)를 출력하기 위하여 $list로 가공된 정보를 복사 및 가공
+/**
+ * 게시판 한 페이지 글 수. 모바일은 '모바일 페이지당 목록 수'를 쓰고, 비어 있거나 0이면 PC 값을 따른다.
+ */
+function get_board_page_rows($board)
+{
+    $rows = (int)($board['bo_page_rows'] ?? 0);
+    if (G5_IS_MOBILE && (int)($board['bo_mobile_page_rows'] ?? 0) > 0) $rows = (int)$board['bo_mobile_page_rows'];
+    return max(1, $rows ?: 15);
+}
+
 function get_list($write_row, $board, $skin_url, $subject_len=40)
 {
 	global $g5, $config, $is_admin;
